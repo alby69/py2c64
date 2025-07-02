@@ -1,0 +1,58 @@
+;--------- Start python code ---------
+; a = 7
+; b = 7
+; res = 0
+; if (a ^ b): # 7^7 = 0 (zero, quindi False)
+;   res = 1
+; # Expected: res = 0
+
+    * = $C100
+    JMP main_program_entry_point
+; --- Data Section ---
+a * = * + 2
+b * = * + 2
+res * = * + 2
+temp_0 * = * + 4
+exception_handler_active_flag * = * + 2
+current_exception_target_label_ptr * = * + 2
+last_exception_type_code * = * + 1
+
+main_program_entry_point:
+; --- Code Section ---
+    LDA #<02FF
+    STA $E0
+    LDA #>02FF
+    STA $E1
+    LDA #7
+    STA a
+    LDA #0
+    STA a+1
+    LDA #7
+    STA b
+    LDA #0
+    STA b+1
+    LDA #0
+    STA res
+    LDA #0
+    STA res+1
+    LDA a
+    EOR b
+    STA temp_0
+    LDA a+1
+    EOR b+1
+    STA temp_0+1
+    LDA temp_0+1
+    LDX temp_0
+    ORA X
+    BEQ if_end_0
+    LDA #1
+    STA res
+    LDA #0
+    STA res+1
+if_end_0:
+    JMP end_program
+
+; --- Routines Section ---
+    * = $8000
+end_program
+    RTS

@@ -1,0 +1,107 @@
+[2025-07-02 20:22:12] PASSED: Simple assignment - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Mixed arithmetic operations - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Arithmetic overflow (sum) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Division by zero - Test completed successfully
+[2025-07-02 20:22:12] PASSED: XOR operator (assignment) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Operatore XOR (valori diversi) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Constant Folding: Simple multiplication - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Constant Folding: Integer division by zero (compile-time error) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Constant Folding: Mixed type addition (int + float) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: For loop over list - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Simple while loop - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Simple If (true condition) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Simple If (false condition) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Else (if branch) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Else (else branch) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Elif-Else (if branch) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Elif-Else (elif branch) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Elif-Else (else branch) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Elif (if branch, no else) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If-Elif (elif branch, no else) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with <= operator - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with < operator (false) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Nested If - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with constant True condition - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with constant False condition and Else - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with BinOp operand on the left - Test completed successfully
+[2025-07-02 20:22:12] PASSED: If with BinOp operand on right and left - Test completed successfully
+[2025-07-02 20:22:12] PASSED: NOT operator (True) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: NOT operator (False) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: AND operator (True and True) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: AND operator (True and False) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: AND operator (False and True - Short Circuit) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: OR operator (True or False - Short Circuit) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: OR operator (False or True) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: OR operator (False or False) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: NOT and AND combination - Test completed successfully
+[2025-07-02 20:22:12] PASSED: NOT and OR combination - Test completed successfully
+[2025-07-02 20:22:12] PASSED: AND with boolean constants - Test completed successfully
+[2025-07-02 20:22:12] PASSED: XOR operator in IF condition (True) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: XOR operator in IF condition (False) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: While loop with break - Test completed successfully
+[2025-07-02 20:22:12] PASSED: While loop with continue - Test completed successfully
+[2025-07-02 20:22:12] PASSED: For loop with break - Test completed successfully
+[2025-07-02 20:22:12] PASSED: For loop with continue - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Break in nested loop (while in for) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Dizionario: Aggiunta e rimozione - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Dizionario: Inizializzazione e accesso - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Tuple - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Set - Test completed successfully
+[2025-07-02 20:22:12] PASSED: int_plus_float_literal - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_less_than_comparison - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_equal_comparison - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_not_equal_comparison - Test completed successfully
+[2025-07-02 20:22:12] PASSED: int_float_greater_than_comparison - Test completed successfully
+[2025-07-02 20:22:12] PASSED: assign_positive_float_literal - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_abs_sgn_log - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_exp_stub - Test completed successfully
+[2025-07-02 20:22:12] PASSED: float_comparison_eq_ne - Test completed successfully
+[2025-07-02 20:22:12] PASSED: int_to_float_and_float_to_int_conversion - Test completed successfully
+[2025-07-02 20:22:12] PASSED: user_func_return_float_literal - Test completed successfully
+[2025-07-02 20:22:12] PASSED: user_func_return_float_cast - Test completed successfully
+[2025-07-02 20:22:12] PASSED: user_func_return_int_literal - Test completed successfully
+[2025-07-02 20:22:12] PASSED: user_func_return_mixed_calls - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Simple function definition and call (no params, no explicit return) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with one parameter and return - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with multiple parameters - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with empty return (implicit None/0) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Funzione senza istruzione return (implicito None/0) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function call with constant as argument - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function call whose argument is an expression - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function calling another function - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with parameters and complex body (if statement) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Funzione che modifica variabile globale (non un parametro) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with parameter whose name collides with a global - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Function with two parameters, called with variables - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Test GFX Turn On and Clear Screen - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Test GFX Draw Line (Star) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Test GFX Turn Off - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Test GFX Draw Ellipse and Circle - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_draw_circle_simple - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_draw_circle_vars - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_draw_ellipse_expressions - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_draw_rect_simple - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_set_pos - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_color_and_enable - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_disable_and_msb - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_expand - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_msb_clear - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_set_pointer - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_priority - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_multicolor - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_multicolor_colors - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_collision_check - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_create_from_data - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_set_pointer - Test completed successfully
+[2025-07-02 20:22:12] PASSED: graphics_sprite_priority - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Input da tastiera - Test completed successfully
+[2025-07-02 20:22:12] PASSED: log_zero_error - Test completed successfully
+[2025-07-02 20:22:12] PASSED: log_negative_error - Test completed successfully
+[2025-07-02 20:22:12] PASSED: log_positive_stub - Test completed successfully
+[2025-07-02 20:22:12] PASSED: exp_stub - Test completed successfully
+[2025-07-02 20:22:12] PASSED: add_one_function_call - Test completed successfully
+[2025-07-02 20:22:12] PASSED: String slicing - Test completed successfully
+[2025-07-02 20:22:12] PASSED: String concatenation (f-string) - Test completed successfully
+[2025-07-02 20:22:12] PASSED: String concatenation (f-string) and print - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Print string variable - Test completed successfully
+[2025-07-02 20:22:12] PASSED: Print string literal - Test completed successfully

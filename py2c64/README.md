@@ -1,4 +1,3 @@
-# py2c64: A Python to 6502 Assembly Compiler for the Commodore 64
 
 `py2c64` is an experimental compiler that translates a subset of the Python language into 6502 assembly code, specifically targeting the Commodore 64. The project aims to make retro-programming more accessible by combining Python's clean, modern syntax with the challenge and charm of low-level 8-bit development.
 
@@ -17,6 +16,8 @@ The compiler is continuously evolving. Currently, it supports the following Pyth
     -   **Floating-Point**: `+`, `-`, `*`, `/`.
 -   **Control Flow**:
     -   `if/else` conditional statements.
+    -   `while` loops.
+    -   `for` loops (supporting `range(start, stop, step)`).
 -   **Functions**:
     -   Function definitions (`def`) and calls.
     -   Stack-based parameter passing and local variable management using a frame pointer.
@@ -24,7 +25,8 @@ The compiler is continuously evolving. Currently, it supports the following Pyth
 -   **Built-in Functions**:
     -   `print()`: For printing string literals and numeric values to the screen.
     -   Type casting: `int()`, `float()`.
-    -   Math: `abs()`, `log()`, `exp()`.
+    -   Math: `abs()`, `log()`, `exp()`, `sgn()`.
+-   **Code Optimization**: A peephole optimizer pass removes redundant `JMP` instructions to make the generated code more efficient.
 
 ### Commodore 64 Graphics Library
 An integrated library for controlling the C64's high-resolution (320x200) bitmap mode. The necessary routines are automatically linked if used in the Python source.
@@ -39,7 +41,20 @@ An integrated library for controlling the C64's high-resolution (320x200) bitmap
 ### Commodore 64 Sprite Library
 An integrated library for controlling the C64's hardware sprites.
 
--   `sprite_set_pos(sprite_num, x, y)`: Sets the screen position of a sprite. `sprite_num` is 0-7, `x` is 0-319 (16-bit), `y` is 0-255 (8-bit). Note: The MSB for X coordinates > 255 is handled by a
+-   **Control and Positioning**:
+    -   `sprite_enable(mask)` / `sprite_disable(mask)`: Enables/disables sprites using a bitmask.
+    -   `sprite_set_pos(sprite_num, x, y)`: Sets the position (0-255) of a specific sprite.
+    -   `sprite_set_x_msb(mask)`: Sets the 9th bit (Most Significant Bit) of the X-coordinate for one or more sprites, allowing positions greater than 255.
+    -   `sprite_set_pointer(sprite_num, pointer_val)`: Sets the data pointer for a sprite, which determines its graphical data source.
+-   **Appearance and Color**:
+    -   `sprite_set_color(sprite_num, color)`: Sets the individual color of a sprite.
+    -   `sprite_set_multicolor(mask)`: Enables multicolor mode for specific sprites.
+    -   `sprite_set_multicolor_colors(mc1, mc2)`: Sets the two global multicolor registers for all multicolor sprites.
+    -   `sprite_expand_xy(y_mask, x_mask)`: Expands sprites vertically and/or horizontally.
+-   **Interaction and Data**:
+    -   `sprite_set_priority(mask)`: Sets the priority of sprites (foreground vs. background).
+    -   `sprite_check_collision_sprite()` / `sprite_check_collision_data()`: Reads the sprite-to-sprite and sprite-to-data collision registers.
+    -   `sprite_create_from_data(sprite_num, source_addr)`: Copies 63 bytes from a source memory address to a sprite's data area and sets its pointer accordingly.
 ## How to Use
 
 The project is driven by the `test.py` script, which acts as both a test runner and a compiler frontend.
@@ -83,15 +98,13 @@ The project is a work in progress. Future enhancements are planned in two main a
 
 ### Expanding Language Support
 
--   [ ] **Loops**: Implement `for` and `while` loops.
+-   [x] **Loops**: Implemented `while` and `for` loops with full `range(start, stop, step)` support.
 -   [ ] **Comparisons & Logic**: Full support for comparison (`==`, `!=`, `<`, `>`, `<=`, `>=`) and boolean (`and`, `or`, `not`) operators.
 -   [ ] **Data Structures**: Introduce support for basic arrays or lists with static allocation.
 -   [ ] **Global Variables**: Proper handling of the `global` keyword within functions.
 
 ### Improving Tooling and C64 Integration
 
--   [ ] **Code Optimization**: Add a peephole optimizer pass to make the generated assembly smaller and faster.
 -   [ ] **Enhanced C64 Libraries**: Add support for more C64 features, such as sprites, character graphics, and the SID sound chip.
 -   [ ] **Error Reporting**: Improve error messages to include line and column numbers from the source Python file.
 -   [ ] **Emulator Integration**: Create a "compile and run" workflow that automatically launches the compiled program in an emulator like VICE.
-
