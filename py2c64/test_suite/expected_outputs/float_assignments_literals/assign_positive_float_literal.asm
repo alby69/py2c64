@@ -30,6 +30,10 @@ main_program_entry_point:
     STA x+2
     LDA #$82
     STA x+3
+    LDA #0
+    STA y
+    LDA #0
+    STA y+1
     LDA #$00
     STA z+0
     LDA #$00

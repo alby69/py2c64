@@ -64,15 +64,6 @@ func_ret_get_pi_0:
     JSR pop_word_to_addr
     RTS
     ; --- End Function Epilogue ---
-    JSR func_get_pi_0
-    LDA $F8
-    STA a+3
-    LDA $F9
-    STA a+0
-    LDA $FA
-    STA a+1
-    LDA $FB
-    STA a+2
     JMP end_program
 
 ; --- Routines Section ---

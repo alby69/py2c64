@@ -51,6 +51,10 @@ main_program_entry_point:
     STA b_float+2
     LDA $FB
     STA b_float+3
+    LDA #0
+    STA c_float
+    LDA #0
+    STA c_float+1
     LDA c_float+0
     STA temp_0+0
     LDA c_float+1

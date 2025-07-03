@@ -53,6 +53,42 @@ main_program_entry_point:
     STA b+2
     LDA #$82
     STA b+3
+    LDA #0
+    STA c
+    LDA #0
+    STA c+1
+    LDA #0
+    STA res_eq
+    LDA #0
+    STA res_eq+1
+    LDA #0
+    STA res_ne
+    LDA #0
+    STA res_ne+1
+    LDA #0
+    STA res_lt
+    LDA #0
+    STA res_lt+1
+    LDA #0
+    STA res_gt
+    LDA #0
+    STA res_gt+1
+    LDA #0
+    STA res_le1
+    LDA #0
+    STA res_le1+1
+    LDA #0
+    STA res_le2
+    LDA #0
+    STA res_le2+1
+    LDA #0
+    STA res_ge1
+    LDA #0
+    STA res_ge1+1
+    LDA #0
+    STA res_ge2
+    LDA #0
+    STA res_ge2+1
     JMP end_program
 
 ; --- Routines Section ---

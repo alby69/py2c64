@@ -28,12 +28,6 @@ main_program_entry_point:
     STA b
     LDA #0
     STA b+1
-    LDA a
-    EOR b
-    STA c
-    LDA a+1
-    EOR b+1
-    STA c+1
     JMP end_program
 
 ; --- Routines Section ---

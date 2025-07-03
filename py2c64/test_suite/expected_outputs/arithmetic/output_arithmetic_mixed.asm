@@ -57,52 +57,10 @@ main_program_entry_point:
     STA b
     LDA #0
     STA b+1
-    LDA a1
-    STA m16_arg1_l
-    LDA a1+1
-    STA m16_arg1_h
-    LDA b
-    STA m16_arg2_l
-    LDA b+1
-    STA m16_arg2_h
-    JSR multiply16x16_16
-    LDA m16_res_l
-    STA temp_0
-    LDA m16_res_h
-    STA temp_0+1
-    LDA a1
-    SEC
-    SBC b
-    STA temp_2
-    LDA a1+1
-    SBC b+1
-    JSR check_overflow
-    STA temp_2+1
     LDA #2
     STA temp_3
     LDA #0
     STA temp_3+1
-    LDA temp_2
-    STA d16_orig_dividend_l
-    LDA temp_2+1
-    STA d16_orig_dividend_h
-    LDA temp_3
-    STA d16_divisor_l
-    LDA temp_3+1
-    STA d16_divisor_h
-    JSR divide16x16_16
-    LDA d16_quotient_l
-    STA temp_1
-    LDA d16_quotient_h
-    STA temp_1+1
-    LDA temp_0
-    CLC
-    ADC temp_1
-    STA c
-    LDA temp_0+1
-    ADC temp_1+1
-    JSR check_overflow
-    STA c+1
     JMP end_program
 
 ; --- Routines Section ---

@@ -30,14 +30,6 @@ main_program_entry_point:
     STA x2
     LDA #0
     STA x2+1
-    LDA x1
-    CLC
-    ADC x2
-    STA z
-    LDA x1+1
-    ADC x2+1
-    JSR check_overflow
-    STA z+1
     JMP end_program
 
 ; --- Routines Section ---

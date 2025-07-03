@@ -52,14 +52,6 @@ func_add_one_0:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA __add_one_x
-    CLC
-    ADC temp_0
-    STA __add_one_y
-    LDA __add_one_x+1
-    ADC temp_0+1
-    JSR check_overflow
-    STA __add_one_y+1
     LDA __add_one_y
     STA temp_0
     LDA __add_one_y+1
@@ -84,9 +76,6 @@ func_ret_add_one_0:
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_add_one_0
-    STX result
-    STA result+1
     LDA result
     STA temp_0
     LDA result+1

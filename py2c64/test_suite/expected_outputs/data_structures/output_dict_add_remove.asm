@@ -19,16 +19,20 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
+    LDA #0
+    STA my_dict
+    LDA #0
+    STA my_dict+1
     LDA #<my_dict_key_0_str
     STA my_dict_key_0
     LDA #>my_dict_key_0_str
     STA my_dict_key_0+1
     LDA #'c'
-    STA $C390
+    STA $C3A6
     LDA #0
-    STA $C391
+    STA $C3A7
     LDA #3
-    STA $C38E
+    STA $C3A4
 ; Placeholder per Delete
     JMP end_program
 

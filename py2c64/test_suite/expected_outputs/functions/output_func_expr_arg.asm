@@ -55,19 +55,6 @@ func_square_0:
     LDA $E1
     STA $E3
     ; --- End Function Prologue ---
-    LDA __square_val
-    STA m16_arg1_l
-    LDA __square_val+1
-    STA m16_arg1_h
-    LDA __square_val
-    STA m16_arg2_l
-    LDA __square_val+1
-    STA m16_arg2_h
-    JSR multiply16x16_16
-    LDA m16_res_l
-    STA temp_0
-    LDA m16_res_h
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -92,17 +79,6 @@ func_ret_square_0:
     STA b
     LDA #0
     STA b+1
-    LDA a
-    CLC
-    ADC b
-    STA __func_arg_0
-    LDA a+1
-    ADC b+1
-    JSR check_overflow
-    STA __func_arg_0+1
-    JSR func_square_0
-    STX result
-    STA result+1
     JMP end_program
 
 ; --- Routines Section ---

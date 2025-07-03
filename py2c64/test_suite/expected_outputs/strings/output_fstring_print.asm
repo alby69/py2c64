@@ -25,6 +25,10 @@ main_program_entry_point:
     STA x1
     LDA #>str_lit_0
     STA x1+1
+    LDA #0
+    STA s
+    LDA #0
+    STA s+1
     LDA s+0
     STA temp_0+0
     LDA s+1

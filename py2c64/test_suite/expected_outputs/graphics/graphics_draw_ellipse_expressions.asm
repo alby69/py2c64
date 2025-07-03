@@ -59,14 +59,6 @@ main_program_entry_point:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA temp_1
-    CLC
-    ADC offset_x
-    STA temp_0
-    LDA temp_1+1
-    ADC offset_x+1
-    JSR check_overflow
-    STA temp_0+1
     LDA temp_0      ; LSB
     STA $B0
     LDA temp_0+1    ; MSB
@@ -75,14 +67,6 @@ main_program_entry_point:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA temp_1
-    SEC
-    SBC offset_y
-    STA temp_0
-    LDA temp_1+1
-    SBC offset_y+1
-    JSR check_overflow
-    STA temp_0+1
     LDA temp_0      ; LSB è sufficiente
     STA $B2
     LDA #80

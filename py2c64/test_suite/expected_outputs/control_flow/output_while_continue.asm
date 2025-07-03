@@ -36,6 +36,10 @@ main_program_entry_point:
     STA res+1
 
 while_start_0:
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X
@@ -44,27 +48,15 @@ while_start_0:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA i
-    CLC
-    ADC temp_0
-    STA i
-    LDA i+1
-    ADC temp_0+1
-    JSR check_overflow
-    STA i+1
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X
     BEQ if_end_1
 if_end_1:
-    LDA res
-    CLC
-    ADC i
-    STA res
-    LDA res+1
-    ADC i+1
-    JSR check_overflow
-    STA res+1
     JMP while_start_0
 while_end_0:
     JMP end_program

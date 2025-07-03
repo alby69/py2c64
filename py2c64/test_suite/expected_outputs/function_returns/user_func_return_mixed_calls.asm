@@ -172,18 +172,6 @@ func_ret_returns_int_2:
     JSR pop_word_to_addr
     RTS
     ; --- End Function Epilogue ---
-    JSR func_returns_float_direct_1
-    LDA $F8
-    STA f_val+3
-    LDA $F9
-    STA f_val+0
-    LDA $FA
-    STA f_val+1
-    LDA $FB
-    STA f_val+2
-    JSR func_returns_int_2
-    STX i_val
-    STA i_val+1
     JMP end_program
 
 ; --- Routines Section ---

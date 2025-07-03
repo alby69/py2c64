@@ -55,14 +55,6 @@ func_do_nothing_0:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA __do_nothing_p
-    CLC
-    ADC temp_0
-    STA __do_nothing_y
-    LDA __do_nothing_p+1
-    ADC temp_0+1
-    JSR check_overflow
-    STA __do_nothing_y+1
 
 func_ret_do_nothing_0:
     ; --- Function Epilogue for do_nothing ---
@@ -85,9 +77,6 @@ func_ret_do_nothing_0:
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_do_nothing_0
-    STX val
-    STA val+1
     JMP end_program
 
 ; --- Routines Section ---

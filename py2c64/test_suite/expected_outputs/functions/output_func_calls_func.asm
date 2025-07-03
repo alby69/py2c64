@@ -58,19 +58,6 @@ func_inner_func_0:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA __inner_func_val
-    STA m16_arg1_l
-    LDA __inner_func_val+1
-    STA m16_arg1_h
-    LDA temp_1
-    STA m16_arg2_l
-    LDA temp_1+1
-    STA m16_arg2_h
-    JSR multiply16x16_16
-    LDA m16_res_l
-    STA temp_0
-    LDA m16_res_h
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -104,17 +91,6 @@ func_outer_func_1:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA __outer_func_x
-    CLC
-    ADC temp_1
-    STA __func_arg_0
-    LDA __outer_func_x+1
-    ADC temp_1+1
-    JSR check_overflow
-    STA __func_arg_0+1
-    JSR func_inner_func_0
-    STX temp_0
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -135,9 +111,6 @@ func_ret_outer_func_1:
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_outer_func_1
-    STX result
-    STA result+1
     JMP end_program
 
 ; --- Routines Section ---

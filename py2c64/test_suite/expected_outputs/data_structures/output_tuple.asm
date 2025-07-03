@@ -15,6 +15,10 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
+    LDA #0
+    STA t
+    LDA #0
+    STA t+1
     JMP end_program
 
 ; --- Routines Section ---

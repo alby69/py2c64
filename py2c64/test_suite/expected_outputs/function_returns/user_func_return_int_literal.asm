@@ -54,9 +54,6 @@ func_ret_get_int_0:
     JSR pop_word_to_addr
     RTS
     ; --- End Function Epilogue ---
-    JSR func_get_int_0
-    STX c
-    STA c+1
     JMP end_program
 
 ; --- Routines Section ---

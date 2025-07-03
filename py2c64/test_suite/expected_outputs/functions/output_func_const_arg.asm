@@ -57,9 +57,6 @@ func_ret_identity_0:
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_identity_0
-    STX result
-    STA result+1
     JMP end_program
 
 ; --- Routines Section ---

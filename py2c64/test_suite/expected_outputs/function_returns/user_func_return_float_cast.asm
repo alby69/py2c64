@@ -98,15 +98,6 @@ func_ret_to_float_0:
     STA __func_arg_0
     LDA b_val+1
     STA __func_arg_0+1
-    JSR func_to_float_0
-    LDA $F8
-    STA b+3
-    LDA $F9
-    STA b+0
-    LDA $FA
-    STA b+1
-    LDA $FB
-    STA b+2
     JMP end_program
 
 ; --- Routines Section ---

@@ -42,6 +42,10 @@ func_check_sign_0:
     LDA $E1
     STA $E3
     ; --- End Function Prologue ---
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X
@@ -55,10 +59,18 @@ func_check_sign_0:
     JMP func_ret_check_sign_0
     JMP if_end_1
 if_else_1:
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X
     BEQ if_else_2
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     JMP func_ret_check_sign_0
@@ -84,19 +96,14 @@ func_ret_check_sign_0:
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_check_sign_0
-    STX res_pos
-    STA res_pos+1
-    JSR func_check_sign_0
-    STX res_neg
-    STA res_neg+1
     LDA #0
     STA __func_arg_0
     LDA #0
     STA __func_arg_0+1
-    JSR func_check_sign_0
-    STX res_zero
-    STA res_zero+1
+    LDA #0
+    STA __func_arg_0
+    LDA #0
+    STA __func_arg_0+1
     JMP end_program
 
 ; --- Routines Section ---

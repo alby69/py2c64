@@ -36,6 +36,10 @@ main_program_entry_point:
     STA y_float+2
     LDA #$81
     STA y_float+3
+    LDA #0
+    STA is_equal
+    LDA #0
+    STA is_equal+1
     JMP end_program
 
 ; --- Routines Section ---

@@ -40,14 +40,6 @@ func_subtract_0:
     LDA $E1
     STA $E3
     ; --- End Function Prologue ---
-    LDA __subtract_a
-    SEC
-    SBC __subtract_b
-    STA temp_0
-    LDA __subtract_a+1
-    SBC __subtract_b+1
-    JSR check_overflow
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -80,9 +72,6 @@ func_ret_subtract_0:
     STA __func_arg_1
     LDA var2+1
     STA __func_arg_1+1
-    JSR func_subtract_0
-    STX result
-    STA result+1
     JMP end_program
 
 ; --- Routines Section ---

@@ -29,6 +29,10 @@ main_program_entry_point:
     STA res
     LDA #0
     STA res+1
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X

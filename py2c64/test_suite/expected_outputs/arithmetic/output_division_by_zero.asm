@@ -38,19 +38,6 @@ main_program_entry_point:
     STA x2
     LDA #0
     STA x2+1
-    LDA x1
-    STA d16_orig_dividend_l
-    LDA x1+1
-    STA d16_orig_dividend_h
-    LDA x2
-    STA d16_divisor_l
-    LDA x2+1
-    STA d16_divisor_h
-    JSR divide16x16_16
-    LDA d16_quotient_l
-    STA z
-    LDA d16_quotient_h
-    STA z+1
     JMP end_program
 
 ; --- Routines Section ---

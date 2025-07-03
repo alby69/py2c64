@@ -17,6 +17,14 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
+    LDA #0
+    STA my_dict
+    LDA #0
+    STA my_dict+1
+    LDA #0
+    STA x1
+    LDA #0
+    STA x1+1
     JMP end_program
 
 ; --- Routines Section ---

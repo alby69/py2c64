@@ -42,14 +42,6 @@ func_add_one_0:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA __add_one_x
-    CLC
-    ADC temp_1
-    STA temp_0
-    LDA __add_one_x+1
-    ADC temp_1+1
-    JSR check_overflow
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -74,9 +66,6 @@ func_ret_add_one_0:
     STA __func_arg_0
     LDA val+1
     STA __func_arg_0+1
-    JSR func_add_one_0
-    STX result
-    STA result+1
     JMP end_program
 
 ; --- Routines Section ---

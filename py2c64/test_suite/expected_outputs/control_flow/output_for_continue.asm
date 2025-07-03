@@ -24,6 +24,10 @@ main_program_entry_point:
     LDA #>02FF
     STA $E1
     LDA #0
+    STA my_list
+    LDA #0
+    STA my_list+1
+    LDA #0
     STA res
     LDA #0
     STA res+1

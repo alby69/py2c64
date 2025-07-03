@@ -51,19 +51,6 @@ func_multiply_0:
     LDA $E1
     STA $E3
     ; --- End Function Prologue ---
-    LDA __multiply_a
-    STA m16_arg1_l
-    LDA __multiply_a+1
-    STA m16_arg1_h
-    LDA __multiply_b
-    STA m16_arg2_l
-    LDA __multiply_b+1
-    STA m16_arg2_h
-    JSR multiply16x16_16
-    LDA m16_res_l
-    STA temp_0
-    LDA m16_res_h
-    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
 
@@ -88,9 +75,6 @@ func_ret_multiply_0:
     STA __func_arg_1
     LDA #0
     STA __func_arg_1+1
-    JSR func_multiply_0
-    STX res
-    STA res+1
     JMP end_program
 
 ; --- Routines Section ---

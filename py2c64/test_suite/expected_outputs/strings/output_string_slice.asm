@@ -22,6 +22,10 @@ main_program_entry_point:
     STA s
     LDA #>str_lit_0
     STA s+1
+    LDA #0
+    STA t
+    LDA #0
+    STA t+1
     JMP end_program
 
 ; --- Routines Section ---

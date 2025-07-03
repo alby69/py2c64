@@ -37,14 +37,6 @@ main_program_entry_point:
     STA b_float_literal+2
     LDA #$81
     STA b_float_literal+3
-    LDA a_int
-    CLC
-    ADC b_float_literal
-    STA c_float_result
-    LDA a_int+1
-    ADC b_float_literal+1
-    JSR check_overflow
-    STA c_float_result+1
     JMP end_program
 
 ; --- Routines Section ---

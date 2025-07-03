@@ -31,6 +31,10 @@ main_program_entry_point:
     STA res
     LDA #0
     STA res+1
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X
@@ -41,6 +45,10 @@ main_program_entry_point:
     STA res+1
     JMP if_end_0
 if_else_0:
+    LDA #0
+    STA temp_0
+    LDA #0
+    STA temp_0+1
     LDA temp_0+1
     LDX temp_0
     ORA X

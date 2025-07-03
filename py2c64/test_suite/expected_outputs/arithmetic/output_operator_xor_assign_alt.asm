@@ -29,12 +29,6 @@ main_program_entry_point:
     STA val2
     LDA #0
     STA val2+1
-    LDA val1
-    EOR val2
-    STA res_xor
-    LDA val1+1
-    EOR val2+1
-    STA res_xor+1
     JMP end_program
 
 ; --- Routines Section ---

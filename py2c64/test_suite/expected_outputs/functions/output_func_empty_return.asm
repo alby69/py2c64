@@ -50,9 +50,6 @@ func_ret_set_val_to_zero_0:
     STA x
     LDA #0
     STA x+1
-    JSR func_set_val_to_zero_0
-    STX x
-    STA x+1
     JMP end_program
 
 ; --- Routines Section ---

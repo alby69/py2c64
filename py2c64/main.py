@@ -3,7 +3,7 @@ import ast
 from . import globals # Module-level import
 from .lib import routines
 from .lib.func_core import *
-from .lib.func_expressions import *
+from .lib.func_expressions_old import *
 from .lib.func_structures import *
 from .lib.func_dict import *
 from .lib.func_strings import *

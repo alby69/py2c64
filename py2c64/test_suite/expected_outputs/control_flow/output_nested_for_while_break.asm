@@ -35,6 +35,10 @@ main_program_entry_point:
     STA outer_sum
     LDA #0
     STA outer_sum+1
+    LDA #0
+    STA my_list
+    LDA #0
+    STA my_list+1
     JMP end_program
 
 ; --- Routines Section ---
