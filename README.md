@@ -37,6 +37,7 @@ An integrated library for controlling the C64's high-resolution (320x200) bitmap
 -   `draw_line(x1, y1, x2, y2)`: Draws a line between two points using an efficient implementation of Bresenham's algorithm.
 -   `draw_ellipse(xm, ym, xr, yr)`: Draws an ellipse (or a circle if `xr`==`yr`) centered at (xm, ym) with the given X and Y radii.
 -   `draw_circle(x, y, r)`: Draws a circle centered at (x, y) with the given radius.
+-   `draw_rect(x1, y1, x2, y2)`: Draws a rectangle defined by two opposite corners.
 
 ### Commodore 64 Sprite Library
 An integrated library for controlling the C64's hardware sprites.
@@ -44,7 +45,7 @@ An integrated library for controlling the C64's hardware sprites.
 -   **Control and Positioning**:
     -   `sprite_enable(mask)` / `sprite_disable(mask)`: Enables/disables sprites using a bitmask.
     -   `sprite_set_pos(sprite_num, x, y)`: Sets the position (0-255) of a specific sprite.
-    -   `sprite_set_x_msb(mask)`: Sets the 9th bit (Most Significant Bit) of the X-coordinate for one or more sprites, allowing positions greater than 255.
+    -   `sprite_set_x_msb(mask)` / `sprite_set_x_msb_clear(mask)`: Sets or clears the 9th bit (Most Significant Bit) of the X-coordinate for one or more sprites, allowing positions greater than 255.
     -   `sprite_set_pointer(sprite_num, pointer_val)`: Sets the data pointer for a sprite, which determines its graphical data source.
 -   **Appearance and Color**:
     -   `sprite_set_color(sprite_num, color)`: Sets the individual color of a sprite.
@@ -101,10 +102,10 @@ The project is a work in progress. Future enhancements are planned in two main a
 -   [x] **Loops**: Implemented `while` and `for` loops with full `range(start, stop, step)` support.
 -   [ ] **Comparisons & Logic**: Full support for comparison (`==`, `!=`, `<`, `>`, `<=`, `>=`) and boolean (`and`, `or`, `not`) operators.
 -   [ ] **Data Structures**: Introduce support for basic arrays or lists with static allocation.
--   [ ] **Global Variables**: Proper handling of the `global` keyword within functions.
+-   [x] **Global Variables**: Proper handling of the `global` keyword within functions.
 
 ### Improving Tooling and C64 Integration
 
 -   [ ] **Enhanced C64 Libraries**: Add support for more C64 features, such as sprites, character graphics, and the SID sound chip.
--   [ ] **Error Reporting**: Improve error messages to include line and column numbers from the source Python file.
+-   [x] **Error Reporting**: Improve error messages to include line and column numbers from the source Python file.
 -   [ ] **Emulator Integration**: Create a "compile and run" workflow that automatically launches the compiled program in an emulator like VICE.
