@@ -1,11 +1,11 @@
 # py2asm/lib/ast_processor.py
 import ast
 from .. import globals
-from . import func_expressions_old
+from . import func_expressions
 from . import func_core
 from . import func_dict
 
-# NOTA: Si assume che esista una funzione `func_expressions.process_expression`
+# NOTA: Si assume che esista una funzione `func_expressionss.process_expression`
 # che valuta un'espressione e lascia il risultato a 16 bit nei registri A/X.
 # Questa è un'astrazione necessaria per concentrarsi sulla logica di chiamata.
 def _evaluate_expression_to_ax(node, error_handler_func, current_func_info=None):
@@ -13,9 +13,9 @@ def _evaluate_expression_to_ax(node, error_handler_func, current_func_info=None)
     Wrapper per la logica di valutazione delle espressioni.
     Genera codice che lascia un risultato a 16 bit in A (high byte) e X (low byte).
     """
-    # La vera logica è delegata ad altri moduli come func_expressions.py
+    # La vera logica è delegata ad altri moduli come func_expressionss.py
     temp_result_var = func_core.get_temp_var()
-    func_expressions_old.translate_expression_recursive(temp_result_var, node, current_func_info.get('name') if current_func_info else None)
+    func_expressions.translate_expression_recursive(temp_result_var, node, current_func_info.get('name') if current_func_info else None)
 
     is_float_result = globals.variables.get(temp_result_var, {}).get('type') == 'float'
 
@@ -65,7 +65,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             for i, arg_node in enumerate(call_node.args):
                 # Valuta l'espressione dell'argomento in una variabile temporanea
                 temp_arg_var = func_core.get_temp_var()
-                func_expressions_old.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
+                func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
                 zp_addr = zp_bases[i]
                 # Genera codice per spostare il valore dalla variabile temporanea alla locazione ZP
@@ -112,7 +112,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a draw_ellipse ---")
             for i, arg_node in enumerate(call_node.args):
                 temp_arg_var = func_core.get_temp_var()
-                func_expressions_old.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
+                func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
                 zp_addr = zp_bases[i]
                 if is_16bit[i]:
@@ -152,7 +152,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             # Valuta i 3 argomenti (x, y, r) e li mette nelle ZP per xm, ym, xr
             for i, arg_node in enumerate(call_node.args):
                 temp_arg_var = func_core.get_temp_var()
-                func_expressions_old.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
+                func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
                 zp_addr = zp_map[i]['zp_base']
                 if zp_map[i]['is_16bit']:
@@ -190,7 +190,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a draw_rect ---")
             for i, arg_node in enumerate(call_node.args):
                 temp_arg_var = func_core.get_temp_var()
-                func_expressions_old.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
+                func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
                 zp_addr = zp_bases[i]
                 if is_16bit[i]:
@@ -221,13 +221,13 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables first to avoid register clobbering
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_x = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_x, arg_x_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_x, arg_x_node, current_func_info.get('name') if current_func_info else None)
 
             temp_y = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_y, arg_y_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_y, arg_y_node, current_func_info.get('name') if current_func_info else None)
 
             # Now, load the values into the correct registers/ZP locations
             # Store X coordinate in $B0 (used by the routine)
@@ -259,10 +259,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_color = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_color, arg_color_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_color, arg_color_node, current_func_info.get('name') if current_func_info else None)
 
             # Load sprite number into X register
             globals.generated_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
@@ -287,7 +287,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_enable ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_enable")
             globals.used_routines.add('sprite_enable')
@@ -303,7 +303,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_disable ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_disable")
             globals.used_routines.add('sprite_disable')
@@ -319,7 +319,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_set_x_msb ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_set_x_msb")
             globals.used_routines.add('sprite_set_x_msb')
@@ -335,7 +335,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_set_x_msb_clear ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_set_x_msb_clear")
             globals.used_routines.add('sprite_set_x_msb_clear')
@@ -355,10 +355,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables first
             temp_y_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_y_mask, arg_y_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_y_mask, arg_y_mask_node, current_func_info.get('name') if current_func_info else None)
 
             temp_x_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_x_mask, arg_x_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_x_mask, arg_x_mask_node, current_func_info.get('name') if current_func_info else None)
 
             # Load x_mask into X register
             globals.generated_code.append(f"    LDX {temp_x_mask}      ; Carica x_mask in X")
@@ -387,10 +387,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_ptr = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
 
             # Load sprite number into X register
             globals.generated_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
@@ -415,7 +415,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_set_priority ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_set_priority")
             globals.used_routines.add('sprite_set_priority')
@@ -431,7 +431,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_set_multicolor ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_set_multicolor")
             globals.used_routines.add('sprite_set_multicolor')
@@ -451,10 +451,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables first
             temp_mc1 = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mc1, arg_mc1_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mc1, arg_mc1_node, current_func_info.get('name') if current_func_info else None)
 
             temp_mc2 = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mc2, arg_mc2_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mc2, arg_mc2_node, current_func_info.get('name') if current_func_info else None)
 
             # Load mc2 into X register
             globals.generated_code.append(f"    LDX {temp_mc2}      ; Carica mc2 in X")
@@ -483,10 +483,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables first
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_addr = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_addr, arg_addr_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_addr, arg_addr_node, current_func_info.get('name') if current_func_info else None)
 
             # Load source_addr into ZP pointer $F0/$F1 (ZP_SRC_PTR in the routine)
             globals.generated_code.append(f"    LDA {temp_addr}      ; Carica LSB dell'indirizzo sorgente")
@@ -514,7 +514,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             globals.generated_code.append(f"    ; --- Preparazione chiamata a sprite_set_priority ---")
             arg_mask_node = call_node.args[0]
             temp_mask = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_mask, arg_mask_node, current_func_info.get('name') if current_func_info else None)
             globals.generated_code.append(f"    LDA {temp_mask}      ; Carica maschera in A")
             globals.generated_code.append("    JSR sprite_set_priority")
             globals.used_routines.add('sprite_set_priority')
@@ -534,10 +534,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables first
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_addr = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_addr, arg_addr_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_addr, arg_addr_node, current_func_info.get('name') if current_func_info else None)
 
             # Load source_addr into ZP pointer $F0/$F1 (ZP_SRC_PTR in the routine)
             globals.generated_code.append(f"    LDA {temp_addr}      ; Carica LSB dell'indirizzo sorgente")
@@ -569,10 +569,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             # Evaluate arguments into temporary variables
             temp_num = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_ptr = func_core.get_temp_var()
-            func_expressions_old.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
+            func_expressions.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
 
             # Load sprite number into X register
             globals.generated_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
@@ -591,7 +591,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
         # --- Gestione funzioni built-in (logica esistente) ---
         if func_name == 'print':
-            func_core.process_print_call(call_node, error_handler_func, current_func_info, func_expressions_old)
+            func_core.process_print_call(call_node, error_handler_func, current_func_info, func_expressions)
             return
         # ... qui andrebbe la gestione di altre funzioni built-in come int(), float(), etc.
 
@@ -698,7 +698,7 @@ def process_assign_node(node, current_func_info=None):
             if mangled_name in globals.variables:
                 resolved_var_name = mangled_name
 
-        func_expressions_old.translate_expression_recursive(resolved_var_name, node.value, current_func_name)
+        func_expressions.translate_expression_recursive(resolved_var_name, node.value, current_func_name)
     else:
         if isinstance(target, ast.Subscript):
             func_dict.handle_dict_assignment(node)
@@ -761,7 +761,7 @@ def process_function_def_node(node, error_handler_func):
                 if return_type == 'float':
                     # Evaluate expression directly into FP1
                     temp_ret_val_var = func_core.get_temp_var()
-                    func_expressions_old.translate_expression_recursive(temp_ret_val_var, statement.value, current_func_info)
+                    func_expressions.translate_expression_recursive(temp_ret_val_var, statement.value, current_func_info)
                     globals.generated_code.extend(func_core._generate_load_float_to_fp1(temp_ret_val_var))
                     func_core.release_temp_var(temp_ret_val_var)
                 else: # Assume int (2 bytes)
@@ -858,9 +858,9 @@ def process_for_node(node, error_handler_func, current_func_info=None): # type: 
 
     # 3. Evaluate start, stop, step values
     globals.generated_code.append(f"    ; Evaluate range() arguments")
-    func_expressions_old.translate_expression_recursive(start_val_var, start_node, current_func_name)
-    func_expressions_old.translate_expression_recursive(stop_val_var, stop_node, current_func_name)
-    func_expressions_old.translate_expression_recursive(step_val_var, step_node, current_func_name)
+    func_expressions.translate_expression_recursive(start_val_var, start_node, current_func_name)
+    func_expressions.translate_expression_recursive(stop_val_var, stop_node, current_func_name)
+    func_expressions.translate_expression_recursive(step_val_var, step_node, current_func_name)
 
     # 4. Initialize loop variable
     globals.generated_code.append(f"    ; Initialize loop variable '{resolved_loop_var_name}' from start value")
