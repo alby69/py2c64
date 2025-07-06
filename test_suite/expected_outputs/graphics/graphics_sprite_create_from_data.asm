@@ -28,7 +28,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    ; --- Preparazione chiamata a sprite_create_from_data ---
     LDA #0
     STA temp_0
     LDA #0
@@ -37,13 +36,6 @@ main_program_entry_point:
     STA temp_1
     LDA #64
     STA temp_1+1
-    LDA temp_1      ; Carica LSB dell'indirizzo sorgente
-    STA $F0
-    LDA temp_1+1    ; Carica MSB dell'indirizzo sorgente
-    STA $F1
-    LDX temp_0      ; Carica numero sprite in X
-    JSR sprite_create_from_data
-    ; --- Fine chiamata a sprite_create_from_data ---
     LDA #1
     STA sprite_to_create
     LDA #0
@@ -52,7 +44,6 @@ main_program_entry_point:
     STA data_address
     LDA #64
     STA data_address+1
-    ; --- Preparazione chiamata a sprite_create_from_data ---
     LDA sprite_to_create
     STA temp_1
     LDA sprite_to_create+1
@@ -61,25 +52,10 @@ main_program_entry_point:
     STA temp_0
     LDA data_address+1
     STA temp_0+1
-    LDA temp_0      ; Carica LSB dell'indirizzo sorgente
-    STA $F0
-    LDA temp_0+1    ; Carica MSB dell'indirizzo sorgente
-    STA $F1
-    LDX temp_1      ; Carica numero sprite in X
-    JSR sprite_create_from_data
-    ; --- Fine chiamata a sprite_create_from_data ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

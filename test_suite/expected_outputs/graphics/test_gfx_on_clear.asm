@@ -19,20 +19,10 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_clear_screen
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

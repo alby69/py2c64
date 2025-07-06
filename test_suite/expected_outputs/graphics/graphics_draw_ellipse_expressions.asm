@@ -44,8 +44,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_clear_screen
     LDA #10
     STA offset_x
     LDA #0
@@ -54,49 +52,26 @@ main_program_entry_point:
     STA offset_y
     LDA #0
     STA offset_y+1
-    ; --- Preparazione chiamata a draw_ellipse ---
     LDA #160
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #100
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #80
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #30
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_ellipse
-    ; --- Fine chiamata a draw_ellipse ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

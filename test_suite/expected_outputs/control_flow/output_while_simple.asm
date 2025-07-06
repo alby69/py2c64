@@ -24,22 +24,14 @@ main_program_entry_point:
     STA i
     LDA #0
     STA i+1
-
-while_start_0:
     LDA #0
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

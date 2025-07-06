@@ -31,14 +31,10 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    ; --- Preparazione chiamata a sprite_enable ---
     LDA #5
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; Carica maschera in A
-    JSR sprite_enable
-    ; --- Fine chiamata a sprite_enable ---
     LDA #0
     STA sprite_num
     LDA #0
@@ -47,7 +43,6 @@ main_program_entry_point:
     STA color_code
     LDA #0
     STA color_code+1
-    ; --- Preparazione chiamata a sprite_set_color ---
     LDA sprite_num
     STA temp_0
     LDA sprite_num+1
@@ -56,11 +51,6 @@ main_program_entry_point:
     STA temp_1+0
     LDA color_code+1
     STA temp_1+1
-    LDX temp_0      ; Carica numero sprite in X
-    LDA temp_1      ; Carica colore in A
-    JSR sprite_set_color
-    ; --- Fine chiamata a sprite_set_color ---
-    ; --- Preparazione chiamata a sprite_set_color ---
     LDA #2
     STA temp_1
     LDA #0
@@ -69,22 +59,10 @@ main_program_entry_point:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDX temp_1      ; Carica numero sprite in X
-    LDA temp_0      ; Carica colore in A
-    JSR sprite_set_color
-    ; --- Fine chiamata a sprite_set_color ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

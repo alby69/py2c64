@@ -47,7 +47,6 @@ main_program_entry_point:
     STA y_pos
     LDA #0
     STA y_pos+1
-    ; --- Preparazione chiamata a sprite_set_pos ---
     LDA sprite_num+0
     STA temp_0+0
     LDA sprite_num+1
@@ -60,13 +59,6 @@ main_program_entry_point:
     STA temp_2+0
     LDA y_pos+1
     STA temp_2+1
-    LDA temp_1      ; Carica LSB della coordinata X
-    STA $B0
-    LDX temp_0      ; Carica numero sprite in X
-    LDA temp_2      ; Carica coordinata Y in A
-    JSR sprite_set_pos
-    ; --- Fine chiamata a sprite_set_pos ---
-    ; --- Preparazione chiamata a sprite_set_pos ---
     LDA #1
     STA temp_3
     LDA #0
@@ -79,24 +71,10 @@ main_program_entry_point:
     STA temp_5
     LDA #0
     STA temp_5+1
-    LDA temp_4      ; Carica LSB della coordinata X
-    STA $B0
-    LDX temp_3      ; Carica numero sprite in X
-    LDA temp_5      ; Carica coordinata Y in A
-    JSR sprite_set_pos
-    ; --- Fine chiamata a sprite_set_pos ---
-
-while_start_0:
     LDA #1
     STA temp_6
     LDA #0
     STA temp_6+1
-    LDA temp_6+1
-    LDX temp_6
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

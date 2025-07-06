@@ -39,48 +39,22 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_clear_screen
-    ; --- Preparazione chiamata a draw_circle (via draw_ellipse) ---
     LDA #120
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #90
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
-    ; Copia raggio (LSB) in ZP per yr
-    LDA temp_0      ; LSB del raggio
-    STA $B8         ; Salva in yr (8-bit)
-    JSR gfx_draw_ellipse
-    ; --- Fine chiamata a draw_circle ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

@@ -30,45 +30,10 @@ main_program_entry_point:
     STA y
     LDA #0
     STA y+1
-
-func_do_nothing_0:
-    ; --- Function Prologue for do_nothing ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; Allocate 2 bytes for local variables
-    SEC
-    LDA $E0
-    SBC #2
-    STA $E0
-    LDA $E1
-    SBC #0
-    STA $E1
-    ; --- End Function Prologue ---
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-
-func_ret_do_nothing_0:
-    ; --- Function Epilogue for do_nothing ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     LDA #0
     STA val
     LDA #0

@@ -29,206 +29,106 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_clear_screen
-    ; --- Preparazione chiamata a draw_line ---
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #100
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #240
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-    ; --- Preparazione chiamata a draw_line ---
     LDA #240
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #4
     STA temp_0
     LDA #1
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #120
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-    ; --- Preparazione chiamata a draw_line ---
     LDA #4
     STA temp_0
     LDA #1
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #120
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-    ; --- Preparazione chiamata a draw_line ---
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #60
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #120
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-    ; --- Preparazione chiamata a draw_line ---
     LDA #60
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #120
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #80
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-    ; --- Preparazione chiamata a draw_line ---
     LDA #80
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #100
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_line
-    ; --- Fine chiamata a draw_line ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

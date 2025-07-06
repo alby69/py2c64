@@ -28,27 +28,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-
-func_to_float_0:
-    ; --- Function Prologue for to_float ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; Allocate 2 bytes for local variables
-    SEC
-    LDA $E0
-    SBC #2
-    STA $E0
-    LDA $E1
-    SBC #0
-    STA $E1
-    ; --- End Function Prologue ---
     LDA #1
     STA __to_float_y
     LDA #0
@@ -68,28 +47,6 @@ func_to_float_0:
     STA temp_0+2
     LDA $FB
     STA temp_0+3
-    LDA temp_0+3
-    STA $F8
-    LDA temp_0+0
-    STA $F9
-    LDA temp_0+1
-    STA $FA
-    LDA temp_0+2
-    STA $FB
-
-func_ret_to_float_0:
-    ; --- Function Epilogue for to_float ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     LDA #10
     STA b_val
     LDA #0

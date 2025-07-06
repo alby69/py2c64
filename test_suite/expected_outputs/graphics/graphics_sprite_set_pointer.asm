@@ -28,7 +28,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    ; --- Preparazione chiamata a sprite_set_pointer ---
     LDA #0
     STA temp_0
     LDA #0
@@ -37,10 +36,6 @@ main_program_entry_point:
     STA temp_1
     LDA #0
     STA temp_1+1
-    LDX temp_0      ; Carica numero sprite in X
-    LDA temp_1      ; Carica valore puntatore in A
-    JSR sprite_set_pointer
-    ; --- Fine chiamata a sprite_set_pointer ---
     LDA #1
     STA s_num
     LDA #0
@@ -49,7 +44,6 @@ main_program_entry_point:
     STA ptr_val
     LDA #0
     STA ptr_val+1
-    ; --- Preparazione chiamata a sprite_set_pointer ---
     LDA s_num
     STA temp_1
     LDA s_num+1
@@ -58,22 +52,10 @@ main_program_entry_point:
     STA temp_0
     LDA ptr_val+1
     STA temp_0+1
-    LDX temp_1      ; Carica numero sprite in X
-    LDA temp_0      ; Carica valore puntatore in A
-    JSR sprite_set_pointer
-    ; --- Fine chiamata a sprite_set_pointer ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

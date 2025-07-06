@@ -36,7 +36,6 @@ main_program_entry_point:
     STA x_expand_mask
     LDA #0
     STA x_expand_mask+1
-    ; --- Preparazione chiamata a sprite_expand_xy ---
     LDA y_expand_mask+0
     STA temp_0+0
     LDA y_expand_mask+1
@@ -45,11 +44,6 @@ main_program_entry_point:
     STA temp_1+0
     LDA x_expand_mask+1
     STA temp_1+1
-    LDX temp_1      ; Carica x_mask in X
-    LDA temp_0      ; Carica y_mask in A
-    JSR sprite_expand_xy
-    ; --- Fine chiamata a sprite_expand_xy ---
-    ; --- Preparazione chiamata a sprite_expand_xy ---
     LDA #4
     STA temp_1
     LDA #0
@@ -58,22 +52,10 @@ main_program_entry_point:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDX temp_0      ; Carica x_mask in X
-    LDA temp_1      ; Carica y_mask in A
-    JSR sprite_expand_xy
-    ; --- Fine chiamata a sprite_expand_xy ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

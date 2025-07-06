@@ -39,15 +39,10 @@ main_program_entry_point:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ if_end_0
     LDA #1
     STA res
     LDA #0
     STA res+1
-if_end_0:
     JMP end_program
 
 ; --- Routines Section ---

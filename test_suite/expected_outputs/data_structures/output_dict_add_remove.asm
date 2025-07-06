@@ -33,7 +33,6 @@ main_program_entry_point:
     STA $C3A7
     LDA #3
     STA $C3A4
-; Placeholder per Delete
     JMP end_program
 
 ; --- Routines Section ---

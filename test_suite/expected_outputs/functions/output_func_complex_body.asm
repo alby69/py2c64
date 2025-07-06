@@ -29,69 +29,22 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-
-func_check_sign_0:
-    ; --- Function Prologue for check_sign ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; --- End Function Prologue ---
     LDA #0
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ if_else_1
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    JMP func_ret_check_sign_0
-    JMP if_end_1
-if_else_1:
     LDA #0
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ if_else_2
     LDA #0
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    JMP func_ret_check_sign_0
-    JMP if_end_2
-if_else_2:
-if_end_2:
-if_end_1:
-
-func_ret_check_sign_0:
-    ; --- Function Epilogue for check_sign ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     LDA #10
     STA __func_arg_0
     LDA #0

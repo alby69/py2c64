@@ -19,7 +19,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-; Placeholder per Try block
     JMP end_program
 
 ; --- Routines Section ---

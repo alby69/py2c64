@@ -38,35 +38,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-
-func_multiply_0:
-    ; --- Function Prologue for multiply ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; --- End Function Prologue ---
-    LDA temp_0+1
-    LDX temp_0
-
-func_ret_multiply_0:
-    ; --- Function Epilogue for multiply ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     LDA #3
     STA __func_arg_0
     LDA #0

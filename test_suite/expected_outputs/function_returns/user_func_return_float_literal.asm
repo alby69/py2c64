@@ -21,19 +21,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-
-func_get_pi_0:
-    ; --- Function Prologue for get_pi ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; --- End Function Prologue ---
     LDA #$5C
     STA temp_0+0
     LDA #$8F
@@ -42,28 +29,6 @@ func_get_pi_0:
     STA temp_0+2
     LDA #$82
     STA temp_0+3
-    LDA temp_0+3
-    STA $F8
-    LDA temp_0+0
-    STA $F9
-    LDA temp_0+1
-    STA $FA
-    LDA temp_0+2
-    STA $FB
-
-func_ret_get_pi_0:
-    ; --- Function Epilogue for get_pi ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     JMP end_program
 
 ; --- Routines Section ---

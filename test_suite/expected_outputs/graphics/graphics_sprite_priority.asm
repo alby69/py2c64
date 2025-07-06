@@ -25,38 +25,22 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    ; --- Preparazione chiamata a sprite_set_priority ---
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; Carica maschera in A
-    JSR sprite_set_priority
-    ; --- Fine chiamata a sprite_set_priority ---
     LDA #8
     STA prio_mask
     LDA #0
     STA prio_mask+1
-    ; --- Preparazione chiamata a sprite_set_priority ---
     LDA prio_mask
     STA temp_0
     LDA prio_mask+1
     STA temp_0+1
-    LDA temp_0      ; Carica maschera in A
-    JSR sprite_set_priority
-    ; --- Fine chiamata a sprite_set_priority ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

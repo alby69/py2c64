@@ -36,7 +36,6 @@ main_program_entry_point:
     STA mc2
     LDA #0
     STA mc2+1
-    ; --- Preparazione chiamata a sprite_set_multicolor_colors ---
     LDA mc1+0
     STA temp_0+0
     LDA mc1+1
@@ -45,11 +44,6 @@ main_program_entry_point:
     STA temp_1+0
     LDA mc2+1
     STA temp_1+1
-    LDX temp_1      ; Carica mc2 in X
-    LDA temp_0      ; Carica mc1 in A
-    JSR sprite_set_multicolor_colors
-    ; --- Fine chiamata a sprite_set_multicolor_colors ---
-    ; --- Preparazione chiamata a sprite_set_multicolor_colors ---
     LDA #2
     STA temp_1
     LDA #0
@@ -58,22 +52,10 @@ main_program_entry_point:
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDX temp_0      ; Carica mc2 in X
-    LDA temp_1      ; Carica mc1 in A
-    JSR sprite_set_multicolor_colors
-    ; --- Fine chiamata a sprite_set_multicolor_colors ---
-
-while_start_0:
     LDA #1
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-    ORA X
-    BEQ while_end_0
-    JMP while_start_0
-while_end_0:
     JMP end_program
 
 ; --- Routines Section ---

@@ -41,70 +41,38 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_clear_screen
-    ; --- Preparazione chiamata a draw_ellipse ---
     LDA #160
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #100
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #80
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #40
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_ellipse
-    ; --- Fine chiamata a draw_ellipse ---
-    ; --- Preparazione chiamata a draw_ellipse ---
     LDA #60
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B0
-    LDA temp_0+1    ; MSB
-    STA $B1
     LDA #150
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B2
     LDA #30
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB
-    STA $B6
-    LDA temp_0+1    ; MSB
-    STA $B7
     LDA #30
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0      ; LSB è sufficiente
-    STA $B8
-    JSR gfx_draw_ellipse
-    ; --- Fine chiamata a draw_ellipse ---
     JMP end_program
 
 ; --- Routines Section ---

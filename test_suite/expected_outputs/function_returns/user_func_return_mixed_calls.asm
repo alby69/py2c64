@@ -33,27 +33,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-
-func_returns_float_0:
-    ; --- Function Prologue for returns_float ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; Allocate 2 bytes for local variables
-    SEC
-    LDA $E0
-    SBC #2
-    STA $E0
-    LDA $E1
-    SBC #0
-    STA $E1
-    ; --- End Function Prologue ---
     LDA #$00
     STA __returns_float_val+0
     LDA #$00
@@ -74,41 +53,6 @@ func_returns_float_0:
     STA temp_0+0
     LDA val+1
     STA temp_0+1
-    LDA temp_0+3
-    STA $F8
-    LDA temp_0+0
-    STA $F9
-    LDA temp_0+1
-    STA $FA
-    LDA temp_0+2
-    STA $FB
-
-func_ret_returns_float_0:
-    ; --- Function Epilogue for returns_float ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
-
-func_returns_float_direct_1:
-    ; --- Function Prologue for returns_float_direct ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; --- End Function Prologue ---
     LDA #$00
     STA temp_0+0
     LDA #$00
@@ -117,61 +61,10 @@ func_returns_float_direct_1:
     STA temp_0+2
     LDA #$81
     STA temp_0+3
-    LDA temp_0+3
-    STA $F8
-    LDA temp_0+0
-    STA $F9
-    LDA temp_0+1
-    STA $FA
-    LDA temp_0+2
-    STA $FB
-
-func_ret_returns_float_direct_1:
-    ; --- Function Epilogue for returns_float_direct ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
-
-func_returns_int_2:
-    ; --- Function Prologue for returns_int ---
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR push_word_from_addr
-    LDA $E0
-    STA $E2
-    LDA $E1
-    STA $E3
-    ; --- End Function Prologue ---
     LDA #7
     STA temp_0
     LDA #0
     STA temp_0+1
-    LDA temp_0+1
-    LDX temp_0
-
-func_ret_returns_int_2:
-    ; --- Function Epilogue for returns_int ---
-    LDA $E2
-    STA $E0
-    LDA $E3
-    STA $E1
-    LDA #<00E2
-    STA $F2
-    LDA #>00E2
-    STA $F3
-    JSR pop_word_to_addr
-    RTS
-    ; --- End Function Epilogue ---
     JMP end_program
 
 ; --- Routines Section ---

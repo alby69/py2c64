@@ -16,8 +16,6 @@ main_program_entry_point:
     STA $E0
     LDA #>02FF
     STA $E1
-    JSR gfx_turn_on
-    JSR gfx_turn_off
     JMP end_program
 
 ; --- Routines Section ---
