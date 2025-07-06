@@ -11,15 +11,10 @@ variables = globals.variables
 used_routines = globals.used_routines
 report_error = globals.report_compiler_error
 
-# NOTA: Si assume che esista una funzione `func_expressions.process_expression`
-# che valuta un'espressione e lascia il risultato a 16 bit nei registri A/X.
-# Questa è un'astrazione necessaria per concentrarsi sulla logica di chiamata.
 def _evaluate_expression_to_ax(node, error_handler_func, current_func_info=None):
     """
     Wrapper per la logica di valutazione delle espressioni.
-    Genera codice che lascia un risultato a 16 bit in A (high byte) e X (low byte).
     """
-    # La vera logica è delegata ad altri moduli come func_expressions.py
     temp_result_var = func_core.get_temp_var()
     func_expressions.translate_expression_recursive(temp_result_var, node, current_func_info.get('name') if current_func_info else None)
 
@@ -56,8 +51,6 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
         func_name = call_node.func.id
 
-        # --- Gestione funzioni built-in (logica esistente, non modificata) ---
-        # --- Gestione draw_line (caso speciale con passaggio parametri in Zero-Page) ---
         if func_name == 'draw_line':
             if len(call_node.args) != 4:
                 report_error(f"Function 'draw_line' expects 4 arguments, got {len(call_node.args)}.", node=call_node)
@@ -69,12 +62,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             gen_code.append(f"    ; --- Preparazione chiamata a draw_line ---")
             for i, arg_node in enumerate(call_node.args):
-                # Valuta l'espressione dell'argomento in una variabile temporanea
                 temp_arg_var = func_core.get_temp_var()
                 func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
                 zp_addr = zp_bases[i]
-                # Genera codice per spostare il valore dalla variabile temporanea alla locazione ZP
                 if is_16bit[i]:
                     # Argomento a 16 bit (x1, x2)
                     gen_code.append(f"    LDA {temp_arg_var}      ; LSB")
@@ -88,13 +79,11 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
                 func_core.release_temp_var(temp_arg_var)
 
-            # Chiama la routine e aggiungila al set di quelle usate
             gen_code.append("    JSR gfx_draw_line")
             used_routines.add('gfx_draw_line')
             gen_code.append(f"    ; --- Fine chiamata a draw_line ---")
-            return # Chiamata gestita
+            return
 
-        # --- NEW: Handle gfx_turn_on, gfx_turn_off, gfx_clear_screen ---
         if func_name in ['gfx_turn_on', 'gfx_turn_off', 'gfx_clear_screen']:
             if len(call_node.args) != 0:
                 report_error(f"Function '{func_name}' expects 0 arguments, got {len(call_node.args)}.", node=call_node)
@@ -104,14 +93,11 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add(func_name)
             return
 
-        # --- Gestione draw_ellipse (caso speciale con passaggio parametri in Zero-Page) ---
         if func_name == 'draw_ellipse':
             if len(call_node.args) != 4:
                 report_error(f"Function 'draw_ellipse' expects 4 arguments (xm, ym, xr, yr), got {len(call_node.args)}.", node=call_node)
                 return
 
-            # Definizioni delle locazioni Zero-Page e dei tipi di argomento
-            # xm, ym (centro), xr, yr (raggi)
             zp_bases = [0xB0, 0xB2, 0xB6, 0xB8] # xm(16), ym(8), xr(16), yr(8)
             is_16bit = [True, False, True, False]
 
@@ -122,13 +108,11 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
                 zp_addr = zp_bases[i]
                 if is_16bit[i]:
-                    # Argomento a 16 bit (xm, xr)
                     gen_code.append(f"    LDA {temp_arg_var}      ; LSB")
                     gen_code.append(f"    STA ${zp_addr:02X}")
                     gen_code.append(f"    LDA {temp_arg_var}+1    ; MSB")
                     gen_code.append(f"    STA ${zp_addr+1:02X}")
                 else:
-                    # Argomento a 8 bit (ym, yr)
                     gen_code.append(f"    LDA {temp_arg_var}      ; LSB è sufficiente")
                     gen_code.append(f"    STA ${zp_addr:02X}")
 
@@ -137,16 +121,13 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append("    JSR gfx_draw_ellipse")
             used_routines.add('gfx_draw_ellipse')
             gen_code.append(f"    ; --- Fine chiamata a draw_ellipse ---")
-            return # Chiamata gestita
+            return
 
-        # --- Gestione draw_circle (caso speciale, usa la routine di draw_ellipse) ---
         if func_name == 'draw_circle':
             if len(call_node.args) != 3:
                 report_error(f"Function 'draw_circle' expects 3 arguments (x, y, radius), got {len(call_node.args)}.", node=call_node)
                 return
 
-            # Argomenti: x (16bit), y (8bit), r (usato per xr e yr)
-            # Locazioni ZP: xm(0xB0, 16b), ym(0xB2, 8b), xr(0xB6, 16b), yr(0xB8, 8b)
             zp_map = {
                 0: {'zp_base': 0xB0, 'is_16bit': True},  # x -> xm
                 1: {'zp_base': 0xB2, 'is_16bit': False}, # y -> ym
@@ -181,15 +162,13 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append("    JSR gfx_draw_ellipse")
             used_routines.add('gfx_draw_ellipse')
             gen_code.append(f"    ; --- Fine chiamata a draw_circle ---")
-            return # Chiamata gestita
+            return
 
-        # --- Gestione draw_rect (caso speciale con passaggio parametri in Zero-Page) ---
         if func_name == 'draw_rect':
             if len(call_node.args) != 4:
                 report_error(f"Function 'draw_rect' expects 4 arguments (x1, y1, x2, y2), got {len(call_node.args)}.", node=call_node)
                 return
 
-            # Definizioni delle locazioni Zero-Page e dei tipi di argomento
             zp_bases = [0xB0, 0xB2, 0xB6, 0xB8] # x1(16), y1(8), x2(16), y2(8)
             is_16bit = [True, False, True, False]
 
@@ -209,9 +188,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append("    JSR gfx_draw_rect")
             used_routines.add('gfx_draw_rect')
             gen_code.append(f"    ; --- Fine chiamata a draw_rect ---")
-            return # Chiamata gestita
-
-        # --- NEW: Gestione Funzioni Sprite ---
+            return
 
         if func_name == 'sprite_set_pos':
             if len(call_node.args) != 3:
@@ -220,12 +197,10 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             gen_code.append(f"    ; --- Preparazione chiamata a sprite_set_pos ---")
 
-            # Arguments are: num, x, y
             arg_num_node = call_node.args[0]
             arg_x_node = call_node.args[1]
             arg_y_node = call_node.args[2]
 
-            # Evaluate arguments into temporary variables first to avoid register clobbering
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
@@ -235,23 +210,15 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             temp_y = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_y, arg_y_node, current_func_info.get('name') if current_func_info else None)
 
-            # Now, load the values into the correct registers/ZP locations
-            # Store X coordinate in $B0 (used by the routine)
             gen_code.append(f"    LDA {temp_x}      ; Carica LSB della coordinata X")
             gen_code.append(f"    STA $B0")
-
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Load Y coordinate into A register
             gen_code.append(f"    LDA {temp_y}      ; Carica coordinata Y in A")
-
-            # Call the routine
             gen_code.append("    JSR sprite_set_pos")
             used_routines.add('sprite_set_pos')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_pos ---")
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_color':
             if len(call_node.args) != 2:
@@ -263,27 +230,21 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             arg_num_node = call_node.args[0]
             arg_color_node = call_node.args[1]
 
-            # Evaluate arguments into temporary variables
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_color = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_color, arg_color_node, current_func_info.get('name') if current_func_info else None)
 
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Load color into A register
             gen_code.append(f"    LDA {temp_color}      ; Carica colore in A")
-
-            # Call the routine
             gen_code.append("    JSR sprite_set_color")
             used_routines.add('sprite_set_color')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_color ---")
             func_core.release_temp_var(temp_num)
             func_core.release_temp_var(temp_color)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_enable':
             if len(call_node.args) != 1:
@@ -299,7 +260,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_enable')
             gen_code.append(f"    ; --- Fine chiamata a sprite_enable ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_disable':
             if len(call_node.args) != 1:
@@ -315,7 +276,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_disable')
             gen_code.append(f"    ; --- Fine chiamata a sprite_disable ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_x_msb':
             if len(call_node.args) != 1:
@@ -331,7 +292,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_set_x_msb')
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_x_msb ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_x_msb_clear':
             if len(call_node.args) != 1:
@@ -347,7 +308,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_set_x_msb_clear')
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_x_msb_clear ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_expand_xy':
             if len(call_node.args) != 2:
@@ -358,28 +319,22 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             arg_y_mask_node = call_node.args[0]
             arg_x_mask_node = call_node.args[1]
-
-            # Evaluate arguments into temporary variables first
+            
             temp_y_mask = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_y_mask, arg_y_mask_node, current_func_info.get('name') if current_func_info else None)
 
             temp_x_mask = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_x_mask, arg_x_mask_node, current_func_info.get('name') if current_func_info else None)
 
-            # Load x_mask into X register
             gen_code.append(f"    LDX {temp_x_mask}      ; Carica x_mask in X")
-
-            # Load y_mask into A register
             gen_code.append(f"    LDA {temp_y_mask}      ; Carica y_mask in A")
-
-            # Call the routine
             gen_code.append("    JSR sprite_expand_xy")
             used_routines.add('sprite_expand_xy')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_expand_xy ---")
             func_core.release_temp_var(temp_y_mask)
             func_core.release_temp_var(temp_x_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_pointer':
             if len(call_node.args) != 2:
@@ -390,28 +345,22 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             arg_num_node = call_node.args[0]
             arg_ptr_node = call_node.args[1]
-
-            # Evaluate arguments into temporary variables
+           
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_ptr = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
 
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Load pointer value into A register
             gen_code.append(f"    LDA {temp_ptr}      ; Carica valore puntatore in A")
-
-            # Call the routine
             gen_code.append("    JSR sprite_set_pointer")
             used_routines.add('sprite_set_pointer')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_pointer ---")
             func_core.release_temp_var(temp_num)
             func_core.release_temp_var(temp_ptr)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_priority':
             if len(call_node.args) != 1:
@@ -427,7 +376,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_set_priority')
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_priority ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_multicolor':
             if len(call_node.args) != 1:
@@ -443,7 +392,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_set_multicolor')
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_multicolor ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_multicolor_colors':
             if len(call_node.args) != 2:
@@ -455,7 +404,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             arg_mc1_node = call_node.args[0]
             arg_mc2_node = call_node.args[1]
 
-            # Evaluate arguments into temporary variables first
+            
             temp_mc1 = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_mc1, arg_mc1_node, current_func_info.get('name') if current_func_info else None)
 
@@ -475,7 +424,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_multicolor_colors ---")
             func_core.release_temp_var(temp_mc1)
             func_core.release_temp_var(temp_mc2)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_create_from_data':
             if len(call_node.args) != 2:
@@ -487,7 +436,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             arg_num_node = call_node.args[0]
             arg_addr_node = call_node.args[1]
 
-            # Evaluate arguments into temporary variables first
+            
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
@@ -500,17 +449,14 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append(f"    LDA {temp_addr}+1    ; Carica MSB dell'indirizzo sorgente")
             gen_code.append(f"    STA $F1")
 
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Call the routine
             gen_code.append("    JSR sprite_create_from_data")
             used_routines.add('sprite_create_from_data')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_create_from_data ---")
             func_core.release_temp_var(temp_num)
             func_core.release_temp_var(temp_addr)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_priority':
             if len(call_node.args) != 1:
@@ -526,7 +472,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             used_routines.add('sprite_set_priority')
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_priority ---")
             func_core.release_temp_var(temp_mask)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_create_from_data':
             if len(call_node.args) != 2:
@@ -538,7 +484,7 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             arg_num_node = call_node.args[0]
             arg_addr_node = call_node.args[1]
 
-            # Evaluate arguments into temporary variables first
+            
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
@@ -551,17 +497,14 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
             gen_code.append(f"    LDA {temp_addr}+1    ; Carica MSB dell'indirizzo sorgente")
             gen_code.append(f"    STA $F1")
 
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Call the routine
             gen_code.append("    JSR sprite_create_from_data")
             used_routines.add('sprite_create_from_data')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_create_from_data ---")
             func_core.release_temp_var(temp_num)
             func_core.release_temp_var(temp_addr)
-            return # Chiamata gestita
+            return
 
         if func_name == 'sprite_set_pointer':
             if len(call_node.args) != 2:
@@ -572,30 +515,23 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
             arg_num_node = call_node.args[0]
             arg_ptr_node = call_node.args[1]
-
-            # Evaluate arguments into temporary variables
+            
             temp_num = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_num, arg_num_node, current_func_info.get('name') if current_func_info else None)
 
             temp_ptr = func_core.get_temp_var()
             func_expressions.translate_expression_recursive(temp_ptr, arg_ptr_node, current_func_info.get('name') if current_func_info else None)
 
-            # Load sprite number into X register
             gen_code.append(f"    LDX {temp_num}      ; Carica numero sprite in X")
-
-            # Load pointer value into A register
             gen_code.append(f"    LDA {temp_ptr}      ; Carica valore puntatore in A")
-
-            # Call the routine
             gen_code.append("    JSR sprite_set_pointer")
             used_routines.add('sprite_set_pointer')
 
             gen_code.append(f"    ; --- Fine chiamata a sprite_set_pointer ---")
             func_core.release_temp_var(temp_num)
             func_core.release_temp_var(temp_ptr)
-            return # Chiamata gestita
+            return
 
-        # --- Gestione funzioni built-in (logica esistente) ---
         if func_name == 'print':
             func_core.process_print_call(call_node, error_handler_func, current_func_info, func_expressions)
             return
