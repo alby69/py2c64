@@ -77,12 +77,12 @@ The project is a work in progress. Future enhancements are planned in two main a
 ### Expanding Language Support
 
 -   [x] **Loops**: Implemented `while` and `for` loops with full `range(start, stop, step)` support.
--   [ ] **Comparisons & Logic**: Full support for comparison (`==`, `!=`, `<`, `>`, `<=`, `>=`) and boolean (`and`, `or`, `not`) operators.
+-   [x] **Comparisons & Logic**: Full support for comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
 -   [ ] **Data Structures**: Introduce support for basic arrays or lists with static allocation.
 -   [x] **Global Variables**: Proper handling of the `global` keyword within functions.
 
 ### Improving Tooling and C64 Integration
 
--   [ ] **Enhanced C64 Libraries**: Add support for more C64 features, such as sprites, character graphics, and the SID sound chip.
+-   [x] **Enhanced C64 Libraries**: Added full support for C64 sprites, including positioning, color, multicolor mode, expansion, and collision detection.
 -   [x] **Error Reporting**: Improve error messages to include line and column numbers from the source Python file.
 -   [ ] **Emulator Integration**: Create a "compile and run" workflow that automatically launches the compiled program in an emulator like VICE.

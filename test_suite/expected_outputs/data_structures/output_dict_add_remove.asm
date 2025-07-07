@@ -28,11 +28,11 @@ main_program_entry_point:
     LDA #>my_dict_key_0_str
     STA my_dict_key_0+1
     LDA #'c'
-    STA $C3A6
+    STA $C272
     LDA #0
-    STA $C3A7
+    STA $C273
     LDA #3
-    STA $C3A4
+    STA $C270
     JMP end_program
 
 ; --- Routines Section ---

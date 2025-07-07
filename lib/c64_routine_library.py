@@ -1,10 +1,21 @@
-# c64_gfx_routines.py
-# Routines for C64 graphics, based on "The Graphics Book for the Commodore 64".
+# /workspaces/py2c64/lib/c64_routine_library.py
+
+"""
+This module acts as a central library for generating the assembly code for
+various C64-specific routines (graphics, sprites, math, etc.).
+
+The main export is the `ROUTINE_GENERATORS` dictionary, which maps a
+routine name (e.g., 'gfx_turn_on') to a function that returns the
+corresponding assembly code as a string.
+
+This allows the main compiler to look up and include only the routines
+that are actually used in the final assembly output.
+"""
 
 from .. import globals as py2asm_globals
 from .func_core import create_label
 
-def gfx_turn_on():
+def _generate_gfx_turn_on():
     """
     Generates assembly to turn on high-resolution graphics mode.
     Based on section 4.2.1.1 of "The Graphics Book for the Commodore 64".
@@ -46,7 +57,7 @@ gfx_turn_on
 """
     return code.strip()
 
-def gfx_turn_off():
+def _generate_gfx_turn_off():
     """
     Generates assembly to turn off graphics mode and return to text mode.
     Based on section 4.2.1.4 of "The Graphics Book for the Commodore 64".
@@ -73,7 +84,7 @@ gfx_turn_off
 """
     return code.strip()
 
-def gfx_clear_screen():
+def _generate_gfx_clear_screen():
     """
     Generates assembly to clear the 8K bitmap graphics screen memory.
     Based on section 4.2.1.2 of "The Graphics Book for the Commodore 64".
@@ -111,7 +122,7 @@ gfx_clear_screen
 # Placeholder for more complex routines like plotting points, lines, etc.
 # These would require parameters, likely passed via ZP locations or registers.
 
-def gfx_plot_point(plot_mode='set'):
+def _generate_gfx_plot_point(plot_mode='set'):
     """
     Generates assembly to plot or unplot a point on the HGR screen.
     Based on section 4.2.2.1 of "The Graphics Book for the Commodore 64".
@@ -229,7 +240,7 @@ def gfx_plot_point(plot_mode='set'):
     return code.strip()
 
 # --- Bresenham's Line Algorithm Implementation ---
-def gfx_draw_line():
+def _generate_gfx_draw_line():
     """
     Generates assembly to draw a line between two points using Bresenham's algorithm.
     Based on Section 4.2.2.4 of "The Graphics Book for the Commodore 64".
@@ -430,7 +441,7 @@ def gfx_draw_line():
 
     return code.strip()
 
-def gfx_draw_ellipse():
+def _generate_gfx_draw_ellipse():
     """
     Generates assembly to draw an ellipse using floating point math.
     Based on Section 4.2.2.3 of "The Graphics Book for the Commodore 64".
@@ -597,7 +608,7 @@ def gfx_draw_ellipse():
     return code.strip()
 
 
-def copy_fp1_to_fp2():
+def _generate_copy_fp1_to_fp2():
     return f"""
 copy_fp1_to_fp2
     LDA ${py2asm_globals.WOZ_FP_X1:02X}
@@ -611,7 +622,7 @@ copy_fp1_to_fp2_loop:
     RTS
 """
 
-def copy_fp1_to_fp_addr_temp1():
+def _generate_copy_fp1_to_fp_addr_temp1():
     return f"""
 copy_fp1_to_fp_addr_temp1
     LDA ${py2asm_globals.WOZ_FP_X1:02X}
@@ -625,7 +636,7 @@ copy_fp1_to_fp_addr_temp1_loop:
     RTS
 """
 
-def copy_fp1_to_fp_addr_temp2():
+def _generate_copy_fp1_to_fp_addr_temp2():
     return f"""
 copy_fp1_to_fp_addr_temp2
     LDA ${py2asm_globals.WOZ_FP_X1:02X}
@@ -639,7 +650,7 @@ copy_fp1_to_fp_addr_temp2_loop:
     RTS
 """
 
-def copy_fp1_to_fp_addr_temp3():
+def _generate_copy_fp1_to_fp_addr_temp3():
     return f"""
 copy_fp1_to_fp_addr_temp3
     LDA ${py2asm_globals.WOZ_FP_X1:02X}
@@ -654,7 +665,7 @@ copy_fp1_to_fp_addr_temp3_loop:
 """
 
 
-def copy_fp_addr_temp1_to_fp2():
+def _generate_copy_fp_addr_temp1_to_fp2():
     return f"""
 copy_fp_addr_temp1_to_fp2
     LDA ${py2asm_globals.TEMP_VAR_1}+3
@@ -668,7 +679,7 @@ copy_fp_addr_temp1_to_fp2_loop:
     RTS
 """
 
-def copy_fp_addr_temp2_to_fp1():
+def _generate_copy_fp_addr_temp2_to_fp1():
     return f"""
 copy_fp_addr_temp2_to_fp1
     LDA ${py2asm_globals.TEMP_VAR_2}+3
@@ -682,7 +693,7 @@ copy_fp_addr_temp2_to_fp1_loop:
     RTS
 """
 
-def copy_fp_addr_temp2_to_fp2():
+def _generate_copy_fp_addr_temp2_to_fp2():
     return f"""
 copy_fp_addr_temp2_to_fp2
     LDA ${py2asm_globals.TEMP_VAR_2}+3
@@ -696,7 +707,7 @@ copy_fp_addr_temp2_to_fp2_loop:
     RTS
 """
 
-def copy_fp_addr_temp3_to_fp2():
+def _generate_copy_fp_addr_temp3_to_fp2():
     return f"""
 copy_fp_addr_temp3_to_fp2
     LDA ${py2asm_globals.TEMP_VAR_3}+3
@@ -712,7 +723,7 @@ copy_fp_addr_temp3_to_fp2_loop:
 
 
 
-def int_to_fp1_from_addr():
+def _generate_int_to_fp1_from_addr():
     return f"""
 int_to_fp1_from_addr
     ; Converts a 16-bit integer from TEMP_VAR_1 to a floating point number in FP1
@@ -726,7 +737,7 @@ int_to_fp1_from_addr
     RTS
     """
 
-def gfx_draw_rect():
+def _generate_gfx_draw_rect():
     """
     Draws a rectangle by calling gfx_draw_line four times.
     Input (ZP): x1 ($B0,$B1), y1 ($B2), x2 ($B6,$B7), y2 ($B8)
@@ -796,10 +807,10 @@ VIC_COLLISION_SPRITE_SPRITE = 0x1E    # Sprite-to-sprite collision register
 VIC_COLLISION_SPRITE_DATA = 0x1F      # Sprite-to-data (background) collision register
 VIC_SPRITE0_COLOR = 0x27              # Sprite 0 color register
 
-# Indirizzo base dei puntatori agli sprite nella RAM
+# Base address for sprite data pointers in the screen RAM block
 SPRITE_POINTER_BASE = 0x07F8          # Base address for sprite data pointers in screen RAM block
 
-def sprite_set_pos():
+def _generate_sprite_set_pos():
     """
     Imposta la posizione di uno sprite.
     Input: X-reg = numero sprite (0-7), A = coordinata Y, ZP_X_COORD ($B0) = coordinata X (LSB, 0-255).
@@ -817,7 +828,7 @@ sprite_set_pos
 """
     return code.strip()
 
-def sprite_set_x_msb():
+def _generate_sprite_set_x_msb():
     """
     Imposta o cancella il bit più significativo (MSB) della coordinata X per uno o più sprite.
     Questo permette di superare la coordinata X=255.
@@ -835,7 +846,7 @@ sprite_set_x_msb
 """
     return code.strip()
 
-def sprite_set_x_msb_clear():
+def _generate_sprite_set_x_msb_clear():
     """
     Cancella il bit più significativo (MSB) della coordinata X per uno o più sprite.
     Input: A = maschera di bit per gli sprite da modificare (bit 0 per sprite 0, etc.).
@@ -853,7 +864,7 @@ sprite_set_x_msb_clear
 """
     return code.strip()
 
-def sprite_enable():
+def _generate_sprite_enable():
     """
     Abilita uno o più sprite.
     Input: A = maschera di bit per gli sprite da abilitare (bit 0 per sprite 0, etc.).
@@ -869,7 +880,7 @@ sprite_enable
 """
     return code.strip()
 
-def sprite_disable():
+def _generate_sprite_disable():
     """
     Disabilita uno o più sprite.
     Input: A = maschera di bit per gli sprite da disabilitare.
@@ -886,7 +897,7 @@ sprite_disable
 """
     return code.strip()
 
-def sprite_set_color():
+def _generate_sprite_set_color():
     """
     Imposta il colore di un singolo sprite.
     Input: X-reg = numero sprite (0-7), A = codice colore (0-15).
@@ -899,7 +910,7 @@ sprite_set_color
 """
     return code.strip()
 
-def sprite_expand_xy():
+def _generate_sprite_expand_xy():
     """
     Espande uno o più sprite in orizzontale e/o verticale.
     Input: A = maschera per espansione Y, X-reg = maschera per espansione X.
@@ -922,7 +933,7 @@ sprite_expand_xy
 """
     return code.strip()
 
-def sprite_set_priority():
+def _generate_sprite_set_priority():
     """
     Imposta la priorità degli sprite (davanti o dietro lo sfondo).
     Input: A = maschera di bit (1=dietro, 0=davanti).
@@ -938,7 +949,7 @@ sprite_set_priority
 """
     return code.strip()
 
-def sprite_set_multicolor():
+def _generate_sprite_set_multicolor():
     """
     Abilita la modalità multicolore per gli sprite.
     Input: A = maschera di bit per gli sprite da rendere multicolore.
@@ -954,7 +965,7 @@ sprite_set_multicolor
 """
     return code.strip()
 
-def sprite_set_multicolor_colors():
+def _generate_sprite_set_multicolor_colors():
     """
     Imposta i due colori globali per gli sprite in modalità multicolore.
     Input: A = colore per il registro multicolor 1 ($D025)
@@ -968,7 +979,7 @@ sprite_set_multicolor_colors
 """
     return code.strip()
 
-def sprite_check_collision_sprite():
+def _generate_sprite_check_collision_sprite():
     """
     Controlla le collisioni tra sprite.
     Output: A = registro di collisione ($D01E). Un bit a 1 indica che lo sprite corrispondente è entrato in collisione.
@@ -980,7 +991,7 @@ sprite_check_collision_sprite
 """
     return code.strip()
 
-def sprite_check_collision_data():
+def _generate_sprite_check_collision_data():
     """
     Controlla le collisioni tra sprite e dati dello schermo/caratteri.
     Output: A = registro di collisione ($D01F).
@@ -992,7 +1003,7 @@ sprite_check_collision_data
 """
     return code.strip()
 
-def sprite_set_pointer():
+def _generate_sprite_set_pointer():
     """
     Imposta il puntatore dati per un singolo sprite.
     Input: X-reg = numero sprite (0-7), A = valore del puntatore.
@@ -1007,7 +1018,7 @@ sprite_set_pointer
 """
     return code.strip()
 
-def sprite_create_from_data():
+def _generate_sprite_create_from_data():
     """
     Funzione "editor" per creare/aggiornare i dati di uno sprite da un blocco di memoria.
     Copia 63 byte da un indirizzo sorgente, calcola la destinazione in un'area predefinita
@@ -1067,3 +1078,57 @@ sprite_create_from_data
     RTS
 """
     return code.strip()
+
+# The main dictionary mapping routine names to their generator functions.
+ROUTINE_GENERATORS = {
+    # Graphics
+    'gfx_turn_on': _generate_gfx_turn_on,
+    'gfx_turn_off': _generate_gfx_turn_off,
+    'gfx_clear_screen': _generate_gfx_clear_screen,
+    'gfx_plot_point': _generate_gfx_plot_point,
+    'gfx_draw_line': _generate_gfx_draw_line,
+    'gfx_draw_ellipse': _generate_gfx_draw_ellipse,
+    'gfx_draw_rect': _generate_gfx_draw_rect,
+    'gfx_draw_circle': lambda: "", # Circle is handled by draw_ellipse in assembly
+
+    # Sprites
+    'sprite_set_pos': _generate_sprite_set_pos,
+    'sprite_set_x_msb': _generate_sprite_set_x_msb,
+    'sprite_set_x_msb_clear': _generate_sprite_set_x_msb_clear,
+    'sprite_enable': _generate_sprite_enable,
+    'sprite_disable': _generate_sprite_disable,
+    'sprite_set_color': _generate_sprite_set_color,
+    'sprite_expand_xy': _generate_sprite_expand_xy,
+    'sprite_set_priority': _generate_sprite_set_priority,
+    'sprite_set_multicolor': _generate_sprite_set_multicolor,
+    'sprite_set_multicolor_colors': _generate_sprite_set_multicolor_colors,
+    'sprite_check_collision_sprite': _generate_sprite_check_collision_sprite,
+    'sprite_check_collision_data': _generate_sprite_check_collision_data,
+    'sprite_set_pointer': _generate_sprite_set_pointer,
+    'sprite_create_from_data': _generate_sprite_create_from_data,
+
+    # Floating Point Helpers (used by ellipse, etc.)
+    'copy_fp1_to_fp2': _generate_copy_fp1_to_fp2,
+    'copy_fp1_to_fp_addr_temp1': _generate_copy_fp1_to_fp_addr_temp1,
+    'copy_fp1_to_fp_addr_temp2': _generate_copy_fp1_to_fp_addr_temp2,
+    'copy_fp1_to_fp_addr_temp3': _generate_copy_fp1_to_fp_addr_temp3,
+    'copy_fp_addr_temp1_to_fp2': _generate_copy_fp_addr_temp1_to_fp2,
+    'copy_fp_addr_temp2_to_fp1': _generate_copy_fp_addr_temp2_to_fp1,
+    'copy_fp_addr_temp2_to_fp2': _generate_copy_fp_addr_temp2_to_fp2,
+    'copy_fp_addr_temp3_to_fp2': _generate_copy_fp_addr_temp3_to_fp2,
+    'int_to_fp1_from_addr': _generate_int_to_fp1_from_addr,
+
+    # Note: The core FP routines (FP_ADD, FP_SUB, etc.) are assumed to be
+    # in a separate, always-included library like 'woz_fp.s' and are not
+    # generated dynamically here. We only add them to used_routines.
+    # This dictionary is for routines generated by Python code.
+}
+
+def get_routine_code(routine_name):
+    """
+    Returns the assembly code for a given routine name.
+    """
+    generator = ROUTINE_GENERATORS.get(routine_name)
+    if generator:
+        return generator()
+    return None # Or raise an error if the routine is not found

@@ -13,6 +13,9 @@
     JMP main_program_entry_point
 ; --- Data Section ---
 temp_0 * = * + 4
+temp_1 * = * + 4
+temp_2 * = * + 4
+temp_3 * = * + 4
 FP_CONST_ONE byte $00, $00, $40, $81
 FP_CONST_TWO byte $00, $00, $40, $82
 FP_CONST_LN2 byte $9E, $E0, $58, $80
@@ -46,29 +49,29 @@ main_program_entry_point:
     LDA #0
     STA temp_0+1
     LDA #100
-    STA temp_0
+    STA temp_1
     LDA #0
-    STA temp_0+1
+    STA temp_1+1
     LDA #80
-    STA temp_0
+    STA temp_2
     LDA #0
-    STA temp_0+1
+    STA temp_2+1
     LDA #40
-    STA temp_0
+    STA temp_3
     LDA #0
-    STA temp_0+1
+    STA temp_3+1
     LDA #60
-    STA temp_0
+    STA temp_3
     LDA #0
-    STA temp_0+1
+    STA temp_3+1
     LDA #150
-    STA temp_0
+    STA temp_2
     LDA #0
-    STA temp_0+1
+    STA temp_2+1
     LDA #30
-    STA temp_0
+    STA temp_1
     LDA #0
-    STA temp_0+1
+    STA temp_1+1
     LDA #30
     STA temp_0
     LDA #0

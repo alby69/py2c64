@@ -4,6 +4,26 @@
 import ast
 from .. import globals as py2asm_globals # Import the globals module with an alias
 
+def _get_mangled_local_var_name(func_name, var_name):
+    """Mangles a local variable name with its function scope."""
+    return f"__{func_name}_{var_name}"
+
+def resolve_variable_name(var_name, current_func_name=None):
+    """
+    Resolves a variable name to its mangled form if it's a local or parameter,
+    otherwise returns the original name for global variables.
+    """
+    if current_func_name:
+        # It's important to check if the mangled name actually exists in the variables table.
+        # A variable with the same name could be global.
+        mangled_name = _get_mangled_local_var_name(current_func_name, var_name)
+        if mangled_name in py2asm_globals.variables:
+            return mangled_name
+    # If not in a function context, or if the mangled name wasn't found,
+    # assume it's a global variable and return the original name.
+    return var_name
+
+
 def _generate_copy_2_bytes(source, dest):
     """Generates assembly to copy 2 bytes (a word) from source to dest.
     Source and dest can be variable names (str) or direct ZP addresses (int).
