@@ -2,9 +2,9 @@
 # file with all routines
 import textwrap
 import sys # Import sys for diagnostics
-from .. import globals as app_globals # Import to access app_globals.data_definitions
+from .. import globals as app_globals
 
-from . import c64_gfx_routines # Import the new graphics routines module
+from . import c64_routine_library # Corrected import name
 # print(f"DEBUG: routines.py module level - type of app_globals: {type(app_globals)}")
 # print(f"DEBUG: routines.py module level - app_globals is built-in globals: {app_globals is globals}") # Compare with built-in globals
 # print(f"DEBUG: routines.py module level - app_globals is the imported module: {app_globals is sys.modules.get('py2asm.globals')}") # Compare with sys.modules
@@ -180,39 +180,8 @@ routines_map = {
     # 'FP_OVFL_ROUTINE_CALL': lambda: FP_OVFL_ROUTINE_CALL(), # Renamed to FP_OVFL_HANDLER
     'FP_OVFL_HANDLER': lambda: FP_OVFL_HANDLER(), # Renamed from FP_OVFL_ROUTINE_CALL
     'global_unhandled_exception_routine': lambda: global_unhandled_exception_routine(),
-    # --- C64 Graphics Routines ---
-    'gfx_turn_on': lambda: c64_gfx_routines.gfx_turn_on(),
-    'gfx_turn_off': lambda: c64_gfx_routines.gfx_turn_off(),
-    'int_to_fp1_from_addr': lambda: c64_gfx_routines.int_to_fp1_from_addr(),
-    'gfx_clear_screen': lambda: c64_gfx_routines.gfx_clear_screen(),
-    'gfx_plot_point': lambda: c64_gfx_routines.gfx_plot_point(),
-    'gfx_draw_line': lambda: c64_gfx_routines.gfx_draw_line(),
-    'copy_fp1_to_fp2': lambda: c64_gfx_routines.copy_fp1_to_fp2(),
-    'copy_fp1_to_fp_addr_temp1': lambda: c64_gfx_routines.copy_fp1_to_fp_addr_temp1(),
-    'copy_fp1_to_fp_addr_temp2': lambda: c64_gfx_routines.copy_fp1_to_fp_addr_temp2(),
-    'copy_fp1_to_fp_addr_temp3': lambda: c64_gfx_routines.copy_fp1_to_fp_addr_temp3(),
-    'copy_fp_addr_temp1_to_fp2': lambda: c64_gfx_routines.copy_fp_addr_temp1_to_fp2(),
-    'copy_fp_addr_temp2_to_fp1': lambda: c64_gfx_routines.copy_fp_addr_temp2_to_fp1(),
-    'copy_fp_addr_temp2_to_fp2': lambda: c64_gfx_routines.copy_fp_addr_temp2_to_fp2(),
-    'copy_fp_addr_temp3_to_fp2': lambda: c64_gfx_routines.copy_fp_addr_temp3_to_fp2(),
-    'gfx_draw_ellipse': lambda: c64_gfx_routines.gfx_draw_ellipse(),
-    'gfx_draw_rect': lambda: c64_gfx_routines.gfx_draw_rect(),
+    # C64 GFX/Sprite routines are now loaded dynamically from c64_routine_library
     'ascii_to_petscii': lambda: ascii_to_petscii(),
-    # --- C64 Sprite Routines ---
-    'sprite_set_pos': lambda: c64_gfx_routines.sprite_set_pos(),
-    'sprite_set_x_msb': lambda: c64_gfx_routines.sprite_set_x_msb(),
-    'sprite_set_x_msb_clear': lambda: c64_gfx_routines.sprite_set_x_msb_clear(),
-    'sprite_enable': lambda: c64_gfx_routines.sprite_enable(),
-    'sprite_disable': lambda: c64_gfx_routines.sprite_disable(),
-    'sprite_set_color': lambda: c64_gfx_routines.sprite_set_color(),
-    'sprite_expand_xy': lambda: c64_gfx_routines.sprite_expand_xy(),
-    'sprite_set_priority': lambda: c64_gfx_routines.sprite_set_priority(),
-    'sprite_set_multicolor': lambda: c64_gfx_routines.sprite_set_multicolor(),
-    'sprite_set_multicolor_colors': lambda: c64_gfx_routines.sprite_set_multicolor_colors(),
-    'sprite_check_collision_sprite': lambda: c64_gfx_routines.sprite_check_collision_sprite(),
-    'sprite_check_collision_data': lambda: c64_gfx_routines.sprite_check_collision_data(),
-    'sprite_set_pointer': lambda: c64_gfx_routines.sprite_set_pointer(),
-    'sprite_create_from_data': lambda: c64_gfx_routines.sprite_create_from_data(),
 }
 
 # --- Wozniak/Apple II Floating Point Routines (from Apple II ROM listing) ---
@@ -1354,27 +1323,24 @@ routine_dependencies = {
     'global_unhandled_exception_routine': {'print_string', 'end_program'},
     # Aggiungere altre dipendenze se necessario
         'print_char': {'ascii_to_petscii'}, # Ora dipende da ascii_to_petscii e implicitamente da chrout
-    'gfx_draw_ellipse': {
-        'gfx_plot_point',
-        'int_to_fp1_from_addr', 'copy_fp1_to_fp2', 'copy_fp1_to_fp_addr_temp1',
-        'copy_fp1_to_fp_addr_temp2', 'copy_fp1_to_fp_addr_temp3',
-        'copy_fp_addr_temp1_to_fp2', 'copy_fp_addr_temp2_to_fp1', 'copy_fp_addr_temp2_to_fp2',
-        'copy_fp_addr_temp3_to_fp2', 'load_one_fp1',
-        'FP_FMUL', 'FP_FDIV', 'FP_FSUB', 'FP_SQRT', 'FP_FIX'
-    },
-    'gfx_draw_rect': {'gfx_draw_line'},
-
+    # C64 GFX dependencies are now handled by the main dependency resolver,
+    # as the library functions add their own requirements to used_routines.
 }
 
 
 # Function to retrieve a routine by its name
 def get_routine_by_name(routine_name):
+    # First, check the local map for core routines
     if routine_name in routines_map:
         return routines_map[routine_name]()
-    else:
-        print(f"Warning: Routine '{routine_name}' not found.")
-        return ""
+    # If not found, try to get it from the C64 library
+    c64_code = c64_routine_library.get_routine_code(routine_name)
+    if c64_code:
+        return c64_code
 
+    # If still not found, warn the user
+    print(f"Warning: Routine '{routine_name}' not found in any library.")
+    return ""
 
 def print_error_message():
     assembly_code = [

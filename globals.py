@@ -15,7 +15,26 @@ EXPECTED_OUTPUTS_SUBDIR = "expected_outputs"
 # The default for 'is_8bit_semantic' will be False (i.e., 16 bit) unless overridden.
 variables = {}
 data_definitions = []  # To collect variable and constant definitions
-generated_code = []
+
+# --- Code Generator Class ---
+class CodeGenerator:
+    def __init__(self):
+        self._lines = []
+
+    def add_code(self, line):
+        """Adds a single line of code."""
+        self._lines.append(line)
+
+    def add_lines(self, lines_string):
+        """Adds multiple lines of code from a string."""
+        for line in lines_string.strip().split('\n'):
+            self._lines.append(line)
+
+    def get_code(self):
+        """Returns the complete code as a single string."""
+        return "\n".join(self._lines)
+
+generated_code = CodeGenerator()
 INITIAL_MEMORY_POINTER = 0xC100
 MAX_MEMORY = 0xCFFF # Upper limit for variable allocation before I/O area
 CHROUT_ADDRESS = "$FFD2"
@@ -71,6 +90,11 @@ STACK_TOP_ADDRESS = 0x02FF  # End of the software stack memory area (grows downw
 temp_variables = {}
 
 used_routines = set()  # Tracks routines used by the generated code
+
+# --- New/Moved Global State ---
+has_errors = False
+error_handler_generated = False
+current_scope = 'global' # Track current scope (global or function name)
 
 str_pointer = 0
 list_pointer = 0
@@ -203,32 +227,41 @@ exception_name_to_code = {
 }
 
 
-def clear_variables():
-    """Resets global variables to their initial state."""
-    global variables, memory_pointer, label_counter, temp_variables, current_loop_labels_stack, temp_var_counter, temp_var_pool
-    global str_pointer, list_pointer, max_len_input, input_pointer, result_compare, used_routines, data_definitions
-    global generated_code, _compiler_error_count, _compiler_warning_count
+def reset_globals(): # Renamed from clear_variables for clarity
+    """Resets all global state for a new compilation run."""
+    global variables, memory_pointer, label_counter, temp_variables, current_loop_labels_stack
+    global temp_var_counter, temp_var_pool, str_pointer, list_pointer, max_len_input
+    global input_pointer, result_compare, used_routines, data_definitions, generated_code
+    global _compiler_error_count, _compiler_warning_count, has_errors, error_handler_generated
+    global current_scope, defined_functions
+
     variables.clear()
-    # memory_pointer is reset by the caller of python_to_assembly
-    # or at the beginning of python_to_assembly.
-    # Reset data structures.
-    temp_var_counter = 0    # Reset temp var counter
-    temp_var_pool.clear()   # Clear temp var pool
+    defined_functions.clear()
+    data_definitions.clear()
+    used_routines.clear()
+    temp_variables.clear()
+    current_loop_labels_stack.clear()
+    temp_var_pool.clear()
+
+    # Reset counters and pointers
+    memory_pointer = INITIAL_MEMORY_POINTER
     label_counter = 0
-    temp_variables.clear()  # Dictionary to track temporary variables in use
+    temp_var_counter = 0
     str_pointer = 0
     list_pointer = 0
     max_len_input = 0
     input_pointer = 0
     result_compare = 0
-    generated_code.clear()
-    data_definitions.clear()
-    used_routines.clear()
-    current_loop_labels_stack.clear()
-    _compiler_error_count = 0 # Reset error count
-    _compiler_warning_count = 0 # Reset warning count
-    # Re-initialize assembly data types if CURRENT_ASSEMBLER_SYNTAX
-    # could change between executions (e.g., in tests).
-    # This is for greater robustness, ensuring that assembly_data_types
-    # is correct at the start of each test.
+
+    # Reset compilation status
+    _compiler_error_count = 0
+    _compiler_warning_count = 0
+    has_errors = False
+    error_handler_generated = False
+    current_scope = 'global'
+
+    # Re-create the code generator
+    generated_code = CodeGenerator()
+
+    # Re-initialize assembler syntax settings
     _initialize_assembly_data_types()

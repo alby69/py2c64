@@ -1,29 +1,24 @@
 # /workspaces/py2c64/main.py
 
 import ast
-import argparse
-import os
 import traceback
 
 # Import project modules
 from . import globals
 from .lib import ast_processor
 from .lib import func_core
-from .lib import func_expressions
-from .lib import func_operations
-from .lib import func_dict
-from .lib import func_c64
-from .lib import func_structures
-from .lib import c64_routine_library
+from .lib import routines as routine_manager # Renamed for clarity
+
+# Note: Other lib modules like func_expressions, func_operations, etc.,
+# are used by ast_processor and don't need to be imported directly here.
 
 # Aliases
 gen_code = globals.generated_code
 variables = globals.variables
-functions = globals.functions
+defined_functions = globals.defined_functions
 used_routines = globals.used_routines
 report_error = globals.report_compiler_error
 create_label = func_core.create_label
-resolve_variable_name = func_core.resolve_variable_name
 _get_mangled_local_var_name = func_core._get_mangled_local_var_name
 
 def _get_type_of_expression(expr_node, current_func_name_context=None):
@@ -43,7 +38,7 @@ def _get_type_of_expression(expr_node, current_func_name_context=None):
     elif isinstance(expr_node, ast.Name):
         var_id = expr_node.id
         # Use the new resolver from func_core
-        resolved_var_id = resolve_variable_name(var_id, current_func_name_context)
+        resolved_var_id = func_core.resolve_variable_name(var_id, current_func_name_context)
         if resolved_var_id in globals.variables:
             return globals.variables[resolved_var_id].get('type', 'unknown')
         return 'unknown'
@@ -56,8 +51,8 @@ def _get_type_of_expression(expr_node, current_func_name_context=None):
     elif isinstance(expr_node, ast.Call):
         if isinstance(expr_node.func, ast.Name):
             func_name = expr_node.func.id
-            if func_name in globals.functions:
-                return globals.functions[func_name].get('return_type', 'void')
+            if func_name in globals.defined_functions: # Se la funzione è definita dall'utente
+                return globals.defined_functions[func_name].get('return_type', 'void')
             # Check for built-in functions that return types
             if func_name == 'int': return 'int'
             if func_name == 'float': return 'float'
@@ -86,7 +81,7 @@ def _collect_variables_recursive(node, current_func_name, local_offset_ptr):
                 var_name = target.id
                 is_global = False
                 # Check for 'global' keyword declaration within the function scope
-                if current_func_name and var_name in functions.get(current_func_name, {}).get('globals', set()):
+                if current_func_name and var_name in defined_functions.get(current_func_name, {}).get('globals', set()):
                     is_global = True
 
                 if current_func_name and not is_global:
@@ -119,7 +114,7 @@ def _collect_variables_recursive(node, current_func_name, local_offset_ptr):
             elif isinstance(target, ast.Subscript):
                 # This handles assignments like my_dict['key'] = value
                 if isinstance(target.value, ast.Name):
-                    dict_name = target.value.id
+                    dict_name = target.value.id # pyright: ignore[reportAttributeAccessIssue]
                     # Use the new resolver from func_core
                     resolved_var_id = resolve_variable_name(dict_name, current_func_name)
                     if resolved_var_id in globals.variables:
@@ -156,13 +151,20 @@ def _collect_variables_recursive(node, current_func_name, local_offset_ptr):
 
     elif isinstance(node, ast.FunctionDef):
         func_name = node.name
+        # Create labels for the function
+        func_label = create_label(f"func_{func_name}", str(globals.label_counter))
+        ret_label = create_label(f"func_{func_name}_ret", str(globals.label_counter))
+        globals.label_counter += 1
+
         # Initialize local offset for this function. Use a list for mutable integer.
         local_offset_for_func = [0]
-        globals.functions[func_name] = {
+        globals.defined_functions[func_name] = {
             'name': func_name,
             'params': [arg.arg for arg in node.args.args],
             'return_type': 'unknown', # Will be updated by 'return' statements
-            'globals': set() # To store variables declared with 'global'
+            'globals': set(), # To store variables declared with 'global'
+            'label': func_label,
+            'ret_label': ret_label
         }
 
         # --- Assign offsets for parameters ---
@@ -180,14 +182,14 @@ def _collect_variables_recursive(node, current_func_name, local_offset_ptr):
             # First, find global declarations
             if isinstance(child_node, ast.Global):
                 for name in child_node.names:
-                    globals.functions[func_name]['globals'].add(name)
+                    globals.defined_functions[func_name]['globals'].add(name)
             _collect_variables_recursive(child_node, func_name, local_offset_for_func)
 
         # After processing the body, determine the function's return type
         for child_node in ast.walk(node):
             if isinstance(child_node, ast.Return):
                 return_type = _get_type_of_expression(child_node.value, func_name)
-                globals.functions[func_name]['return_type'] = return_type
+                globals.defined_functions[func_name]['return_type'] = return_type
                 break # Assume first return statement dictates the type
 
     # --- Generic traversal for other node types ---
@@ -217,74 +219,22 @@ def python_to_assembly(source_code, output_file, error_handler_func):
         globals.has_errors = True
 
 
-    def generate_error_handling_assembly():
-        """
-        Generates assembly code for runtime error handling.
-        """
-        # This is a placeholder for more sophisticated error handling
-        if not globals.error_handler_generated:
-            gen_code.add_code("value_error_msg:")
-            gen_code.add_code('    .byte "ValueError", 0')
-            # Add more error types as needed
-            globals.error_handler_generated = True
-
-
-    def finalize_assembly():
-        nonlocal output_file
-        print("DEBUG: Inside finalize_assembly")
-        # Add RTS at the end of the main program logic
-        if globals.current_scope == 'global':
-            gen_code.add_code("rts") # for the main program
-
-        # Include required C64 routines based on usage
-        for routine_name in sorted(list(globals.used_routines)): # Sort for consistent output
-            routine_code = c64_routine_library.get_routine_code(routine_name)
-            if routine_code:
-                gen_code.add_lines(routine_code)
-            else:
-                # Don't warn for FP routines, they are in an external file
-                if not routine_name.startswith("FP_") and not routine_name == "load_one_fp1":
-                    print(f"Warning: Routine '{routine_name}' not found in routine library.")
-
-        gen_code.add_code("")
-        gen_code.add_code("; *** End of generated code ***")
-
-        # Generate the final assembly code
-        output_code = gen_code.get_code()
-        with open(output_file, 'w') as f:
-            f.write(output_code)
-        print(f"Assembly code saved to '{output_file}'.")
-
-
     # --- Main execution flow of python_to_assembly ---
-    try:
-        # 1. Parse the Python code into an AST
+    try: # Gestione globale degli errori
+        # 1. Analizza il codice Python in un AST
         tree = ast.parse(source_code)
 
-        # 2. First Pass: Collect all variables and functions
+        # 2. Prima Passata: Raccogli tutte le variabili e le funzioni
         _collect_variables_recursive(tree, None, None)
 
-        # 3. Generate initial assembly boilerplate
-        gen_code.add_code("; Generated by py2c64 compiler")
+        # 3. Genera il boilerplate iniziale dell'assembly
+        gen_code.add_code(f"; Generated by py2c64 compiler\n")
+        gen_code.add_code("; --- Python Source Code ---")
+        for line in source_code.strip().split('\n'):
+            gen_code.add_code(f"; {line}")
+        gen_code.add_code("; --------------------------\n")
+
         gen_code.add_code("* = $1000") # Start address for code
-        gen_code.add_code("jmp main")
-        gen_code.add_code("")
-
-        # 4. Generate data segment for global variables
-        gen_code.add_code("; --- Global Variables ---")
-        for name, details in variables.items():
-            if details['scope'] == 'global':
-                if details.get('type') == 'str':
-                    # For strings, we allocate space for a pointer
-                    gen_code.add_code(f"{name}: .word 0 ; string pointer")
-                elif details.get('type') == 'dict':
-                    # For dicts, also a pointer
-                    gen_code.add_code(f"{name}: .word 0 ; dict pointer")
-                else:
-                    # For numbers, allocate 2 bytes
-                    gen_code.add_code(f"{name}: .word 0")
-        gen_code.add_code("")
-
 
         # 5. Second Pass: Generate code
         gen_code.add_code("; --- Main Program and Functions ---")
@@ -296,19 +246,19 @@ def python_to_assembly(source_code, output_file, error_handler_func):
             try:
                 if isinstance(node, ast.Assign):
                     ast_processor.process_assign_node(node)
-                elif isinstance(node, ast.Expr):
-                    ast_processor.process_expr_node(node, generate_error_handling_assembly)
+                elif isinstance(node, ast.Expr): # Standalone expression (e.g. function call)
+                    ast_processor.process_expr_node(node, error_handler_func)
                 elif isinstance(node, ast.FunctionDef):
-                    ast_processor.process_function_def_node(node)
+                    ast_processor.process_function_def_node(node, error_handler_func)
                 elif isinstance(node, ast.If):
-                    ast_processor.process_if_node(node)
+                    ast_processor.process_if_node(node, error_handler_func)
                 elif isinstance(node, ast.For):
-                    ast_processor.process_for_node(node)
+                    ast_processor.process_for_node(node, error_handler_func)
                 elif isinstance(node, ast.While):
-                    ast_processor.process_while_node(node)
+                    ast_processor.process_while_node(node, error_handler_func)
                 elif isinstance(node, ast.Try):
-                    ast_processor.process_try_node(node, generate_error_handling_assembly)
-                elif isinstance(node, (ast.Pass, ast.Global)):
+                    ast_processor.process_try_node(node, error_handler_func)
+                elif isinstance(node, (ast.Pass, ast.Global, ast.Import, ast.ImportFrom)):
                     pass # Already handled or no code needed
                 else:
                     report_error(f"Unsupported top-level statement: {type(node).__name__}", node.lineno)
@@ -327,40 +277,50 @@ def python_to_assembly(source_code, output_file, error_handler_func):
         error_handler_func(f"An unexpected error occurred: {e}", 0)
         globals.has_errors = True
 
-
-    # 6. Finalize the assembly file
+    # 6. Finalize the assembly output
     if not globals.has_errors:
-        finalize_assembly()
+        # Add RTS at the end of the main program logic
+        gen_code.add_code("rts ; End of main program")
+
+        # --- Assemble the final output string ---
+        program_code = gen_code.get_code()
+
+        # --- Data Segment ---
+        data_segment_lines = ["\n; --- Data Segment (Variables and Constants) ---"]
+        # Global variables (allocated with .res)
+        for name, details in sorted(variables.items()):
+            if details['scope'] == 'global':
+                size = details.get('size', 2)
+                data_segment_lines.append(f"{name} .res {size}")
+        # String literals and other data definitions
+        data_segment_lines.extend(sorted(globals.data_definitions))
+        data_segment = "\n".join(data_segment_lines)
+
+        # --- Routines Segment ---
+        routines_segment_lines = ["\n; --- Subroutines ---"]
+        # Get all required routines, including dependencies
+        all_routines_to_include = routine_manager.get_all_required_routines(used_routines)
+        for routine_name in sorted(list(all_routines_to_include)):
+            routine_code = routine_manager.get_routine_by_name(routine_name)
+            if routine_code:
+                routines_segment_lines.append(f"\n; Routine: {routine_name}")
+                routines_segment_lines.append(routine_code)
+            else:
+                # This warning should now be rare due to the improved routine loading
+                print(f"Warning: Code for routine '{routine_name}' could not be generated.")
+        routines_segment = "\n".join(routines_segment_lines)
+
+        # Combine all parts
+        final_assembly = f"{program_code}\n{data_segment}\n{routines_segment}\n"
+
+        # Write to file (optional, but useful for debugging)
+        with open(output_file, 'w') as f:
+            f.write(final_assembly)
+
+        # Return the final string for the test runner
+        return final_assembly
     else:
         print("Assembly generation aborted due to errors.")
+        return None # Indicate failure
 
-
-def main():
-    """
-    Command-line interface for the compiler.
-    """
-    parser = argparse.ArgumentParser(description='Compile Python to 6502 assembly.')
-    parser.add_argument('source_file', help='The Python source file to compile.')
-    parser.add_argument('-o', '--output', help='The output assembly file name.')
-    args = parser.parse_args()
-
-    source_file = args.source_file
-    if not os.path.exists(source_file):
-        print(f"Error: Source file '{source_file}' not found.")
-        return
-
-    output_file = args.output
-    if not output_file:
-        base_name = os.path.splitext(source_file)[0]
-        output_file = base_name + '.asm'
-
-    with open(source_file, 'r') as f:
-        source_code = f.read()
-
-    def cli_error_handler(message, lineno):
-        print(f"Error on line {lineno}: {message}")
-
-    python_to_assembly(source_code, output_file, cli_error_handler)
-
-if __name__ == '__main__':
-    main()
+# The command-line interface has been removed as test.py is the primary entry point.

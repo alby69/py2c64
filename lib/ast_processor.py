@@ -4,7 +4,8 @@ from .. import globals
 from . import func_expressions
 from . import func_core
 from . import func_dict
-from . import func_c64         # NEW: Import for C64 specific functions
+from . import func_c64
+from . import func_builtins    # NEW: Import for built-in functions
 from . import func_structures  # NEW: Import for control structures
 
 # Aliases
@@ -25,7 +26,7 @@ def _evaluate_expression_to_ax(node, error_handler_func, current_func_info=None)
     if is_float_result:
         # Convert float to int for pushing onto the 16-bit stack.
         # This is a temporary simplification. Proper float argument handling is needed.
-        gen_code.extend(func_core._generate_float_to_int_conversion(temp_result_var, temp_result_var)) # type: ignore
+        func
         # Now temp_result_var holds the 16-bit integer representation.
         gen_code.append(f"    LDA {temp_result_var}+1") # High byte
         gen_code.append(f"    LDX {temp_result_var}")   # Low byte
@@ -42,24 +43,30 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
     if isinstance(node.value, ast.Call):
         call_node = node.value
+
+        # --- REFACTORED: Delegate function calls to dedicated handlers ---
+
+        # 1. Delegate to dict method handler (e.g., my_dict.clear())
+        if func_dict.handle_dict_method_call(call_node, current_func_info):
+            return
+
+        # If it wasn't a dict method, it must be a simple function name to be handled further.
         if not isinstance(call_node.func, ast.Name):
-            report_error("Calling methods on objects is not supported.", node=call_node)
+            report_error("Calling methods on objects other than dictionaries is not supported.", node=call_node)
             return
 
-        func_name = call_node.func.id
-
-        # --- REFACTORED: Delegate C64-specific function calls to the dedicated handler ---
-        if func_c64.process_c64_call(call_node, current_func_info):
-            return # The call was handled by the C64 module
-
-        # --- Handle other built-in functions ---
-        if func_name == 'print':
-            func_core.process_print_call(call_node, error_handler_func, current_func_info, func_expressions)
+        # 2. Delegate to C64 hardware function handler
+        if func_c64.handle_c64_call(call_node, current_func_info):
             return
-        # ... other built-in function handlers can go here
+
+        # 3. Delegate to built-in function handler
+        if func_builtins.handle_builtin_call(call_node, current_func_info):
+            return
 
         # --- Handle user-defined functions (Stack-based calling convention) ---
+        func_name = call_node.func.id
         if func_name in globals.defined_functions:
+            # This is a standalone call, so the return value is discarded.
             func_info = globals.defined_functions[func_name]
 
             # Check argument count
@@ -105,32 +112,24 @@ def process_expr_node(node, error_handler_func, current_func_info=None):
 
 def process_assign_node(node, current_func_info=None):
     """Processes an ast.Assign node."""
-    # Handle function calls that return a value, e.g., collision checks
-    if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Call):
-        target_var_name = node.targets[0].id
-        call_node = node.value
-        if isinstance(call_node.func, ast.Name):
-            func_name = call_node.func.id
+    # --- REFACTORED: Delegate assignments from function calls ---
+    if isinstance(node.value, ast.Call):
+        # 1. Delegate to dict method handler (e.g., x = my_dict.get('k'))
+        if func_dict.handle_dict_assignment(node, current_func_info):
+            return
 
-            if func_name in ['sprite_check_collision_sprite', 'sprite_check_collision_data']:
-                if len(call_node.args) != 0:
-                    report_error(f"Function '{func_name}' expects 0 arguments, got {len(call_node.args)}.", node=call_node)
-                    return
+        # 1. Delegate to C64 hardware function handler
+        if func_c64.handle_c64_assignment(node, current_func_info):
+            return
 
-                current_func_name = current_func_info.get('name') if current_func_info else None
-                resolved_var_name = func_core.resolve_variable_name(target_var_name, current_func_name)
+        # 2. Delegate to built-in function handler
+        if func_builtins.handle_builtin_assignment(node, current_func_info):
+            return
 
-                gen_code.append(f"    ; --- Chiamata a {func_name} con assegnazione a {resolved_var_name} ---")
-                gen_code.append(f"    JSR {func_name}")
-                used_routines.add(func_name)
-                # The result is in the A register (8-bit)
-                gen_code.append(f"    STA {resolved_var_name}      ; Salva il risultato (LSB)")
-                gen_code.append(f"    LDA #0")
-                gen_code.append(f"    STA {resolved_var_name}+1    ; Pulisce MSB (valore a 8 bit)")
-                gen_code.append(f"    ; --- Fine chiamata ---")
-                return # Assignment handled
+        # 3. Handle user-defined functions that return a value
+        # (This logic would go here if user-defined functions are implemented)
 
-    # --- Original logic for other assignments ---
+    # --- Logic for regular assignments (not from function calls) ---
     if len(node.targets) > 1:
         report_error("Multiple assignment targets not supported.", node=node)
         return
@@ -142,7 +141,9 @@ def process_assign_node(node, current_func_info=None):
         resolved_var_name = func_core.resolve_variable_name(var_name, current_func_name)
         func_expressions.translate_expression_recursive(resolved_var_name, node.value, current_func_name)
     elif isinstance(target, ast.Subscript):
-        func_dict.handle_dict_assignment(node)
+        # This handles my_dict['key'] = value. This is not yet implemented.
+        # The old call to handle_dict_assignment was incorrect for this case.
+        report_error(f"Assignment to a dictionary key (e.g., my_dict['key'] = value) is not yet supported.", node=target)
     else:
         report_error(f"Assignment to target of type {type(target).__name__} not supported.", node=target)
 

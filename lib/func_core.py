@@ -23,6 +23,12 @@ def resolve_variable_name(var_name, current_func_name=None):
     # assume it's a global variable and return the original name.
     return var_name
 
+def get_current_func_name(current_func_info):
+    """
+    Safely gets the current function name from the info dictionary.
+    """
+    return current_func_info.get('name') if current_func_info else None
+
 
 def _generate_copy_2_bytes(source, dest):
     """Generates assembly to copy 2 bytes (a word) from source to dest.
@@ -136,6 +142,53 @@ def _generate_load_2_bytes_to_zp(source_var_name, dest_zp_addr):
         f"    STA ${dest_zp_addr+1:02X}",
     ]
 
+def load_ax_from_var(var_name):
+    """Generates code to load a 16-bit variable into A/X registers."""
+    py2asm_globals.generated_code.add_code(f"    ldx {var_name}")       # LSB
+    py2asm_globals.generated_code.add_code(f"    lda {var_name}+1")     # MSB
+
+def store_ax_in_var(var_name):
+    """Generates code to store A/X registers into a 16-bit variable."""
+    py2asm_globals.generated_code.add_code(f"    stx {var_name}")       # LSB
+    py2asm_globals.generated_code.add_code(f"    sta {var_name}+1")     # MSB
+
+def load_a_from_var(var_name):
+    """Generates code to load an 8-bit variable into A register."""
+    py2asm_globals.generated_code.add_code(f"    lda {var_name}")
+
+def store_a_in_var(var_name):
+    """Generates code to store A register into an 8-bit variable."""
+    py2asm_globals.generated_code.add_code(f"    sta {var_name}")
+
+def load_x_from_var(var_name):
+    """Generates code to load an 8-bit variable into X register."""
+    py2asm_globals.generated_code.add_code(f"    ldx {var_name}")
+
+def store_x_in_var(var_name):
+    """Generates code to store X register into an 8-bit variable."""
+    py2asm_globals.generated_code.add_code(f"    stx {var_name}")
+
+def load_y_from_var(var_name):
+    """Generates code to load an 8-bit variable into Y register."""
+    py2asm_globals.generated_code.add_code(f"    ldy {var_name}")
+
+def store_y_in_var(var_name):
+    """Generates code to store Y register into an 8-bit variable."""
+    py2asm_globals.generated_code.add_code(f"    sty {var_name}")
+
+def load_fp1_from_var(var_name):
+    """
+    Generates code to load a 4-byte float from a variable into FP1.
+    This is a convenience wrapper around _generate_load_float_to_fp1.
+    """
+    py2asm_globals.generated_code.add_lines("\n".join(_generate_load_float_to_fp1(var_name)))
+
+def store_fp1_in_var(var_name):
+    """
+    Generates code to store a 4-byte float from FP1 into a variable.
+    This is a convenience wrapper around _generate_store_float_from_fp1.
+    """
+    py2asm_globals.generated
 
 def _generate_store_2_bytes_from_zp(source_zp_addr, dest_var_name):
     """Generates assembly to store 2 bytes (a pointer) from a zero-page address to a variable."""

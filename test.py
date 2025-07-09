@@ -14,8 +14,8 @@ _PROJECT_ROOT = os.path.dirname(_CURRENT_SCRIPT_DIR)
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
-from py2c64 import main as py2asm_c64_main  # Modifica qui
-from py2c64 import globals as py2asm_c64_globals  # Modifica qui
+from py2c64 import main as compiler_main
+from py2c64 import globals as compiler_globals
 # Rimosso: from py2asm.test_cases import test_cases
 
 
@@ -72,19 +72,33 @@ def load_test_cases(test_suite_dir="test_suite", specific_file_name=None):
 
 
 def run_test(test_case, regenerate_mode=False):
-    """Runs a single test case."""
+    """Esegue un singolo caso di test."""
     print(f"\n--- Starting test: {test_case['name']} ---")
     print(f"Test code:") # Modificato per rimuovere spazi iniziali e mettere il codice a capo
     print(test_case['code']) # Print the test code on separate lines
-    py2asm_c64_globals.clear_variables()
+    compiler_globals.reset_globals() # Use the new, more complete reset function
     temp_output_filename = "temp_output.asm"  # Define once
+
+    # Define a simple error handler to pass to the compiler.
+    # It will collect any errors reported during compilation.
+    compilation_errors = []
+    def test_error_handler(message, lineno):
+        compilation_errors.append(f"L{lineno}: {message}")
 
     try:
         # Generate assembly
-        result_assembly_string = py2asm_c64_main.python_to_assembly(test_case['code'], output_file=temp_output_filename, print_ast=False)  # Modifica qui
+        # The function signature has changed. Pass the error handler.
+        result_assembly_string = compiler_main.python_to_assembly(
+            test_case['code'],
+            temp_output_filename,
+            test_error_handler
+        )
 
-        if result_assembly_string is None:
-            print(f"Test '{test_case['name']}' FAILED: Error generating assembly.")
+        # Check for compilation errors
+        if compilation_errors or result_assembly_string is None:
+            print(f"Test '{test_case['name']}' FAILED: Error during compilation.")
+            for error in compilation_errors:
+                print(f"  - {error}")
             return False
 
         # Check if an expected file is specified
@@ -93,7 +107,7 @@ def run_test(test_case, regenerate_mode=False):
             # _CURRENT_SCRIPT_DIR è la directory di test.py (py2asm/)
             # py2asm_globals.TEST_SUITE_DIR è "test_suite"
             # py2asm_globals.EXPECTED_OUTPUTS_SUBDIR è "expected_outputs"
-            base_expected_path = os.path.join(_CURRENT_SCRIPT_DIR, py2asm_c64_globals.TEST_SUITE_DIR, py2asm_c64_globals.EXPECTED_OUTPUTS_SUBDIR) # Modifica qui
+            base_expected_path = os.path.join(_CURRENT_SCRIPT_DIR, compiler_globals.TEST_SUITE_DIR, compiler_globals.EXPECTED_OUTPUTS_SUBDIR)
             expected_filename = os.path.join(base_expected_path, test_case["expected"])
 
             if regenerate_mode: # Regeneration mode
@@ -139,7 +153,7 @@ def run_test(test_case, regenerate_mode=False):
                 generated_content_processed = generated_content_processed.replace('\r\n', '\n')
 
                 if expected_content_processed != generated_content_processed:
-                    print(f"Test '{test_case['name']}' FAILED: Generated output does not match expected output.")
+                    print(f"Test '{test_case['name']}' FALLITO: l'output generato non corrisponde all'output atteso.")
                     print("--- Differences ---")
                     # Usa diff per mostrare le differenze (se disponibile)
                     # To use diff, we need to write generated_content to a temporary file
@@ -159,7 +173,7 @@ def run_test(test_case, regenerate_mode=False):
             print(result_assembly_string)
 
         print(f"Test '{test_case['name']}' PASSED.")
-        return True
+        return True # Traduzione: il test è passato
 
     except Exception as e:
         print(f"Test '{test_case['name']}' FAILED: Error during execution: {e}")
@@ -172,7 +186,7 @@ def run_test(test_case, regenerate_mode=False):
             if os.path.exists(temp_output_filename):
                 os.remove(temp_output_filename)
         except FileNotFoundError: # pragma: no cover
-            pass
+            pass # Traduzione: non fare nulla se il file non esiste già
         print("--- Ending test ---")
 
 
@@ -204,7 +218,7 @@ if __name__ == "__main__":
     PASSED_LOG_FILENAME = "passed_tests.log"
     FAILED_LOG_FILENAME = "failed_tests.log"
 
-    logs_full_path = os.path.join(_CURRENT_SCRIPT_DIR, py2asm_c64_globals.TEST_SUITE_DIR, LOGS_DIR) # Modifica qui
+    logs_full_path = os.path.join(_CURRENT_SCRIPT_DIR, compiler_globals.TEST_SUITE_DIR, LOGS_DIR)
     os.makedirs(logs_full_path, exist_ok=True)
 
     passed_log_file = None
@@ -263,7 +277,7 @@ if __name__ == "__main__":
 
     print(f"\n--- Test Summary ---")
     if args.regenerate:
-        print(f"Test cases processed for regeneration: {num_regenerated + num_failed_regeneration}")
+        print(f"Casi di test processati per la rigenerazione: {num_regenerated + num_failed_regeneration}")
         print(f"Files successfully regenerated: {num_regenerated}")
         print(f"Files failed to regenerate: {num_failed_regeneration}")
         sys.exit(0 if num_failed_regeneration == 0 else 1)

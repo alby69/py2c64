@@ -1,77 +1,105 @@
-[2025-07-07 08:04:28] REGENERATION FAILED: For loop over list - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Simple while loop - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Simple If (true condition) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Simple If (false condition) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Else (if branch) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Else (else branch) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Elif-Else (if branch) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Elif-Else (elif branch) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Elif-Else (else branch) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Elif (if branch, no else) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If-Elif (elif branch, no else) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with <= operator - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with < operator (false) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Nested If - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with constant True condition - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with constant False condition and Else - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with BinOp operand on the left - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: If with BinOp operand on right and left - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: NOT operator (True) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: NOT operator (False) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: AND operator (True and True) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: AND operator (True and False) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: AND operator (False and True - Short Circuit) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: OR operator (True or False - Short Circuit) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: OR operator (False or True) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: OR operator (False or False) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: NOT and AND combination - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: NOT and OR combination - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: AND with boolean constants - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: XOR operator in IF condition (True) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: XOR operator in IF condition (False) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: While loop with break - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: While loop with continue - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: For loop with break - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: For loop with continue - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Break in nested loop (while in for) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: user_func_return_float_literal - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: user_func_return_float_cast - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: user_func_return_mixed_calls - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Simple function definition and call (no params, no explicit return) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function with one parameter and return - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function with multiple parameters - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Funzione senza istruzione return (implicito None/0) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function call with constant as argument - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function call whose argument is an expression - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function calling another function - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function with parameters and complex body (if statement) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Funzione che modifica variabile globale (non un parametro) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function with parameter whose name collides with a global - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Function with two parameters, called with variables - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Test GFX Turn On and Clear Screen - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Test GFX Draw Line (Star) - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Test GFX Turn Off - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Test GFX Draw Ellipse and Circle - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_draw_circle_simple - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_draw_circle_vars - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_draw_ellipse_expressions - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_draw_rect_simple - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_set_pos - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_color_and_enable - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_disable_and_msb - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_expand - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_msb_clear - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_set_pointer - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_priority - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_multicolor - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_multicolor_colors - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_collision_check - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_create_from_data - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_set_pointer - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: graphics_sprite_priority - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: log_positive_stub - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: exp_stub - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: add_one_function_call - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: String concatenation (f-string) and print - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Print string variable - Error during regeneration
-[2025-07-07 08:04:28] REGENERATION FAILED: Print string literal - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Simple assignment - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Mixed arithmetic operations - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Arithmetic overflow (sum) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Division by zero - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: XOR operator (assignment) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Operatore XOR (valori diversi) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Constant Folding: Simple multiplication - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Constant Folding: Integer division by zero (compile-time error) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Constant Folding: Mixed type addition (int + float) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: For loop over list - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Simple while loop - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Simple If (true condition) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Simple If (false condition) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Else (if branch) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Else (else branch) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Elif-Else (if branch) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Elif-Else (elif branch) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Elif-Else (else branch) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Elif (if branch, no else) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If-Elif (elif branch, no else) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with <= operator - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with < operator (false) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Nested If - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with constant True condition - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with constant False condition and Else - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with BinOp operand on the left - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: If with BinOp operand on right and left - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: NOT operator (True) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: NOT operator (False) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: AND operator (True and True) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: AND operator (True and False) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: AND operator (False and True - Short Circuit) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: OR operator (True or False - Short Circuit) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: OR operator (False or True) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: OR operator (False or False) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: NOT and AND combination - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: NOT and OR combination - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: AND with boolean constants - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: XOR operator in IF condition (True) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: XOR operator in IF condition (False) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: While loop with break - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: While loop with continue - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: For loop with break - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: For loop with continue - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Break in nested loop (while in for) - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Dizionario: Aggiunta e rimozione - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Dizionario: Inizializzazione e accesso - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Tuple - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Set - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: int_plus_float_literal - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_less_than_comparison - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_equal_comparison - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_not_equal_comparison - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: int_float_greater_than_comparison - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: assign_positive_float_literal - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_abs_sgn_log - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_exp_stub - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: float_comparison_eq_ne - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: int_to_float_and_float_to_int_conversion - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: user_func_return_float_literal - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: user_func_return_float_cast - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: user_func_return_int_literal - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: user_func_return_mixed_calls - Error during regeneration
+[2025-07-09 12:19:54] REGENERATION FAILED: Simple function definition and call (no params, no explicit return) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with one parameter and return - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with multiple parameters - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with empty return (implicit None/0) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Funzione senza istruzione return (implicito None/0) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function call with constant as argument - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function call whose argument is an expression - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function calling another function - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with parameters and complex body (if statement) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Funzione che modifica variabile globale (non un parametro) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with parameter whose name collides with a global - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Function with two parameters, called with variables - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Test GFX Turn On and Clear Screen - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Test GFX Draw Line (Star) - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: Test GFX Draw Ellipse and Circle - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_draw_circle_simple - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_draw_circle_vars - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_draw_ellipse_expressions - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_draw_rect_simple - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_sprite_set_pos - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_sprite_color_and_enable - Error during regeneration
+[2025-07-09 12:19:55] REGENERATION FAILED: graphics_sprite_disable_and_msb - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_expand - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_msb_clear - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_set_pointer - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_priority - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_multicolor - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_multicolor_colors - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_collision_check - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_create_from_data - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_set_pointer - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: graphics_sprite_priority - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: log_zero_error - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: log_negative_error - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: log_positive_stub - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: exp_stub - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: add_one_function_call - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: String slicing - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: String concatenation (f-string) - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: String concatenation (f-string) and print - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: Print string variable - Error during regeneration
+[2025-07-09 12:19:57] REGENERATION FAILED: Print string literal - Error during regeneration
