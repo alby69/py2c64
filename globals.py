@@ -19,20 +19,20 @@ data_definitions = []  # To collect variable and constant definitions
 # --- Code Generator Class ---
 class CodeGenerator:
     def __init__(self):
-        self._lines = []
-
-    def add_code(self, line):
-        """Adds a single line of code."""
-        self._lines.append(line)
-
-    def add_lines(self, lines_string):
-        """Adds multiple lines of code from a string."""
-        for line in lines_string.strip().split('\n'):
-            self._lines.append(line)
+        self._code = []
 
     def get_code(self):
         """Returns the complete code as a single string."""
-        return "\n".join(self._lines)
+        return "\n".join(self._code)
+    
+    def append(self, line):
+        """Appends a single line of code to the code section."""
+        self._code.append(line)
+
+    def extend(self, lines):
+        """Extends the code section with a list of lines."""
+        self._code.extend(lines)
+
 
 generated_code = CodeGenerator()
 INITIAL_MEMORY_POINTER = 0xC100

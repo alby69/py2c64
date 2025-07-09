@@ -26,6 +26,7 @@ def _process_c64_call(call_node, spec, current_func_info=None):
     func_name = call_node.func.id
     params = spec.get('params', [])
     args = call_node.args
+    scope = 'local' if current_func_info else 'global'
 
     if len(args) != len(params):
         report_error(f"Incorrect number of arguments for C64 function '{func_name}'. Expected {len(params)}, got {len(args)}.", call_node.lineno)
@@ -33,7 +34,7 @@ def _process_c64_call(call_node, spec, current_func_info=None):
 
     # Process arguments
     for arg_node, param_spec in zip(args, params):
-        temp_var = func_core.get_temp_var(size=param_spec['size'])
+        temp_var = func_core.get_temp_var()
         func_expressions.translate_expression_recursive(temp_var, arg_node, current_func_info.get('name') if current_func_info else None)
 
         if param_spec['store'] == 'ax':
@@ -48,15 +49,15 @@ def _process_c64_call(call_node, spec, current_func_info=None):
             # Assumes the ZP address is specified in the spec
             zp_addr = param_spec['address']
             func_core.load_ax_from_var(temp_var)
-            gen_code.add_code(f"sta ${zp_addr:02x}")
+            gen_code.append(f"    sta ${zp_addr:02x}")
             if param_spec['size'] == 16:
-                gen_code.add_code(f"stx ${zp_addr+1:02x}")
+                gen_code.append(f"    stx ${zp_addr+1:02x}")
         
         func_core.release_temp_var(temp_var)
 
     # Call the routine
     routine_name = spec['routine']
-    gen_code.add_code(f"jsr {routine_name}")
+    gen_code.append(f"    jsr {routine_name}")
     used_routines.add(routine_name)
 
 def handle_c64_call(call_node, current_func_info=None):

@@ -21,37 +21,37 @@ def _handle_print(call_node, spec, current_func_info, target_var_name=None):
     Handles multiple arguments of different types.
     """
     if not call_node.args:
-        gen_code.add_code("jsr print_newline")
+        gen_code.append("jsr print_newline")
         used_routines.add('print_newline')
         return
 
     for i, arg_node in enumerate(call_node.args):
         if i > 0:
-            gen_code.add_code("jsr print_space")
+            gen_code.append("jsr print_space")
             used_routines.add('print_space')
 
-        temp_arg_var = func_core.get_temp_var(size=4)
+        temp_arg_var = func_core.get_temp_var()
         func_expressions.translate_expression_recursive(temp_arg_var, arg_node, func_core.get_current_func_name(current_func_info))
         arg_type = variables.get(temp_arg_var, {}).get('type', 'int')
 
         if arg_type == 'float':
             func_core.load_fp1_from_var(temp_arg_var)
-            gen_code.add_code("jsr print_float")
+            gen_code.append("jsr print_float")
             used_routines.add('print_float')
         elif arg_type == 'pointer': # Assumes string pointer
             func_core.load_ax_from_var(temp_arg_var)
-            gen_code.add_code(f"sta ${globals.PRINT_STRING_ZP_BASE_PTR:02x}")
-            gen_code.add_code(f"stx ${globals.PRINT_STRING_ZP_BASE_PTR+1:02x}")
-            gen_code.add_code("jsr print_string_from_zp")
+            gen_code.append(f"sta ${globals.PRINT_STRING_ZP_BASE_PTR:02x}")
+            gen_code.append(f"stx ${globals.PRINT_STRING_ZP_BASE_PTR+1:02x}")
+            gen_code.append("jsr print_string_from_zp")
             used_routines.add('print_string_from_zp')
         else: # int
             func_core.load_ax_from_var(temp_arg_var)
-            gen_code.add_code("jsr print_integer")
+            gen_code.append("jsr print_integer")
             used_routines.add('print_integer')
 
         func_core.release_temp_var(temp_arg_var)
 
-    gen_code.add_code("jsr print_newline")
+    gen_code.append("jsr print_newline")
     used_routines.add('print_newline')
 
 def _handle_abs(call_node, spec, current_func_info, target_var_name):
@@ -63,20 +63,20 @@ def _handle_abs(call_node, spec, current_func_info, target_var_name):
         return
 
     resolved_target_name = func_core.resolve_variable_name(target_var_name, func_core.get_current_func_name(current_func_info))
-    temp_arg_var = func_core.get_temp_var(size=4)
+    temp_arg_var = func_core.get_temp_var()
     func_expressions.translate_expression_recursive(temp_arg_var, call_node.args[0], func_core.get_current_func_name(current_func_info))
     arg_type = variables.get(temp_arg_var, {}).get('type', 'int')
 
     if arg_type == 'float':
         func_core.handle_variable(resolved_target_name, size=4, var_type='float')
         func_core.load_fp1_from_var(temp_arg_var)
-        gen_code.add_code("jsr FP_ABS")
+        gen_code.append("jsr FP_ABS")
         used_routines.add('FP_ABS')
         func_core.store_fp1_in_var(resolved_target_name)
     else: # int
         func_core.handle_variable(resolved_target_name, size=2, var_type='int')
         func_core.load_ax_from_var(temp_arg_var)
-        gen_code.add_code("jsr integer_abs")
+        gen_code.append("jsr integer_abs")
         used_routines.add('integer_abs')
         func_core.store_ax_in_var(resolved_target_name)
 
@@ -93,7 +93,7 @@ def _handle_len(call_node, spec, current_func_info, target_var_name):
     resolved_target_name = func_core.resolve_variable_name(target_var_name, func_core.get_current_func_name(current_func_info))
     func_core.handle_variable(resolved_target_name, size=2, var_type='int')
 
-    temp_arg_var = func_core.get_temp_var(size=2)
+    temp_arg_var = func_core.get_temp_var()
     func_expressions.translate_expression_recursive(temp_arg_var, call_node.args[0], func_core.get_current_func_name(current_func_info))
     arg_type = variables.get(temp_arg_var, {}).get('type', 'unknown')
 
@@ -103,7 +103,7 @@ def _handle_len(call_node, spec, current_func_info, target_var_name):
         return
 
     func_core.load_ax_from_var(temp_arg_var) # Load string pointer into AX
-    gen_code.add_code("jsr strlen")
+    gen_code.append("jsr strlen")
     used_routines.add('strlen')
     func_core.store_ax_in_var(resolved_target_name) # Store resulting length
     func_core.release_temp_var(temp_arg_var)
@@ -118,22 +118,22 @@ def _handle_input(call_node, spec, current_func_info, target_var_name):
 
     if call_node.args:
         prompt_node = call_node.args[0]
-        temp_prompt_var = func_core.get_temp_var(size=2)
+        temp_prompt_var = func_core.get_temp_var()
         func_expressions.translate_expression_recursive(temp_prompt_var, prompt_node, func_core.get_current_func_name(current_func_info))
         if variables.get(temp_prompt_var, {}).get('type') != 'pointer':
             report_error(f"input() prompt must be a string.", call_node.lineno)
             func_core.release_temp_var(temp_prompt_var)
             return
         func_core.load_ax_from_var(temp_prompt_var)
-        gen_code.add_code(f"sta ${globals.PRINT_STRING_ZP_BASE_PTR:02x}")
-        gen_code.add_code(f"stx ${globals.PRINT_STRING_ZP_BASE_PTR+1:02x}")
-        gen_code.add_code("jsr print_string_from_zp")
+        gen_code.append(f"sta ${globals.PRINT_STRING_ZP_BASE_PTR:02x}")
+        gen_code.append(f"stx ${globals.PRINT_STRING_ZP_BASE_PTR+1:02x}")
+        gen_code.append("jsr print_string_from_zp")
         used_routines.add('print_string_from_zp')
         func_core.release_temp_var(temp_prompt_var)
 
     resolved_target_name = func_core.resolve_variable_name(target_var_name, func_core.get_current_func_name(current_func_info))
     func_core.handle_variable(resolved_target_name, size=2, var_type='pointer')
-    gen_code.add_code("jsr read_string_input")
+    gen_code.append("jsr read_string_input")
     used_routines.add('read_string_input')
     func_core.store_ax_in_var(resolved_target_name)
 
@@ -160,7 +160,7 @@ def _process_builtin_call(call_node, spec, current_func_info, target_var_name=No
         return
 
     if args:
-        temp_arg_var = func_core.get_temp_var(size=4)
+        temp_arg_var = func_core.get_temp_var()
         func_expressions.translate_expression_recursive(temp_arg_var, args[0], func_core.get_current_func_name(current_func_info))
         if variables.get(temp_arg_var, {}).get('type') == 'float':
             func_core.load_fp1_from_var(temp_arg_var)
@@ -168,7 +168,7 @@ def _process_builtin_call(call_node, spec, current_func_info, target_var_name=No
             func_core.load_ax_from_var(temp_arg_var)
         func_core.release_temp_var(temp_arg_var)
 
-    gen_code.add_code(f"jsr {spec['routine']}")
+    gen_code.append(f"jsr {spec['routine']}")
     used_routines.add(spec['routine'])
 
     if target_var_name:

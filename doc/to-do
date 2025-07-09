@@ -1,0 +1,36 @@
+
+implement the handle_comparison function in func_operations.py. This function will generate the correct assembly code for both integer and floating-point comparisons.
+This implementation will:
+	1	Handle Type Coercion: If an integer is being compared to a float, it will be converted to a float before the comparison.
+	2	Integer Comparison: For int vs int, it will perform a 16-bit signed comparison. For equality (==, !=), it compares bytes directly. For relational operators (<, >, etc.), it performs a 16-bit subtraction and checks the N (Negative) and V (Overflow) flags to determine the signed result.
+	3	Float Comparison: For float vs float, it will use the FP_COMPARE routine, which subtracts the two floating-point numbers. The function then checks if the result is positive, negative, or zero to determine the outcome of the comparison.
+	4	Store Result: The boolean result of the comparison (1 for True, 0 for False) will be stored in the target variable.
+
+
+
+1. Scrolling dello Schermo (Scorrimento)
+Questa è una delle funzionalità più richieste per i giochi.
+
+Scrolling Hardware "Fine" (Smooth Scrolling): Implementare routine per manipolare i registri di scorrimento del VIC-II ($D011 e $D016) per ottenere uno scorrimento fluido, pixel per pixel, sia in orizzontale che in verticale. Questo è un argomento complesso ma fondamentale.
+
+Scrolling a Blocchi (Tile-based): Creare funzioni di alto livello che gestiscano lo scorrimento di una "mappa" più grande dello schermo, caricando le porzioni corrette di dati bitmap man mano che la visuale si sposta.
+
+2. Grafica a Caratteri Avanzata (Character Mode)
+Oltre al bitmap, il C64 eccelle nella grafica a caratteri.
+
+Caricamento di Set di Caratteri Personalizzati: Una funzione load_charset(source_address) per copiare un set di caratteri disegnato da te nella RAM, permettendo di creare grafica a "tile" molto efficiente.
+Stampa a Coordinate (print_at): Una routine print_at(row, col, string_address) per scrivere testo in una specifica posizione dello schermo, manipolando direttamente la Screen RAM e la Color RAM.
+Modalità Testo Multicolore: Funzioni per attivare e gestire la modalità testo multicolore, che permette di avere 4 colori per carattere.
+
+4. Interrupt di Raster
+Questa è la tecnica che sblocca il vero potenziale del C64 per effetti grafici avanzati.
+
+Gestione degli Interrupt: Creare un framework per impostare facilmente delle routine di interrupt che si attivino a specifiche linee di scansione del raster. Questo è il segreto dietro a moltissimi effetti "impossibili", come:
+Cambiare i colori a metà schermo.
+Mischiare modalità grafiche diverse.
+Visualizzare più di 8 sprite contemporaneamente (tramite sprite multiplexing).
+
+5. Suono e Musica (SID)
+Anche se non è grafica, l'audio è un compagno inseparabile.
+
+Interfaccia per il SID: Creare funzioni base per interagire con il chip sonoro SID (memoria da $D400), come play_note(voice, frequency, waveform) e set_volume(level), per aggiungere facilmente suoni ed effetti ai nostri programmi.

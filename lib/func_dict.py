@@ -43,11 +43,11 @@ def _process_dict_method_call(call_node, spec, dict_var_name, current_func_info,
         report_error(f"Variable '{dict_var_name}' is not a dictionary.", call_node.lineno)
         return
 
-    gen_code.add_code(f"; --- Preparing call to dict.{method_name} on '{resolved_dict_name}' ---")
-    gen_code.add_code(f"lda #<{resolved_dict_name}")
-    gen_code.add_code(f"ldx #>{resolved_dict_name}")
-    gen_code.add_code(f"sta {ZP_DICT_PTR}")
-    gen_code.add_code(f"stx {ZP_DICT_PTR}+1")
+    gen_code.append(f"; --- Preparing call to dict.{method_name} on '{resolved_dict_name}' ---")
+    gen_code.append(f"lda #<{resolved_dict_name}")
+    gen_code.append(f"ldx #>{resolved_dict_name}")
+    gen_code.append(f"sta {ZP_DICT_PTR}")
+    gen_code.append(f"stx {ZP_DICT_PTR}+1")
 
     # --- 3. Process and Pass Arguments ---
     arg_zp_locs = [ZP_ARG1_PTR, ZP_ARG2_PTR]
@@ -57,20 +57,20 @@ def _process_dict_method_call(call_node, spec, dict_var_name, current_func_info,
             report_error(f"Internal Compiler Error: Too many arguments for dict method handler.", call_node.lineno)
             break
 
-        temp_arg_var = func_core.get_temp_var(size=4) # Use size 4 to accommodate any type
+        temp_arg_var = func_core.get_temp_var() # Use size 4 to accommodate any type
         temp_vars_to_release.append(temp_arg_var)
         func_expressions.translate_expression_recursive(temp_arg_var, arg_node, current_func_name)
 
         # Pass a pointer to the *variable* that holds the argument's value
         zp_loc = arg_zp_locs[i]
-        gen_code.add_code(f"lda #<{temp_arg_var}")
-        gen_code.add_code(f"ldx #>{temp_arg_var}")
-        gen_code.add_code(f"sta {zp_loc}")
-        gen_code.add_code(f"stx {zp_loc}+1")
+        gen_code.append(f"lda #<{temp_arg_var}")
+        gen_code.append(f"ldx #>{temp_arg_var}")
+        gen_code.append(f"sta {zp_loc}")
+        gen_code.append(f"stx {zp_loc}+1")
 
     # --- 4. Call the Routine ---
     routine_name = spec['routine']
-    gen_code.add_code(f"jsr {routine_name}")
+    gen_code.append(f"jsr {routine_name}")
     used_routines.add(routine_name)
 
     # --- 5. Handle Return Value ---
@@ -89,7 +89,7 @@ def _process_dict_method_call(call_node, spec, dict_var_name, current_func_info,
     # --- 6. Cleanup ---
     for temp_var in temp_vars_to_release:
         func_core.release_temp_var(temp_var)
-    gen_code.add_code(f"; --- End call to dict.{method_name} ---")
+    gen_code.append(f"; --- End call to dict.{method_name} ---")
 
 
 def handle_dict_method_call(call_node, current_func_info=None):

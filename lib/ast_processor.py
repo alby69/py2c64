@@ -26,7 +26,7 @@ def _evaluate_expression_to_ax(node, error_handler_func, current_func_info=None)
     if is_float_result:
         # Convert float to int for pushing onto the 16-bit stack.
         # This is a temporary simplification. Proper float argument handling is needed.
-        func
+        func_core._generate_float_to_int_conversion(temp_result_var, temp_result_var)
         # Now temp_result_var holds the 16-bit integer representation.
         gen_code.append(f"    LDA {temp_result_var}+1") # High byte
         gen_code.append(f"    LDX {temp_result_var}")   # Low byte
@@ -196,7 +196,24 @@ def process_function_def_node(node, error_handler_func):
             process_assign_node(statement, current_func_info)
         elif isinstance(statement, ast.Return):
             if statement.value:
-                _evaluate_expression_to_ax(statement.value, error_handler_func, current_func_info)
+                # Determine the type of the return expression to use the correct return register(s)
+                temp_return_var = func_core.get_temp_var()
+                func_expressions.translate_expression_recursive(
+                    temp_return_var, statement.value, current_func_info.get('name')
+                )
+                return_type = variables.get(temp_return_var, {}).get('type', 'int')
+
+                if return_type == 'float':
+                    # Load float value into FP1 for return
+                    func_core.load_fp1_from_var(temp_return_var)
+                else:
+                    # Load integer/pointer value into A/X for return
+                    func_core.load_ax_from_var(temp_return_var)
+
+                func_core.release_temp_var(temp_return_var)
+            else:
+                # No return value (or `return None`), so return 0 in A/X
+                gen_code.extend(["    LDA #0", "    LDX #0"])
             gen_code.append(f"    JMP {ret_label}")
         # --- MODIFIED: Call functions from the new module ---
         elif isinstance(statement, ast.If):

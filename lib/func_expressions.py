@@ -6,8 +6,10 @@ from .. import globals as _globals
 from .func_core import (
     type_value, handle_variable, get_temp_var, release_temp_var,
     _generate_int_to_float_conversion, _generate_float_to_int_conversion,
-    _generate_load_float_to_fp1, _generate_store_float_from_fp1, _copy_variable_content
+    _generate_load_float_to_fp1, _generate_store_float_from_fp1, _copy_variable_content,
+    resolve_variable_name
 )
+from .func_strings import join_str_value
 
 # Aliases
 gen_code = _globals.generated_code
@@ -128,11 +130,7 @@ def _resolve_operand(operand, current_func_name):
         type_value(temp_var, operand)
         return temp_var
     elif isinstance(operand, ast.Name):
-        resolved = operand.id
-        if current_func_name:
-            mangled = f"__{current_func_name}_{operand.id}"
-            if mangled in variables:
-                resolved = mangled
+        resolved = resolve_variable_name(operand.id, current_func_name)
         return resolved
     else:
         temp_var = get_temp_var()
@@ -171,11 +169,7 @@ def get_value(node, current_func_name=None):
         type_value(temp_var, node)
         return temp_var
     elif isinstance(node, ast.Name):
-        resolved = node.id
-        if current_func_name:
-            mangled = f"__{current_func_name}_{node.id}"
-            if mangled in variables:
-                resolved = mangled
+        resolved = resolve_variable_name(node.id, current_func_name)
         return resolved if resolved in variables else None
     elif isinstance(node, ast.BinOp):
         temp_var = get_temp_var()
@@ -204,16 +198,32 @@ def translate_expression_recursive(var_name, node, current_func_name=None):
         type_value(var_name, node)
     
     elif isinstance(node, ast.Name):
-        source_var = node.id
-        if current_func_name:
-            mangled = f"__{current_func_name}_{source_var}"
-            if mangled in variables:
-                source_var = mangled
+        source_var = resolve_variable_name(node.id, current_func_name)
         _copy_variable_content(source_var, var_name, current_func_name)
     
     elif isinstance(node, ast.Call):
         _handle_function_call_in_expression(var_name, node, current_func_name)
     
+    elif isinstance(node, ast.JoinedStr):
+        join_str_value(var_name, node)
+
+    elif isinstance(node, ast.UnaryOp):
+        if isinstance(node.op, ast.USub):
+            # Implement -x as 0 - x
+            zero_node = ast.Constant(value=0)
+            sub_node = ast.BinOp(left=zero_node, op=ast.Sub(), right=node.operand)
+            # Now process this new BinOp node
+            translate_expression_recursive(var_name, sub_node, current_func_name)
+        else:
+            report_error(f"Unsupported unary operator: {type(node.op).__name__}", node=node)
+            type_value(var_name, ast.Constant(value=0))
+
+    elif isinstance(node, ast.Compare):
+        # Delegate comparison to a handler in func_operations
+        # Import here to avoid circular dependency at module level
+        from .func_operations import handle_comparison
+        handle_comparison(var_name, node, current_func_name)
+
     else:
         report_error(f"Unsupported node type {type(node).__name__}", node=node)
         type_value(var_name, ast.Constant(value=0))
