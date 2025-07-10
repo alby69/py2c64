@@ -43,21 +43,17 @@ This section describes the role of each Python module within the `lib/` director
 
 -   `ast_processor.py`: The central processor for the Abstract Syntax Tree (AST). It traverses the tree and orchestrates the code generation process by delegating tasks to specialized modules like `func_expressions` for expressions, `func_structures` for control flow, and `func_c64` for hardware calls.
 
--   `c64_function_specs.py`: A data-only module that defines the API for all C64-specific hardware functions. It specifies parameter types, register/memory locations, and the name of the corresponding assembly routine, acting as a contract between the Python front-end and the assembly back-end.
-
 -   `c64_routine_library.py`: A library of generator functions that produce 6502 assembly for C64-specific graphics and sprite operations (e.g., `gfx_turn_on`, `draw_line`, `sprite_set_pos`).
 
 -   `func_core.py`: Provides fundamental, low-level functions used throughout the compiler. This includes managing global and local variables, creating unique labels for jumps and loops, managing temporary variables for intermediate calculations, and generating assembly for basic memory operations.
 
--   `func_dict.py`: Contains the logic for handling Python dictionary operations, specifically creating dictionaries and assigning values to keys (`my_dict[key] = value`).
+-   `func_dict.py`: Contains experimental and incomplete logic for handling Python dictionary operations. Currently, most dictionary features are not supported.
 
 -   `func_expressions.py`: Responsible for the recursive translation of Python expressions into assembly. It handles constants, variable lookups, function calls, and operations, breaking them down into a sequence of assembly instructions. It works closely with `func_operations.py`.
 
--   `func_c64.py`: Implements the specific calling conventions for C64 hardware functions. It reads specifications from `c64_function_specs.py` to correctly place arguments in registers or zero-page locations before calling the assembly routine.
-
 -   `func_operations.py`: Provides specialized handlers for specific low-level operations. It contains the code generation logic for 16-bit integer arithmetic (add, sub, mul, div), floating-point arithmetic, and comparison operations (`==`, `!=`, `<`, etc.).
 
--   `func_strings.py`: Manages string-related operations. Its primary role is to handle the `print()` function, generating code to print both string literals and the values of variables to the screen.
+-   `func_strings.py`: Manages string-related operations. Its primary role is to handle the `print()` function and f-string concatenation.
 
 -   `func_structures.py`: Contains handlers for high-level control flow structures like `if`, `for`, and `while`, separating this logic from the main AST processor.
 

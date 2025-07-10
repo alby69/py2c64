@@ -17,7 +17,7 @@ The compiler is continuously evolving. Currently, it supports the following Pyth
 -   **Control Flow**:
     -   `if/else` conditional statements.
     -   `while` loops.
-    -   `for` loops (supporting `range(start, stop, step)`).
+    -   `for` loops (supporting `range(start, stop, step)`). `break` and `continue` are not yet fully supported.
 -   **Functions**:
     -   Function definitions (`def`) and calls.
     -   Stack-based parameter passing and local variable management using a frame pointer.
@@ -25,7 +25,7 @@ The compiler is continuously evolving. Currently, it supports the following Pyth
 -   **Built-in Functions**:
     -   `print()`: For printing string literals and numeric values to the screen.
     -   Type casting: `int()`, `float()`.
-    -   Math: `abs()`, `log()`, `exp()`, `sgn()`.
+    -   Math: `abs()`.
 -   **Code Optimization**: A peephole optimizer pass removes redundant `JMP` instructions to make the generated code more efficient.
 
 ### C64 Hardware Libraries
@@ -77,8 +77,8 @@ The project is a work in progress. Future enhancements are planned in two main a
 ### Expanding Language Support
 
 -   [x] **Loops**: Implemented `while` and `for` loops with full `range(start, stop, step)` support.
--   [x] **Comparisons & Logic**: Full support for comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
--   [ ] **Data Structures**: Introduce support for basic arrays or lists with static allocation.
+-   [ ] **Comparisons & Logic**: Basic support for comparison operators (`==`, `!=`, `<`, etc.). Logical operators (`and`, `or`) are not yet supported.
+-   [ ] **Data Structures**: Introduce support for basic arrays, lists, or dictionaries.
 -   [x] **Global Variables**: Proper handling of the `global` keyword within functions.
 
 ### Improving Tooling and C64 Integration

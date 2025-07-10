@@ -21,6 +21,7 @@ used_routines = globals.used_routines
 report_error = globals.report_compiler_error
 create_label = func_core.create_label
 _get_mangled_local_var_name = func_core._get_mangled_local_var_name
+resolve_variable_name = func_core.resolve_variable_name
 
 def _get_type_of_expression(expr_node, current_func_name_context=None):
     """
@@ -39,7 +40,7 @@ def _get_type_of_expression(expr_node, current_func_name_context=None):
     elif isinstance(expr_node, ast.Name):
         var_id = expr_node.id
         # Use the new resolver from func_core
-        resolved_var_id = func_core.resolve_variable_name(var_id, current_func_name_context)
+        resolved_var_id = resolve_variable_name(var_id, current_func_name_context)
         if resolved_var_id in globals.variables:
             return globals.variables[resolved_var_id].get('type', 'unknown')
         return 'unknown'

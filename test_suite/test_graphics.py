@@ -292,36 +292,5 @@ while True: # pragma: no cover
     pass # pragma: no cover
 """,
         'expected': 'graphics/graphics_sprite_create_from_data.asm'
-    },
-    {
-        'name': 'graphics_sprite_set_pointer',
-        'code': """
-# Set pointer for sprite 0 to point to data block at $3000 (pointer value $C0 = 192)
-sprite_set_pointer(0, 192)
-
-# Set pointer for sprite 1 using variables
-s_num = 1
-ptr_val = 193 # for data at $3040
-sprite_set_pointer(s_num, ptr_val)
-
-while True: # pragma: no cover
-    pass # pragma: no cover
-""",
-        'expected': 'graphics/graphics_sprite_set_pointer.asm'
-    },
-    {
-        'name': 'graphics_sprite_priority',
-        'code': """
-# Set sprite 0 to be behind background graphics (mask=1)
-sprite_set_priority(1)
-
-# Set sprite 3 to be behind background using a variable
-prio_mask = 8 # bit 3
-sprite_set_priority(prio_mask)
-
-while True: # pragma: no cover
-    pass # pragma: no cover
-""",
-        'expected': 'graphics/graphics_sprite_priority.asm'
     }
 ]

@@ -1,11 +1,19 @@
 
-implement the handle_comparison function in func_operations.py. This function will generate the correct assembly code for both integer and floating-point comparisons.
-This implementation will:
-	1	Handle Type Coercion: If an integer is being compared to a float, it will be converted to a float before the comparison.
-	2	Integer Comparison: For int vs int, it will perform a 16-bit signed comparison. For equality (==, !=), it compares bytes directly. For relational operators (<, >, etc.), it performs a 16-bit subtraction and checks the N (Negative) and V (Overflow) flags to determine the signed result.
-	3	Float Comparison: For float vs float, it will use the FP_COMPARE routine, which subtracts the two floating-point numbers. The function then checks if the result is positive, negative, or zero to determine the outcome of the comparison.
-	4	Store Result: The boolean result of the comparison (1 for True, 0 for False) will be stored in the target variable.
+ implementation for the handle_comparison function and its helpers. This change will fulfill all the requirements you've outlined, providing robust support for both integer and floating-point comparisons.
 
+This implementation will:
+
+Handle Type Coercion: Correctly convert integers to floats when they are compared.
+Implement 16-bit Signed Integer Comparison: Use direct byte comparison for equality (==, !=) and a proper 16-bit subtraction with N (Negative) and V (Overflow) flag checks for relational operators (<, >, <=, >=).
+Implement Float Comparison: Use the FP_COMPARE routine (which subtracts the two numbers) and then check the sign of the result to determine the comparison outcome.
+Store the Boolean Result: Store 1 for True or 0 for False in the target variable.
+
+
+Overhaul Comparison Logic: The existing comparison handlers in func_operations.py are not suitable for generating the conditional branches required by if and while statements. I will replace them with a robust implementation that correctly handles all comparison operators for both integers and floats, generating direct branching code.
+
+Implement Boolean Logic: I will introduce a new recursive helper function, _evaluate_condition, in func_structures.py. This function will process ast.BoolOp nodes (for and/or), correctly implementing short-circuiting behavior, and will delegate to the new comparison handlers for ast.Compare nodes.
+
+Implement Stack Routines: I'll add the push_word_from_addr and pop_word_to_addr routines to lib/routines.py. This will resolve the most frequent warnings and is essential for correct function call behavior.
 
 
 1. Scrolling dello Schermo (Scorrimento)

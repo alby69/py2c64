@@ -154,7 +154,7 @@ def _handle_float_comparison(left_op, right_op, op, true_label):
         ast.Eq: ("BEQ", "FP_EQ"), ast.NotEq: ("BNE", "FP_NE"),
         ast.Lt: ("BCC", "FP_LT"), ast.LtE: ("BCS", "FP_GE"),
         ast.Gt: ("BCC", "FP_LT"), ast.GtE: ("BCS", "FP_GE")
-    }
+    } # Added closing parenthesis
     
     if isinstance(op, (ast.Gt, ast.GtE)):
         gen_code.extend(_generate_load_float_to_fp1(right_op))
@@ -162,6 +162,7 @@ def _handle_float_comparison(left_op, right_op, op, true_label):
     
     gen_code.append("    JSR FP_FCMP")
     used_routines.add('FP_FCMP')
+    used_routines.add('FP_FSUB') # FP_COMPARE calls FP_FSUB
     
     branch_op, flag = comp_ops.get(type(op), ("BEQ", "FP_EQ"))
     gen_code.extend([f"    {branch_op} {flag}", f"    JMP {true_label}"])
@@ -221,14 +222,61 @@ def handle_comparison(target_var_name, node, current_func_name):
     gen_code.extend([
         f"    LDA #0", f"    JMP {end_label}", f"{true_label}:",
         f"    LDA #1", f"{end_label}:", f"    STA {target_var_name}",
-        f"    LDA #0", f"    STA {target_var_name}+1"
+        f"    LDA #0", f"    STA {target_var_name}+1" # Store a 16-bit result for consistency (though only LSB used)
     ])
 
     for temp in coerced_temps:
         release_temp_var(temp)
 
 
-def _handle_integer_abs(source, target):
+def _handle_comparison_for_branching(left_op, right_op, op, true_branch_label, current_func_name, negate=False):
+    """
+    Handles a comparison for branching purposes. It generates the necessary
+    assembly code to compare two values (int or float) and branch to a
+    specified label if the comparison is true.
+
+    Args:
+        left_op (str): Variable name for the left operand.
+        right_op (str): Variable name for the right operand.
+        op (ast.cmpop): Comparison operator (e.g., ast.Eq, ast.Lt).
+        true_branch_label (str): Label to jump to if the comparison is true.
+        current_func_name (str, optional): Name of the current function, if any.
+        negate (bool, optional): If True, negates the comparison result (for
+                                 not ... conditions).
+    """
+    left_type = variables.get(left_op, {}).get('type', 'int')
+    right_type = variables.get(right_op, {}).get('type', 'int')
+    is_float_comparison = left_type == 'float' or right_type == 'float'
+
+    # --- Integer Comparison ---
+    if not is_float_comparison:
+        branch_ops = {
+            ast.Eq: "BEQ", ast.NotEq: "BNE",
+            ast.Lt: "BLT", ast.LtE: "BLE",
+            ast.Gt: "BGT", ast.GtE: "BGE"
+        }
+        branch_op = branch_ops.get(type(op))
+        if not branch_op:
+            report_error(f"Unsupported integer comparison operator: {type(op).__name__}", node=op)
+            return
+        if negate:
+            # Invert the condition by using the opposite branch instruction
+            branch_op = branch_op[0] + 'rev' # e.g. BEQ becomes BREV
+        
+        # Compare integers by subtracting right from left.
+        # The Carry (C), Zero (Z), Negative (N), and Overflow (V) flags will be used.
+        gen_code.extend([
+            f"    LDA {left_op}",
+            f"    SEC",      # Initialize carry for subtraction
+            f"    SBC {right_op}",
+            f"    STA temp_0",   # Store the LSB of the result (not used, but needed for carry in next operation)
+            f"    LDA {left_op}+1",
+            f"    SBC {right_op}+1"
+        ])
+        gen_code.append(f"    {branch_op} {true_branch_label}")
+
+
+def _handle_integer_abs(source, target): # Note: This function isn't directly used in the diff but is provided for context.
     """Handle integer absolute value."""
     pos_label = create_label("abs_pos", str(_globals.label_counter))
     done_label = create_label("abs_done", str(_globals.label_counter))
