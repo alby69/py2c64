@@ -1,14 +1,3 @@
-
- implementation for the handle_comparison function and its helpers. This change will fulfill all the requirements you've outlined, providing robust support for both integer and floating-point comparisons.
-
-This implementation will:
-
-Handle Type Coercion: Correctly convert integers to floats when they are compared.
-Implement 16-bit Signed Integer Comparison: Use direct byte comparison for equality (==, !=) and a proper 16-bit subtraction with N (Negative) and V (Overflow) flag checks for relational operators (<, >, <=, >=).
-Implement Float Comparison: Use the FP_COMPARE routine (which subtracts the two numbers) and then check the sign of the result to determine the comparison outcome.
-Store the Boolean Result: Store 1 for True or 0 for False in the target variable.
-
-
 Overhaul Comparison Logic: The existing comparison handlers in func_operations.py are not suitable for generating the conditional branches required by if and while statements. I will replace them with a robust implementation that correctly handles all comparison operators for both integers and floats, generating direct branching code.
 
 Implement Boolean Logic: I will introduce a new recursive helper function, _evaluate_condition, in func_structures.py. This function will process ast.BoolOp nodes (for and/or), correctly implementing short-circuiting behavior, and will delegate to the new comparison handlers for ast.Compare nodes.

@@ -169,24 +169,81 @@ def _handle_float_comparison(left_op, right_op, op, true_label):
 
 
 def _handle_integer_comparison(left_op, right_op, op, true_label, end_label):
-    """Handle integer comparisons."""
-    gen_code.extend([f"    LDA {left_op}", f"    CMP {right_op}"])
+    """Handle 16-bit signed integer comparisons using N and V flags."""
+    # Perform 16-bit subtraction: left - right
+    gen_code.extend([
+        f"    SEC",  # Set carry for subtraction
+        f"    LDA {left_op}",
+        f"    SBC {right_op}",
+        f"    STA temp_0",  # Store low byte difference (temporary)
+        f"    LDA {left_op}+1",
+        f"    SBC {right_op}+1"
+    ])
     
-    if isinstance(op, ast.Eq):
+    # Handle different comparison operators
+    if isinstance(op, ast.Eq):  # ==
         gen_code.extend([
-            f"    BNE {true_label}", f"    LDA {left_op}+1",
-            f"    CMP {right_op}+1", f"    BNE {true_label}"
+            f"    BNE {end_label}_false",  # High byte not equal -> false
+            f"    LDA temp_0",
+            f"    BNE {end_label}_false",  # Low byte not equal -> false
+            f"    JMP {true_label}",  # Both equal -> true
+            f"{end_label}_false:"
         ])
-    elif isinstance(op, ast.NotEq):
+    elif isinstance(op, ast.NotEq):  # !=
         gen_code.extend([
-            f"    BNE {end_label}_set_true", f"    LDA {left_op}+1",
-            f"    CMP {right_op}+1", f"    BNE {end_label}_set_true",
-            f"    JMP {true_label}", f"{end_label}_set_true:"
+            f"    BNE {true_label}",  # High byte not equal -> true
+            f"    LDA temp_0",
+            f"    BEQ {end_label}_false",  # Both bytes equal -> false
+            f"    JMP {true_label}",  # Low byte not equal -> true
+            f"{end_label}_false:"
         ])
+    elif isinstance(op, ast.Lt):  # <
+        # For signed: (N != V) indicates left < right
+        gen_code.extend([
+            f"    BVC no_overflow_{end_label}",
+            f"    EOR #$80",  # Invert sign bit if overflow occurred
+            f"no_overflow_{end_label}:",
+            f"    BMI {true_label}"  # If negative after adjustment, left < right
+        ])
+    elif isinstance(op, ast.LtE):  # <=
+        gen_code.extend([
+            f"    BVC no_overflow_{end_label}",
+            f"    EOR #$80",  # Invert sign bit if overflow occurred
+            f"no_overflow_{end_label}:",
+            f"    BMI {true_label}",  # Negative -> left < right
+            f"    LDA temp_0",
+            f"    ORA {left_op}+1",  # Check if both bytes are zero
+            f"    BEQ {true_label}"  # Zero means equal -> true
+        ])
+    elif isinstance(op, ast.Gt):  # >
+        # For signed: (N == V) and (Z == 0) indicates left > right
+        gen_code.extend([
+            f"    BEQ {end_label}_check_zero",  # Check if high byte equal
+            f"    BVC no_overflow_{end_label}",
+            f"    EOR #$80",  # Invert sign bit if overflow occurred
+            f"no_overflow_{end_label}:",
+            f"    BPL {true_label}",  # Positive after adjustment -> left > right
+            f"    JMP {end_label}_done",
+            f"{end_label}_check_zero:",
+            f"    LDA temp_0",
+            f"    BEQ {end_label}_done",  # Both zero -> not greater
+            f"    JMP {true_label}",  # Low byte not zero -> greater
+            f"{end_label}_done:"
+        ])
+    elif isinstance(op, ast.GtE):  # >=
+        # For signed: (N == V) indicates left >= right
+        gen_code.extend([
+            f"    BVC no_overflow_{end_label}",
+            f"    EOR #$80",  # Invert sign bit if overflow occurred
+            f"no_overflow_{end_label}:",
+            f"    BPL {true_label}"  # Positive after adjustment -> left >= right
+        ])
+    else:
+        report_error(f"Unsupported integer comparison operator: {type(op).__name__}", level="ERROR")
 
 
 def handle_comparison(target_var_name, node, current_func_name):
-    """Handles an ast.Compare node."""
+    """Handles an ast.Compare node with proper type coercion and flag-based comparisons."""
     if len(node.ops) > 1 or len(node.comparators) > 1:
         report_error("Chained comparisons not supported.", node=node)
         return
@@ -201,6 +258,7 @@ def handle_comparison(target_var_name, node, current_func_name):
 
     coerced_temps = []
     if is_float_comparison:
+        # Coerce integers to floats when necessary
         if left_type == 'int':
             coerced_left = get_temp_var()
             _generate_int_to_float_conversion(left_op_name, coerced_left)
@@ -215,16 +273,25 @@ def handle_comparison(target_var_name, node, current_func_name):
     true_label, end_label = _generate_comparison_labels()
     
     if is_float_comparison:
+        # Handle float comparisons using FP_COMPARE routine
         _handle_float_comparison(left_op_name, right_op_name, op, true_label)
     else:
+        # Handle 16-bit signed integer comparisons
         _handle_integer_comparison(left_op_name, right_op_name, op, true_label, end_label)
 
+    # Store boolean result (1 for True, 0 for False) in target variable
     gen_code.extend([
-        f"    LDA #0", f"    JMP {end_label}", f"{true_label}:",
-        f"    LDA #1", f"{end_label}:", f"    STA {target_var_name}",
-        f"    LDA #0", f"    STA {target_var_name}+1" # Store a 16-bit result for consistency (though only LSB used)
+        f"    LDA #0",  # Default to False
+        f"    JMP {end_label}",  # Jump to end
+        f"{true_label}:",
+        f"    LDA #1",  # Set to True if condition met
+        f"{end_label}:",
+        f"    STA {target_var_name}",  # Store LSB
+        f"    LDA #0",
+        f"    STA {target_var_name}+1"  # Clear MSB for 16-bit boolean
     ])
 
+    # Release any temporary variables used for coercion
     for temp in coerced_temps:
         release_temp_var(temp)
 
