@@ -1,105 +1,105 @@
-[2025-07-11 10:18:53] REGENERATED: Simple assignment - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Mixed arithmetic operations - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Arithmetic overflow (sum) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Division by zero - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: XOR operator (assignment) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Operatore XOR (valori diversi) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Constant Folding: Simple multiplication - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Constant Folding: Integer division by zero (compile-time error) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Constant Folding: Mixed type addition (int + float) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: For loop over list - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Simple while loop - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Simple If (true condition) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Simple If (false condition) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Else (if branch) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Else (else branch) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Elif-Else (if branch) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Elif-Else (elif branch) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Elif-Else (else branch) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Elif (if branch, no else) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If-Elif (elif branch, no else) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with <= operator - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with < operator (false) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Nested If - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with constant True condition - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with constant False condition and Else - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with BinOp operand on the left - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: If with BinOp operand on right and left - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: NOT operator (True) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: NOT operator (False) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: AND operator (True and True) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: AND operator (True and False) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: AND operator (False and True - Short Circuit) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: OR operator (True or False - Short Circuit) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: OR operator (False or True) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: OR operator (False or False) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: NOT and AND combination - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: NOT and OR combination - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: AND with boolean constants - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: XOR operator in IF condition (True) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: XOR operator in IF condition (False) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: While loop with break - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: While loop with continue - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: For loop with break - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: For loop with continue - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Break in nested loop (while in for) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Dizionario: Aggiunta e rimozione - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Dizionario: Inizializzazione e accesso - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Tuple - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Set - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: int_plus_float_literal - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_less_than_comparison - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_equal_comparison - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_not_equal_comparison - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: int_float_greater_than_comparison - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: assign_positive_float_literal - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_abs_sgn_log - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_exp_stub - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: float_comparison_eq_ne - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: int_to_float_and_float_to_int_conversion - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: user_func_return_float_literal - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: user_func_return_float_cast - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: user_func_return_int_literal - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: user_func_return_mixed_calls - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Simple function definition and call (no params, no explicit return) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with one parameter and return - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with multiple parameters - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with empty return (implicit None/0) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Funzione senza istruzione return (implicito None/0) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function call with constant as argument - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function call whose argument is an expression - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function calling another function - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with parameters and complex body (if statement) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Funzione che modifica variabile globale (non un parametro) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with parameter whose name collides with a global - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Function with two parameters, called with variables - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Test GFX Turn On and Clear Screen - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Test GFX Draw Line (Star) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Test GFX Turn Off - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Test GFX Draw Ellipse and Circle - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_draw_circle_simple - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_draw_circle_vars - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_draw_ellipse_expressions - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_draw_rect_simple - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_set_pos - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_color_and_enable - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_disable_and_msb - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_expand - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_msb_clear - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_set_pointer - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_priority - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_multicolor - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_multicolor_colors - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_collision_check - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: graphics_sprite_create_from_data - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Input da tastiera - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: log_zero_error - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: log_negative_error - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: log_positive_stub - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: exp_stub - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: add_one_function_call - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: String slicing - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: String concatenation (f-string) - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: String concatenation (f-string) and print - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Print string variable - File regenerated successfully
-[2025-07-11 10:18:53] REGENERATED: Print string literal - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Simple assignment - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Mixed arithmetic operations - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Arithmetic overflow (sum) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Division by zero - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: XOR operator (assignment) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Operatore XOR (valori diversi) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Constant Folding: Simple multiplication - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Constant Folding: Integer division by zero (compile-time error) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Constant Folding: Mixed type addition (int + float) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: For loop over list - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Simple while loop - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Simple If (true condition) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Simple If (false condition) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Else (if branch) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Else (else branch) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Elif-Else (if branch) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Elif-Else (elif branch) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Elif-Else (else branch) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Elif (if branch, no else) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If-Elif (elif branch, no else) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with <= operator - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with < operator (false) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Nested If - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with constant True condition - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with constant False condition and Else - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with BinOp operand on the left - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: If with BinOp operand on right and left - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: NOT operator (True) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: NOT operator (False) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: AND operator (True and True) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: AND operator (True and False) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: AND operator (False and True - Short Circuit) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: OR operator (True or False - Short Circuit) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: OR operator (False or True) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: OR operator (False or False) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: NOT and AND combination - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: NOT and OR combination - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: AND with boolean constants - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: XOR operator in IF condition (True) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: XOR operator in IF condition (False) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: While loop with break - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: While loop with continue - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: For loop with break - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: For loop with continue - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Break in nested loop (while in for) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Dizionario: Aggiunta e rimozione - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Dizionario: Inizializzazione e accesso - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Tuple - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Set - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: int_plus_float_literal - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_less_than_comparison - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_equal_comparison - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_not_equal_comparison - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: int_float_greater_than_comparison - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: assign_positive_float_literal - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_abs_sgn_log - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_exp_stub - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: float_comparison_eq_ne - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: int_to_float_and_float_to_int_conversion - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: user_func_return_float_literal - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: user_func_return_float_cast - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: user_func_return_int_literal - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: user_func_return_mixed_calls - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Simple function definition and call (no params, no explicit return) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with one parameter and return - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with multiple parameters - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with empty return (implicit None/0) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Funzione senza istruzione return (implicito None/0) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function call with constant as argument - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function call whose argument is an expression - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function calling another function - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with parameters and complex body (if statement) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Funzione che modifica variabile globale (non un parametro) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with parameter whose name collides with a global - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Function with two parameters, called with variables - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Test GFX Turn On and Clear Screen - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Test GFX Draw Line (Star) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Test GFX Turn Off - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Test GFX Draw Ellipse and Circle - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_draw_circle_simple - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_draw_circle_vars - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_draw_ellipse_expressions - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_draw_rect_simple - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_set_pos - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_color_and_enable - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_disable_and_msb - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_expand - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_msb_clear - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_set_pointer - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_priority - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_multicolor - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_multicolor_colors - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_collision_check - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: graphics_sprite_create_from_data - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Input da tastiera - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: log_zero_error - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: log_negative_error - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: log_positive_stub - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: exp_stub - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: add_one_function_call - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: String slicing - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: String concatenation (f-string) - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: String concatenation (f-string) and print - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Print string variable - File regenerated successfully
+[2025-07-12 16:34:25] REGENERATED: Print string literal - File regenerated successfully

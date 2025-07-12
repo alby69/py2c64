@@ -1,4 +1,4 @@
-Overhaul Comparison Logic: The existing comparison handlers in func_operations.py are not suitable for generating the conditional branches required by if and while statements. I will replace them with a robust implementation that correctly handles all comparison operators for both integers and floats, generating direct branching code.
+
 
 Implement Boolean Logic: I will introduce a new recursive helper function, _evaluate_condition, in func_structures.py. This function will process ast.BoolOp nodes (for and/or), correctly implementing short-circuiting behavior, and will delegate to the new comparison handlers for ast.Compare nodes.
 
