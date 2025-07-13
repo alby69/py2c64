@@ -4,11 +4,11 @@ import ast
 import traceback
 
 # Import project modules
-from . import globals
-from .lib import ast_processor
-from .lib import func_core
-from .lib import func_structures
-from .lib import routines as routine_manager # Renamed for clarity
+import globals
+from lib import ast_processor
+from lib import func_core
+from lib import func_structures
+from lib import routines as routine_manager # Renamed for clarity
 
 # Note: Other lib modules like func_expressions, func_operations, etc.,
 # are used by ast_processor and don't need to be imported directly here.

@@ -1,9 +1,9 @@
 # py2c64/lib/func_c64.py
 
-from .. import globals
-from . import func_core
-from . import func_expressions
-from .c64_function_specs import C64_FUNCTION_SPECS, C64_HARDWARE_ALIASES
+import globals
+import lib.func_core
+import lib.func_expressions
+from lib.c64_function_specs import C64_FUNCTION_SPECS, C64_HARDWARE_ALIASES
 
 # Aliases
 gen_code = globals.generated_code

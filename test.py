@@ -14,9 +14,8 @@ _PROJECT_ROOT = os.path.dirname(_CURRENT_SCRIPT_DIR)
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
-from py2c64 import main as compiler_main
-from py2c64 import globals as compiler_globals
-# Rimosso: from py2asm.test_cases import test_cases
+import main as compiler_main
+import globals as compiler_globals
 
 
 def load_test_cases(test_suite_dir="test_suite", specific_file_name=None):

@@ -1,0 +1,89 @@
+# py2c64/lib/ast_processor.py
+    import ast
+    import globals
+    import lib.func_expressions
+    import lib.func_core
+    import lib.func_dict
+    import lib.func_c64
+    import lib.func_builtins
+    import lib.func_structures
+
+
+# /workspaces/py2c64/lib/c64_routine_library.py
+    import globals as py2asm_globals
+    from lib.func_core import create_label
+
+
+# /workspaces/py2c64/lib/func_builtins.py
+    import ast
+    import globals
+    import lib.func_core
+    import lib.func_expressions
+    from lib.builtin_function_specs import BUILTIN_FUNCTION_SPECS
+
+# py2c64/lib/func_c64.py
+    import globals
+    import lib.func_core
+    import lib.func_expressions
+    from lib.c64_function_specs import C64_FUNCTION_SPECS, C64_HARDWARE_ALIASES
+
+
+# py2c64/lib/func_core.py
+    import ast
+    import globals as py2asm_globals # Import the globals module with an alias
+
+
+# py2c64/lib/func_dict.py
+    import ast
+    import globals
+    import lib.func_core
+    import lib.func_expressions
+    from lib.dict_method_specs import DICT_METHOD_SPECS
+
+
+
+# py2c64/lib/func_expressions.py
+    import ast
+    import globals as _globals
+    from lib.func_core import (
+        type_value, handle_variable, get_temp_var, release_temp_var,
+        _generate_int_to_float_conversion, _generate_float_to_int_conversion,
+        _generate_load_float_to_fp1, _generate_store_float_from_fp1, _copy_variable_content,
+        resolve_variable_name
+    )
+    from lib.func_strings import join_str_value
+
+# py2c64/lib/func_operations.py
+    import ast
+    import globals as _globals
+    from lib.func_core import (
+        handle_variable, get_temp_var, release_temp_var, create_label,
+        _generate_int_to_float_conversion, _generate_load_float_to_fp1,
+        _generate_load_float_to_fp2, _generate_store_float_from_fp1
+    )
+
+# py2c64/lib/func_strings.py
+    import ast # pyright: ignore[reportMissingModuleSource]
+    import globals as py2asm_globals # pyright: ignore[reportMissingModuleSource]
+    from lib.func_core import handle_variable, _generate_load_2_bytes_to_zp
+    import lib.routines
+
+# py2c64/lib/func_structures.py
+    import ast
+    from lib.ast_processor import AstProcessor
+    from lib.func_core import FuncCore
+    from lib.func_operations import FuncOperations
+    from lib.func_expressions import FuncExpressions
+    from lib.func_strings import FuncStrings
+    from lib.func_dict import FuncDict
+    from lib.func_c64 import FuncC64
+    from lib.func_builtins import FuncBuiltins
+    from lib.c64_routine_library import C64RoutineLibrary
+    import globals
+
+# py2c64/lib/routines.py
+    import textwrap
+    import sys # Import sys for diagnostics
+    import globals as app_globals
+    import lib.c64_routine_library
+

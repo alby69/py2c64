@@ -1,8 +1,8 @@
-# func_core.py
+# py2c64/lib/func_core.py
 # Core utility functions for variable management, label creation, and code generation.
 
 import ast
-from .. import globals as py2asm_globals # Import the globals module with an alias
+import globals as py2asm_globals
 
 def _get_mangled_local_var_name(func_name, var_name):
     """Mangles a local variable name with its function scope."""

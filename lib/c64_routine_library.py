@@ -12,8 +12,8 @@ This allows the main compiler to look up and include only the routines
 that are actually used in the final assembly output.
 """
 
-from .. import globals as py2asm_globals
-from .func_core import create_label
+import globals as py2asm_globals
+from lib.func_core import create_label
 
 def _generate_gfx_turn_on():
     """

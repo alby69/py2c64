@@ -1,10 +1,9 @@
-# routines.py
-# file with all routines
+# py2c64/lib/routines.py
 import textwrap
 import sys # Import sys for diagnostics
-from .. import globals as app_globals
+import globals as app_globals
 
-from . import c64_routine_library # Corrected import name
+from . import c64_routine_library
 # print(f"DEBUG: routines.py module level - type of app_globals: {type(app_globals)}")
 # print(f"DEBUG: routines.py module level - app_globals is built-in globals: {app_globals is globals}") # Compare with built-in globals
 # print(f"DEBUG: routines.py module level - app_globals is the imported module: {app_globals is sys.modules.get('py2asm.globals')}") # Compare with sys.modules

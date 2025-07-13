@@ -1,11 +1,11 @@
-# /workspaces/py2c64/lib/func_dict.py
+# py2c64/lib/func_dict.py
 
 import ast
 
-from .. import globals
-from . import func_core
-from . import func_expressions
-from .dict_method_specs import DICT_METHOD_SPECS
+import globals
+import lib.func_core
+import lib.func_expressions
+from lib.dict_method_specs import DICT_METHOD_SPECS
 
 # Aliases
 gen_code = globals.generated_code

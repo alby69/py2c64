@@ -1,9 +1,9 @@
-# func_operations.py
+# py2c64/lib/func_operations.py
 # Functions for handling binary operations and arithmetic.
 
 import ast
-from .. import globals as _globals
-from .func_core import (
+import globals as _globals
+from lib.func_core import (
     handle_variable, get_temp_var, release_temp_var, create_label,
     _generate_int_to_float_conversion, _generate_load_float_to_fp1,
     _generate_load_float_to_fp2, _generate_store_float_from_fp1

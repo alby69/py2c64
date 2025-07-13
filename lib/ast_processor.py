@@ -1,12 +1,12 @@
-# py2asm/lib/ast_processor.py
+# py2c64/lib/ast_processor.py
 import ast
-from .. import globals
+import globals
 from . import func_expressions
 from . import func_core
 from . import func_dict
 from . import func_c64
-from . import func_builtins    # NEW: Import for built-in functions
-from . import func_structures  # NEW: Import for control structures
+from . import func_builtins
+from . import func_structures
 
 # Aliases
 gen_code = globals.generated_code

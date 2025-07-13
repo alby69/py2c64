@@ -2,10 +2,10 @@
 
 import ast
 
-from .. import globals
-from . import func_core
-from . import func_expressions
-from .builtin_function_specs import BUILTIN_FUNCTION_SPECS
+import globals
+import lib.func_core
+import lib.func_expressions
+from lib.builtin_function_specs import BUILTIN_FUNCTION_SPECS
 
 # Aliases
 gen_code = globals.generated_code
