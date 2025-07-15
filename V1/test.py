@@ -4,6 +4,7 @@ import os
 import sys # For sys.path and sys.exit
 import shutil  # Per copiare i file
 import argparse  # Per gli argomenti a riga di comando
+import V1.globals as compiler_globals # Import globals for default paths
 import importlib.util # Per caricare moduli dinamicamente
 from datetime import datetime # Per i timestamp nei log
 
@@ -14,8 +15,9 @@ _PROJECT_ROOT = os.path.dirname(_CURRENT_SCRIPT_DIR)
 if _PROJECT_ROOT not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT)
 
-import V1.main as compiler_main
-import V1.globals as compiler_globals
+import V2.main as compiler_main  # Update for V2
+# If V2 handles globals differently or doesn't need it:
+# from V2 import compiler_globals  # Or remove if not used
 
 
 def load_test_cases(test_suite_dir="test_suite", specific_file_name=None):
@@ -75,7 +77,9 @@ def run_test(test_case, regenerate_mode=False):
     print(f"\n--- Starting test: {test_case['name']} ---")
     print(f"Test code:") # Modificato per rimuovere spazi iniziali e mettere il codice a capo
     print(test_case['code']) # Print the test code on separate lines
-    compiler_globals.reset_globals() # Use the new, more complete reset function
+    # Adjust or remove the following line based on how V2 handles global state:
+    # compiler_globals.reset_globals()
+    # If V2 has a reset method on the compiler object, use that instead.
     temp_output_filename = "temp_output.asm"  # Define once
 
     # Define a simple error handler to pass to the compiler.
@@ -106,7 +110,7 @@ def run_test(test_case, regenerate_mode=False):
             # _CURRENT_SCRIPT_DIR è la directory di test.py (py2asm/)
             # py2asm_globals.TEST_SUITE_DIR è "test_suite"
             # py2asm_globals.EXPECTED_OUTPUTS_SUBDIR è "expected_outputs"
-            base_expected_path = os.path.join(_CURRENT_SCRIPT_DIR, compiler_globals.TEST_SUITE_DIR, compiler_globals.EXPECTED_OUTPUTS_SUBDIR)
+            base_expected_path = os.path.join(_CURRENT_SCRIPT_DIR, compiler_globals.TEST_SUITE_DIR, args.expected_dir) # Use the configurable path
             expected_filename = os.path.join(base_expected_path, test_case["expected"])
 
             if regenerate_mode: # Regeneration mode
@@ -210,6 +214,13 @@ if __name__ == "__main__":
         default=None,
         help="Optional: specific test file to run/regenerate (e.g., test_arithmetic.py)"
     )
+    parser.add_argument(
+        "--expected-dir",
+        default=compiler_globals.EXPECTED_OUTPUTS_SUBDIR, # Default to V1 expected outputs
+        help="Directory containing expected output files (relative to test_suite). Defaults to 'expected_outputs'."
+    )
+
+
     args = parser.parse_args()
 
     # Define log file paths

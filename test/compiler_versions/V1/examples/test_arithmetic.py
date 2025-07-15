@@ -1,3 +1,18 @@
+
+"""
+test_cases = [
+    {
+        'name': 'Simple Addition (V1)',
+        'compiler_version': 'V1',  # ADD THIS
+        'code': 'x = 5 + 3',
+        'expected': 'simple_addition.asm'  # SIMPLIFY THIS
+    },
+    # ... other test cases for V1 ...
+]
+"""
+
+
+
 test_cases = [
     {
         "name": "Simple assignment",
