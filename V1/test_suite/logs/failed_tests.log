@@ -1,0 +1,43 @@
+[2025-07-15 14:09:43] REGENERATION FAILED: For loop over list - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Simple while loop - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Simple If (true condition) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Simple If (false condition) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Else (if branch) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Else (else branch) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Elif-Else (if branch) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Elif-Else (elif branch) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Elif-Else (else branch) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Elif (if branch, no else) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If-Elif (elif branch, no else) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If with <= operator - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If with < operator (false) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Nested If - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If with BinOp operand on the left - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: If with BinOp operand on right and left - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: NOT operator (True) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: NOT operator (False) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: NOT and AND combination - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: NOT and OR combination - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: While loop with break - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: While loop with continue - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: For loop with break - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: For loop with continue - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Break in nested loop (while in for) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Function with parameters and complex body (if statement) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Test GFX Turn On and Clear Screen - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: Test GFX Draw Line (Star) - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_draw_circle_simple - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_draw_circle_vars - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_draw_ellipse_expressions - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_draw_rect_simple - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_set_pos - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_color_and_enable - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_disable_and_msb - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_expand - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_msb_clear - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_set_pointer - Error during regeneration
+[2025-07-15 14:09:43] REGENERATION FAILED: graphics_sprite_priority - Error during regeneration
+[2025-07-15 14:09:44] REGENERATION FAILED: graphics_sprite_multicolor - Error during regeneration
+[2025-07-15 14:09:44] REGENERATION FAILED: graphics_sprite_multicolor_colors - Error during regeneration
+[2025-07-15 14:09:44] REGENERATION FAILED: graphics_sprite_collision_check - Error during regeneration
+[2025-07-15 14:09:44] REGENERATION FAILED: graphics_sprite_create_from_data - Error during regeneration
