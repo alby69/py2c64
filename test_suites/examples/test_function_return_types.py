@@ -1,7 +1,8 @@
 # /workspaces/1586160/py2asm/test_suite/test_function_return_types.py
 test_cases = [
     {
-        'name': 'user_func_return_float_literal',
+        'name': 'user_func_return_float_literal (V1)',
+        'compiler_version': 'V1',
         'code': """
 def get_pi():
     return 3.14
@@ -12,7 +13,8 @@ a = get_pi()
         'expected': 'function_returns/user_func_return_float_literal.asm'
     },
     {
-        'name': 'user_func_return_float_cast',
+        'name': 'user_func_return_float_cast (V1)',
+        'compiler_version': 'V1',
         'code': """
 def to_float(x):
     y = 1 # dummy local var
@@ -25,7 +27,8 @@ b = to_float(b_val)
         'expected': 'function_returns/user_func_return_float_cast.asm'
     },
     {
-        'name': 'user_func_return_int_literal',
+        'name': 'user_func_return_int_literal (V1)',
+        'compiler_version': 'V1',
         'code': """
 def get_int():
     return 100
@@ -36,7 +39,8 @@ c = get_int()
         'expected': 'function_returns/user_func_return_int_literal.asm'
     },
     {
-        'name': 'user_func_return_mixed_calls',
+        'name': 'user_func_return_mixed_calls (V1)',
+        'compiler_version': 'V1',
         'code': """
 def returns_float():
     val = 0.0 # dummy local

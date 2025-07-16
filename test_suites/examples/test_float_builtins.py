@@ -2,7 +2,8 @@
 
 test_cases = [
     { # Test case 1: float_abs_sgn_log
-        'name': 'float_abs_sgn_log',
+        'name': 'float_abs_sgn_log (V1)',
+        'compiler_version': 'V1',
         'code': """a = -5.25
 abs_a = abs(a)  # Expected: 5.25
 b = 0.0
@@ -16,7 +17,8 @@ log_int = log(1) # Test coercion""",
     },
 
     {
-            'name': 'float_exp_stub',
+            'name': 'float_exp_stub (V1)',
+            'compiler_version': 'V1',
             'code': """# Test exp() stub - should call FP_EXP and handle type.
 # FP_EXP itself will signal NotImplementedError at runtime.
 # We are testing the compilation path to FP_EXP.
