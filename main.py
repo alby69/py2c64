@@ -423,7 +423,7 @@ class C64CodeGenerator(CodeGenerator):
         elif node.data_type == DataType.FLOAT32:
             # Per i float sarebbe necessario convertire in formato Apple II
             self.output.add_line(f"    ; Float literal: {node.value}")
-        
+
         return temp_var
     
     def visit_identifier(self, node: Identifier) -> Any:
@@ -449,7 +449,7 @@ class C64CodeGenerator(CodeGenerator):
         if node.operation == OperationType.ADD:
             self._generate_add_int16(left_result, right_result, result_var)
         elif node.operation == OperationType.SUB:
-            self._generate_sub_int16(left_result, right_result, result_var)
+            self._generate_sub_int16(left_result, right_result, result_var) #  <- No change required here
         elif node.operation == OperationType.MUL:
             self._generate_mul_int16(left_result, right_result, result_var)
             self.used_routines.add("multiply16x16")
@@ -460,7 +460,7 @@ class C64CodeGenerator(CodeGenerator):
     def visit_function_call(self, node: FunctionCall) -> Any:
         """Visita una chiamata di funzione"""
         if node.name == "print":
-            # Gestione speciale per print
+            # Special handling for print
             if node.arguments:
                 arg_result = node.arguments[0].accept(self)
                 self.output.add_instruction("LDA", f"{arg_result}")
@@ -469,7 +469,7 @@ class C64CodeGenerator(CodeGenerator):
                 self.output.add_instruction("STA", "PRINT_VALUE+1")
                 self.output.add_instruction("JSR", "PRINT_INT16")
                 self.used_routines.add("print_int16")
-        else:
+        else: # Normal function call
             # Chiamata di funzione normale
             func = self.symbol_table.lookup_function(node.name)
             if not func:

@@ -3,8 +3,8 @@
 
 import ast # pyright: ignore[reportMissingModuleSource]
 import V1.globals as globals
-from lib.func_core import handle_variable, _generate_load_2_bytes_to_zp
-import lib.routines
+from lib_old.func_core import handle_variable, _generate_load_2_bytes_to_zp
+import lib_old.routines
 
 def str_slice(var_name, node):
     """Handles string slicing.""" # pyright: ignore[reportUnusedFunction]

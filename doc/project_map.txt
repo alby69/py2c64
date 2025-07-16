@@ -1,89 +1,50 @@
-# py2c64/lib/ast_processor.py
-    import ast
-    import globals
-    import lib.func_expressions
-    import lib.func_core
-    import lib.func_dict
-    import lib.func_c64
-    import lib.func_builtins
-    import lib.func_structures
+
+OK Step 1: Analyze and Categorize Functions in main.py
+
+Core Operations: Functions related to AST traversal, symbol table management, code generation, and output handling (e.g., compile, _generate_add_int16, visit_program).
+Data Structures: Functions that primarily work with the custom data structures like SymbolTable, AssemblyOutput, and LabelManager.
+AST Node Processing: Functions specifically responsible for handling different types of AST nodes (e.g., visit_literal, visit_assignment).
+Error Handling: Functions dedicated to managing and formatting compiler errors (e.g., CompilerError).
+
+OK Step 2: Create Class Definitions in New Modules
+
+Create new Python modules within the lib/ directory to house the categorized classes. For example:
+
+lib/core.py: For core operation classes like Compiler, CodeGenerator.
+lib/symbols.py: For symbol table-related classes (SymbolTable, Variable, Function).
+lib/ast_nodes.py: For AST node classes (Literal, Assignment, etc.).
+lib/errors.py: For error handling classes (CompilerError).
+lib/output.py: For the AssemblyOutput class.
+lib/labels.py: For the LabelManager class.
+(Optional) lib/visitors.py: Introduce a module to store the visitor interfaces and implementations for different AST walkers (like CodeGenerator).
 
 
-# /workspaces/py2c64/lib/c64_routine_library.py
-    import globals as py2asm_globals
-    from lib.func_core import create_label
+OK Step 3: Migrate Functions into Classes
+Carefully move the functions from main.py into their corresponding classes within the new modules. 
+Key Considerations During Migration:
+self: Ensure that class methods correctly use self to access instance variables.
+Dependencies: Within classes, reference other class instances using self (e.g., self.symbol_table.lookup_variable). Adjust imports accordingly.
+State Management: Think carefully about where state (variables like temp_var_counter in C64CodeGenerator) should be stored – either as instance variables or potentially managed by a dedicated state or context object if it needs wider scope.
+Constructors: Modify class constructors (__init__) to properly initialize class members.
+Method Organization: Consider breaking down large methods into smaller, more cohesive private methods (using a leading underscore, e.g., _generate_add_int16).
 
+OK Step 4: Update C64CodeGenerator to Use New AST Node Classes
+Modify the C64CodeGenerator's visit_* methods to work with the new AST node classes. The logic within each visit_* method should largely remain the same, but you'll need to access attributes using the new class structure (e.g., node.target becomes node.target.name if node.target is now an Identifier object).
 
-# /workspaces/py2c64/lib/func_builtins.py
-    import ast
-    import globals
-    import lib.func_core
-    import lib.func_expressions
-    from lib.builtin_function_specs import BUILTIN_FUNCTION_SPECS
+Step 5: Adjust Test Cases
+Update the test cases in test.py to reflect any changes in how the compiler is called or how results are structured. Since you're primarily refactoring the internal structure, ideally the public interface of the compiler (the compile method) should remain the same, minimizing test case adjustments.
 
-# py2c64/lib/func_c64.py
-    import globals
-    import lib.func_core
-    import lib.func_expressions
-    from lib.c64_function_specs import C64_FUNCTION_SPECS, C64_HARDWARE_ALIASES
+Step 6: Refactor Helper Functions
+Consider helper functions within classes. In some cases, these might become standalone utility functions within their modules (especially if they don't heavily rely on class state).
 
+Step 7: Review and Refine
+After the initial migration, carefully review all the code to ensure:
 
-# py2c64/lib/func_core.py
-    import ast
-    import globals as py2asm_globals # Import the globals module with an alias
+Cohesion: Classes should have a clear, single responsibility.
+Coupling: Minimize dependencies between classes where possible.
+Readability: Code should be well-commented and easy to understand.
+Testability: The structure should facilitate writing unit tests for individual classes (though this test suite in test.py primarily performs integration testing).
 
+Step 8: Update main.py as a Hub
 
-# py2c64/lib/func_dict.py
-    import ast
-    import globals
-    import lib.func_core
-    import lib.func_expressions
-    from lib.dict_method_specs import DICT_METHOD_SPECS
-
-
-
-# py2c64/lib/func_expressions.py
-    import ast
-    import globals as _globals
-    from lib.func_core import (
-        type_value, handle_variable, get_temp_var, release_temp_var,
-        _generate_int_to_float_conversion, _generate_float_to_int_conversion,
-        _generate_load_float_to_fp1, _generate_store_float_from_fp1, _copy_variable_content,
-        resolve_variable_name
-    )
-    from lib.func_strings import join_str_value
-
-# py2c64/lib/func_operations.py
-    import ast
-    import globals as _globals
-    from lib.func_core import (
-        handle_variable, get_temp_var, release_temp_var, create_label,
-        _generate_int_to_float_conversion, _generate_load_float_to_fp1,
-        _generate_load_float_to_fp2, _generate_store_float_from_fp1
-    )
-
-# py2c64/lib/func_strings.py
-    import ast # pyright: ignore[reportMissingModuleSource]
-    import globals as py2asm_globals # pyright: ignore[reportMissingModuleSource]
-    from lib.func_core import handle_variable, _generate_load_2_bytes_to_zp
-    import lib.routines
-
-# py2c64/lib/func_structures.py
-    import ast
-    from lib.ast_processor import AstProcessor
-    from lib.func_core import FuncCore
-    from lib.func_operations import FuncOperations
-    from lib.func_expressions import FuncExpressions
-    from lib.func_strings import FuncStrings
-    from lib.func_dict import FuncDict
-    from lib.func_c64 import FuncC64
-    from lib.func_builtins import FuncBuiltins
-    from lib.c64_routine_library import C64RoutineLibrary
-    import globals
-
-# py2c64/lib/routines.py
-    import textwrap
-    import sys # Import sys for diagnostics
-    import globals as app_globals
-    import lib.c64_routine_library
-
+In main.py, you will instantiate the main Py2C64Compiler class (now likely in lib/core.py) and call its compile method. main.py effectively becomes the entry point for the compilation process. It can also handle command-line arguments or other external interactions. You might need to move the example_usage function and the test framework to a separate file (e.g., run.py or similar) to keep main.py clean and focused on the compilation process itself.

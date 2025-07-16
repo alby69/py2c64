@@ -3,13 +3,13 @@
 
 import ast
 import V1.globals as _globals
-from lib.func_core import (
+from lib_old.func_core import (
     type_value, handle_variable, get_temp_var, release_temp_var,
     _generate_int_to_float_conversion, _generate_float_to_int_conversion,
     _generate_load_float_to_fp1, _generate_store_float_from_fp1, _copy_variable_content,
     resolve_variable_name
 )
-from lib.func_strings import join_str_value
+from lib_old.func_strings import join_str_value
 
 # Aliases
 gen_code = _globals.generated_code

@@ -1,0 +1,147 @@
+Below is a “cook-book” style plan that takes you from the 6502 routines in your books to the **exact Python façade** that the py2c64 compiler will recognise.  
+The goal is to create **micro-functions** (think “Unix filter” or “Lego brick”) that
+
+1. a Python user can call naturally,  
+2. the compiler can translate into **one or two dozen 6502 bytes**,  
+3. can be **chained together** by the compiler to build larger programs.
+
+────────────────────────────────────────────
+1. Taxonomy of 6502 Routines
+────────────────────────────────────────────
+Split every routine you own into four buckets:
+
+| Bucket            | Typical 6502 entry points | Typical C64 address |
+|-------------------|---------------------------|---------------------|
+| **MATH**          | `add16`, `sub16`, `mul16`, `div16`, `mod16`, `sqrt16`, `rand16` | RAM $FB-$FE (work area) |
+| **STRING**        | `strlen`, `strcpy`, `strcmp`, `itoa`, `atoi` | $1000-$1FFF (BASIC RAM) |
+| **MEMORY**        | `memset`, `memcpy`, `memchr`, `zeropage_copy` | ROM or self-modifying |
+| **HARDWARE**      | `gfx_cls`, `plot`, `line`, `sprite_on`, `sprite_pos`, `joy_read`, `sid_play` | VIC/SID registers |
+
+Each routine must be **pure** (no side effects beyond the stated one) or **clearly labelled** if it touches hardware.  
+This keeps the compiler’s dependency tracker simple.
+
+────────────────────────────────────────────
+2. Signature Schema in Python
+────────────────────────────────────────────
+Expose every routine as a **Python function that never raises**.  
+Use only the py2c64 built-in types (`int16`, `float32`, `string`, `void`) so the compiler never needs implicit conversions.
+
+Example mapping:
+
+Python façade               | 6502 routine          | bytes | side effects
+----------------------------|-----------------------|-------|-------------
+`def add16(a:int16, b:int16) -> int16`  | `add16.s`             | 19    | uses tmp ZP $FB-$FC
+`def gfx_cls() -> None`                 | `clear_screen.s`      | 12    | fills screen RAM
+`def sprite_pos(idx:int16, x:int16, y:int16) -> None` | `sprite_set_xy.s` | 34 | writes VIC regs
+
+────────────────────────────────────────────
+3. Glue Layer inside py2c64
+────────────────────────────────────────────
+Add a new package `py2c64.lib6502`.  
+Each Python façade is a **stub** of no more than three lines:
+
+```python
+# py2c64/lib6502/math.py
+from py2c64.types import int16, asm_import
+
+@asm_import("add16")          # ← tells CodeGenerator to include add16.s
+def add16(a: int16, b: int16) -> int16:
+    ...
+```
+
+The `@asm_import` decorator registers the routine in `RoutineManager` and records the **exact symbol** and **call ABI**.
+
+────────────────────────────────────────────
+4. 6502 ABI Convention (keep it tiny)
+────────────────────────────────────────────
+Choose **one** calling convention for every micro-routine:
+
+- arguments: **little-endian** in consecutive ZP bytes:  
+  `arg0` → $FB, `arg1` → $FC, `arg2` → $FD …  
+- return: **A/Y pair** (lo/hi) for 16-bit, **A** for 8-bit.  
+- clobber list: caller-saves A,X,Y; callee preserves nothing else.  
+
+This makes the compiler’s code generator trivial: it just copies Python temps into $FB… and copies A/Y back to the result temp.
+
+────────────────────────────────────────────
+5. Inventory Worksheet (fill as you read your books)
+────────────────────────────────────────────
+Create a CSV (or tiny SQLite) table:
+
+```
+python_name, asm_file, section, ret_type, arg_types, stack_bytes
+add16, math/add16.s, MATH, int16, int16 int16, 0
+sub16, math/sub16.s, MATH, int16, int16 int16, 0
+gfx_cls, gfx/clear.s, HW, void, , 0
+sprite_pos, gfx/sprite_pos.s, HW, void, int16 int16 int16, 2
+```
+
+The compiler uses this table to decide **when to emit `jsr add16`**, **how to pass the parameters**, and **which object file to link**.
+
+────────────────────────────────────────────
+6. Quick Example Walk-through
+────────────────────────────────────────────
+Python code written by the user:
+
+```python
+from py2c64.lib6502.math import add16, mul16
+from py2c64.lib6502.gfx import gfx_cls
+
+def demo(x, y):
+    gfx_cls()
+    z = add16(x, y)
+    w = mul16(z, 3)
+    return w
+```
+
+Compiler steps:
+
+1. Parser → AST.  
+2. Symbol table sees `add16`, `mul16`, `gfx_cls` as **foreign symbols**.  
+3. RoutineManager marks `add16.s`, `mul16.s`, `clear.s` as **needed**.  
+4. CodeGen emits:
+
+```
+        jsr gfx_cls        ; 3 bytes
+        lda  #<x
+        ldy  #>x
+        sta  $FB
+        sty  $FC
+        lda  #<y
+        ldy  #>y
+        sta  $FD
+        sty  $FE
+        jsr add16          ; result in A/Y
+        sta  $FB
+        sty  $FC
+        lda  #3
+        sta  $FD
+        ldy  #0
+        sty  $FE
+        jsr mul16          ; result in A/Y
+        rts
+```
+
+────────────────────────────────────────────
+7. Checklist to Get Started Today
+────────────────────────────────────────────
+1. Pick **10** smallest routines from your books (e.g. 16-bit add, subtract, screen clear, plot pixel).  
+2. Hand-assemble them once, measure exact byte count.  
+3. Write the matching `@asm_import` stubs.  
+4. Add an **integration test** for each: compile a 3-line Python program and verify the generated `.prg` runs in VICE.  
+5. When the first 10 work, batch-convert the rest: each new routine is *only* a stub + `.s` file + CSV entry.
+
+────────────────────────────────────────────
+8. Bonus: Auto-Stub Generator
+────────────────────────────────────────────
+If you have many routines, write a 20-line Python script that:
+
+- parses `*.s` files for `; @py_sig: int16 add16(int16,int16)` comments,  
+- spits out the `@asm_import` stub automatically,  
+- updates the CSV.
+
+You’ll reach **hundreds** of Lego-bricks with almost no manual work.
+
+────────────────────────────────────────────
+End of plan.  
+Start with the 10 smallest routines, prove the round-trip works, then treat every new routine as **data entry**, not compiler hacking.

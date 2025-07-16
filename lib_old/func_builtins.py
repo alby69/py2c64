@@ -3,9 +3,9 @@
 import ast
 
 import V1.globals as globals
-from lib import func_core
-from lib import func_expressions
-from lib.builtin_function_specs import BUILTIN_FUNCTION_SPECS
+from lib_old import func_core
+from lib_old import func_expressions
+from lib_old.builtin_function_specs import BUILTIN_FUNCTION_SPECS
 
 # Aliases
 gen_code = globals.generated_code

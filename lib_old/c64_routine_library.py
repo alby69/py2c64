@@ -13,7 +13,7 @@ that are actually used in the final assembly output.
 """
 
 import V1.globals as py2asm_globals
-from lib.func_core import create_label
+from lib_old.func_core import create_label
 
 def _generate_gfx_turn_on():
     """

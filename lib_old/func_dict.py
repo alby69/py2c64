@@ -3,9 +3,9 @@
 import ast
 
 import V1.globals as globals
-import lib.func_core
-import lib.func_expressions
-from lib.dict_method_specs import DICT_METHOD_SPECS
+import lib_old.func_core
+import lib_old.func_expressions
+from lib_old.dict_method_specs import DICT_METHOD_SPECS
 
 # Aliases
 gen_code = globals.generated_code
