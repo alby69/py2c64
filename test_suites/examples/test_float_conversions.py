@@ -2,7 +2,7 @@
 
 test_cases = [
     {
-        'name': 'int_to_float_and_float_to_int_conversion (V1)',
+        'name': 'int_to_float_and_float_to_int_conversion',
         'compiler_version': 'V1',
         'code': """
 a_int = 5

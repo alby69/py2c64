@@ -2,7 +2,7 @@
 
 test_cases = [
     {
-        'name': 'float_comparison_eq_ne (V1)',
+        'name': 'float_comparison_eq_ne',
         'compiler_version': 'V1',
         'code': """
 a = 3.5

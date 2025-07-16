@@ -13,7 +13,7 @@ print(result)
 """
 
 test_cases.append({
-    'name': 'add_one_function_call (V1)',
+    'name': 'add_one_function_call',
     'compiler_version': 'V1',
     'code': test_code_1,
     'expected': 'expected_add_one_function_call.asm'

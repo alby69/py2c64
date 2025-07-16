@@ -1,7 +1,7 @@
 test_cases = [
     {
-        "name": "log_zero_error (V1)",
-        "compiler_version": "V1",
+        "name": "log_zero_error",
+        
         "code": """
 try:
     x = log(0.0)
@@ -11,8 +11,8 @@ except ValueError:
         "expected": "expected_outputs/math_errors/log_zero_error.asm"
     },
     {
-        "name": "log_negative_error (V1)",
-        "compiler_version": "V1",
+        "name": "log_negative_error",
+        
         "code": """
 try:
     y = log(-1.0)
@@ -22,8 +22,8 @@ except ValueError:
         "expected": "expected_outputs/math_errors/log_negative_error.asm"
     },
     {
-        "name": "log_positive_stub (V1)",
-        "compiler_version": "V1",
+        "name": "log_positive_stub",
+        
         "code": """
 x = log(2.718) # Input > 0
 print(x) # Stub should return 0.0
@@ -32,8 +32,8 @@ print(x) # Stub should return 0.0
         # Expected output will involve FP_LOG returning 0.0 and then printing that.
     },
     {
-        "name": "exp_stub (V1)",
-        "compiler_version": "V1",
+        "name": "exp_stub",
+        
         "code": """
 y = exp(1.0) # Any input
 print(y) # Stub should return 1.0

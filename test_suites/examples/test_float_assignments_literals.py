@@ -2,7 +2,7 @@
 
 test_cases = [
     {
-        'name': 'assign_positive_float_literal (V1)',
+        'name': 'assign_positive_float_literal',
         'compiler_version': 'V1',
         'code': """
 x = 3.5

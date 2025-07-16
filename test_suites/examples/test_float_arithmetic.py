@@ -2,7 +2,7 @@
 
 test_cases = [
     {
-        'name': 'int_plus_float_literal (V1)',
+        'name': 'int_plus_float_literal',
         'compiler_version': 'V1',
         'code': """
 a_int = 10
@@ -23,7 +23,7 @@ c_float_result = a_int + b_float_literal
 
 test_cases.extend([
     {
-        'name': 'float_less_than_comparison (V1)',
+        'name': 'float_less_than_comparison',
         'compiler_version': 'V1',
         'code': """
 a_float = 3.14
@@ -33,7 +33,7 @@ result = a_float < b_float
         'expected': 'float_arithmetic/float_less_than_comparison.asm'
     },
     {
-        'name': 'float_equal_comparison (V1)',
+        'name': 'float_equal_comparison',
         'compiler_version': 'V1',
         'code': """
 x_float = 1.5
@@ -43,7 +43,7 @@ is_equal = x_float == y_float
         'expected': 'float_arithmetic/float_equal_comparison.asm'
     },
     {
-        'name': 'float_not_equal_comparison (V1)',
+        'name': 'float_not_equal_comparison',
         'compiler_version': 'V1',
         'code': """
 p_float = 10.0
@@ -53,7 +53,7 @@ is_not_equal = p_float != q_float
         'expected': 'float_arithmetic/float_not_equal_comparison.asm'
     },
     {
-        'name': 'int_float_greater_than_comparison (V1)',
+        'name': 'int_float_greater_than_comparison',
         'compiler_version': 'V1',
         'code': """
 int_val = 5
