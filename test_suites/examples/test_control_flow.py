@@ -1,181 +1,217 @@
 test_cases = [
     {
-        "name": "For loop over list",
+        "name": "For loop over list (V1)",
+        "compiler_version": "V1",
         "code": "my_list = [1, 2, 3]\nfor item in my_list:\n  x = item * 2",
         "expected": "control_flow/output_for_list.asm"
     },
     {
-        "name": "Simple while loop",
+        "name": "Simple while loop (V1)",
+        "compiler_version": "V1",
         "code": "i = 0\nwhile i < 5:\n  i = i + 1",
         "expected": "control_flow/output_while_simple.asm"
     },
     {
-        "name": "Simple If (true condition)",
+        "name": "Simple If (true condition) (V1)",
+        "compiler_version": "V1",
         "code": "x = 10\nres = 0\nif x == 10:\n  res = 1\n# Expected: res = 1",
         "expected": "control_flow/output_if_simple_true.asm"
     },
     {
-        "name": "Simple If (false condition)",
+        "name": "Simple If (false condition) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\nres = 0\nif x == 10:\n  res = 1\n# Expected: res = 0",
         "expected": "control_flow/output_if_simple_false.asm"
     },
     {
-        "name": "If-Else (if branch)",
+        "name": "If-Else (if branch) (V1)",
+        "compiler_version": "V1",
         "code": "x = 10\nres = 0\nif x > 5:\n  res = 1\nelse:\n  res = 2\n# Expected: res = 1",
         "expected": "control_flow/output_if_else_if_branch.asm"
     },
     {
-        "name": "If-Else (else branch)",
+        "name": "If-Else (else branch) (V1)",
+        "compiler_version": "V1",
         "code": "x = 3\nres = 0\nif x > 5:\n  res = 1\nelse:\n  res = 2\n# Expected: res = 2",
         "expected": "control_flow/output_if_else_else_branch.asm"
     },
     {
-        "name": "If-Elif-Else (if branch)",
+        "name": "If-Elif-Else (if branch) (V1)",
+        "compiler_version": "V1",
         "code": "x = 15\nres = 0\nif x > 10:\n  res = 1\nelif x > 5:\n  res = 2\nelse:\n  res = 3\n# Expected: res = 1",
         "expected": "control_flow/output_if_elif_else_if.asm"
     },
     {
-        "name": "If-Elif-Else (elif branch)",
+        "name": "If-Elif-Else (elif branch) (V1)",
+        "compiler_version": "V1",
         "code": "x = 7\nres = 0\nif x > 10:\n  res = 1\nelif x > 5:\n  res = 2\nelse:\n  res = 3\n# Expected: res = 2",
         "expected": "control_flow/output_if_elif_else_elif.asm"
     },
     {
-        "name": "If-Elif-Else (else branch)",
+        "name": "If-Elif-Else (else branch) (V1)",
+        "compiler_version": "V1",
         "code": "x = 3\nres = 0\nif x > 10:\n  res = 1\nelif x > 5:\n  res = 2\nelse:\n  res = 3\n# Expected: res = 3",
         "expected": "control_flow/output_if_elif_else_else.asm"
     },
     {
-        "name": "If-Elif (if branch, no else)",
+        "name": "If-Elif (if branch, no else) (V1)",
+        "compiler_version": "V1",
         "code": "x = 12\nres = 0\nif x > 10:\n  res = 1\nelif x > 5:\n  res = 2\n# Expected: res = 1",
         "expected": "control_flow/output_if_elif_if.asm"
     },
     {
-        "name": "If-Elif (elif branch, no else)",
+        "name": "If-Elif (elif branch, no else) (V1)",
+        "compiler_version": "V1",
         "code": "x = 8\nres = 0\nif x > 10:\n  res = 1\nelif x > 5:\n  res = 2\n# Expected: res = 2",
         "expected": "control_flow/output_if_elif_elif.asm"
     },
     {
-        "name": "If with <= operator",
+        "name": "If with <= operator (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 5\nres = 0\nif x <= y:\n  res = 1\n# Expected: res = 1",
         "expected": "control_flow/output_if_lte_true.asm"
     },
     {
-        "name": "If with < operator (false)",
+        "name": "If with < operator (false) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 5\nres = 0\nif x < y:\n  res = 1\n# Expected: res = 0",
         "expected": "control_flow/output_if_lt_false.asm"
     },
     {
-        "name": "Nested If",
+        "name": "Nested If (V1)",
+        "compiler_version": "V1",
         "code": "x = 10\ny = 5\nres = 0\nif x > 5:\n  if y < 10:\n    res = 1\n  else:\n    res = 2\nelse:\n  res = 3\n# Expected: res = 1",
         "expected": "control_flow/output_if_nested.asm"
     },
     {
-        "name": "If with constant True condition",
+        "name": "If with constant True condition (V1)",
+        "compiler_version": "V1",
         "code": "res = 0\nif True:\n  res = 1\n# Expected: res = 1",
         "expected": "control_flow/output_if_true_const.asm"
     },
     {
-        "name": "If with constant False condition and Else",
+        "name": "If with constant False condition and Else (V1)",
+        "compiler_version": "V1",
         "code": "res = 0\nif False:\n  res = 1\nelse:\n  res = 2\n# Expected: res = 2",
         "expected": "control_flow/output_if_false_const_else.asm"
     },
     {
-        "name": "If with BinOp operand on the left",
+        "name": "If with BinOp operand on the left (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 10\nres = 0\nif x + 2 > y - 5:\n  res = 1\n# Expected: 7 > 5 -> res = 1",
         "expected": "control_flow/output_if_binop_left.asm"
     },
     {
-        "name": "If with BinOp operand on right and left",
+        "name": "If with BinOp operand on right and left (V1)",
+        "compiler_version": "V1",
         "code": "x = 3\ny = 1\nres = 0\nif x * 2 == y + 5:\n  res = 1\n# Expected: 6 == 6 -> res = 1",
         "expected": "control_flow/output_if_binop_both.asm"
     },
     {
-        "name": "NOT operator (True)",
+        "name": "NOT operator (True) (V1)",
+        "compiler_version": "V1",
         "code": "x = 0\nres = 0\nif not x:\n  res = 1\n# Expected: not 0 -> True -> res = 1",
         "expected": "control_flow/output_bool_not_true.asm"
     },
     {
-        "name": "NOT operator (False)",
+        "name": "NOT operator (False) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\nres = 0\nif not x:\n  res = 1\n# Expected: not 5 -> False -> res = 0",
         "expected": "control_flow/output_bool_not_false.asm"
     },
     {
-        "name": "AND operator (True and True)",
+        "name": "AND operator (True and True) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 10\nres = 0\nif x > 0 and y > 0:\n  res = 1\n# Expected: True and True -> res = 1",
         "expected": "control_flow/output_bool_and_tt.asm"
     },
     {
-        "name": "AND operator (True and False)",
+        "name": "AND operator (True and False) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 0\nres = 0\nif x > 0 and y > 0:\n  res = 1\n# Expected: True and False -> res = 0",
         "expected": "control_flow/output_bool_and_tf.asm"
     },
     {
-        "name": "AND operator (False and True - Short Circuit)",
+        "name": "AND operator (False and True - Short Circuit) (V1)",
+        "compiler_version": "V1",
         "code": "x = 0\ny = 10\nres = 0\nif x > 0 and y > 0: # y > 0 should not be evaluated if the compiler is smart\n  res = 1\n# Expected: False and True -> res = 0",
         "expected": "control_flow/output_bool_and_ft_short_circuit.asm"
     },
     {
-        "name": "OR operator (True or False - Short Circuit)",
+        "name": "OR operator (True or False - Short Circuit) (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 0\nres = 0\nif x > 0 or y > 0: # y > 0 should not be evaluated\n  res = 1\n# Expected: True or False -> res = 1",
         "expected": "control_flow/output_bool_or_tf_short_circuit.asm"
     },
     {
-        "name": "OR operator (False or True)",
+        "name": "OR operator (False or True) (V1)",
+        "compiler_version": "V1",
         "code": "x = 0\ny = 10\nres = 0\nif x > 0 or y > 0:\n  res = 1\n# Expected: False or True -> res = 1",
         "expected": "control_flow/output_bool_or_ft.asm"
     },
     {
-        "name": "OR operator (False or False)",
+        "name": "OR operator (False or False) (V1)",
+        "compiler_version": "V1",
         "code": "x = 0\ny = 0\nres = 0\nif x > 0 or y > 0:\n  res = 1\n# Expected: False or False -> res = 0",
         "expected": "control_flow/output_bool_or_ff.asm"
     },
     {
-        "name": "NOT and AND combination",
+        "name": "NOT and AND combination (V1)",
+        "compiler_version": "V1",
         "code": "x = 5\ny = 0\nres = 0\nif not (x == 0 and y == 0):\n  res = 1\n# Expected: not (False and True) -> not False -> True -> res = 1",
         "expected": "control_flow/output_bool_not_and.asm"
     },
     {
-        "name": "NOT and OR combination",
+        "name": "NOT and OR combination (V1)",
+        "compiler_version": "V1",
         "code": "x = 0\ny = 0\nres = 0\nif not (x > 0 or y > 0):\n  res = 1\n# Expected: not (False or False) -> not False -> True -> res = 1",
         "expected": "control_flow/output_bool_not_or.asm"
     },
     {
-        "name": "AND with boolean constants",
+        "name": "AND with boolean constants (V1)",
+        "compiler_version": "V1",
         "code": "res = 0\nif True and False:\n  res = 1\n# Expected: res = 0",
         "expected": "control_flow/output_bool_and_const.asm"
     },
     {
-        "name": "XOR operator in IF condition (True)",
+        "name": "XOR operator in IF condition (True) (V1)",
+        "compiler_version": "V1",
         "code": "a = 10\nb = 5\nres = 0\nif (a ^ b): # 10^5 = 15 (non-zero, quindi True)\n  res = 1\n# Expected: res = 1",
         "expected": "control_flow/output_operator_xor_if_true.asm"
     },
     {
-        "name": "XOR operator in IF condition (False)",
+        "name": "XOR operator in IF condition (False) (V1)",
+        "compiler_version": "V1",
         "code": "a = 7\nb = 7\nres = 0\nif (a ^ b): # 7^7 = 0 (zero, quindi False)\n  res = 1\n# Expected: res = 0",
         "expected": "control_flow/output_operator_xor_if_false.asm"
     },
     {
-        "name": "While loop with break",
+        "name": "While loop with break (V1)",
+        "compiler_version": "V1",
         "code": "i = 0\nres = 0\nwhile i < 10:\n  res = res + i\n  i = i + 1\n  if i == 5:\n    break\n# Expected: res = 0+1+2+3+4 = 10, i = 5",
         "expected": "control_flow/output_while_break.asm"
     },
     {
-        "name": "While loop with continue",
+        "name": "While loop with continue (V1)",
+        "compiler_version": "V1",
         "code": "i = 0\nres = 0\nwhile i < 5:\n  i = i + 1\n  if i == 3:\n    continue\n  res = res + i\n# Expected: i=5, res = 1+2+4+5 = 12",
         "expected": "control_flow/output_while_continue.asm"
     },
     {
-        "name": "For loop with break",
+        "name": "For loop with break (V1)",
+        "compiler_version": "V1",
         "code": "my_list = [1, 2, 3, 4, 5]\nres = 0\nfor item in my_list:\n  if item == 4:\n    break\n  res = res + item\n# Expected: res = 1+2+3 = 6",
         "expected": "control_flow/output_for_break.asm"
     },
     {
-        "name": "For loop with continue",
+        "name": "For loop with continue (V1)",
+        "compiler_version": "V1",
         "code": "my_list = [1, 2, 3, 4, 5]\nres = 0\nfor item in my_list:\n  if item == 3:\n    continue\n  res = res + item\n# Expected: res = 1+2+4+5 = 12",
         "expected": "control_flow/output_for_continue.asm"
     },
     {
-        "name": "Break in nested loop (while in for)",
+        "name": "Break in nested loop (while in for) (V1)",
+        "compiler_version": "V1",
         "code": """
 outer_sum = 0
 my_list = [1, 2, 3]

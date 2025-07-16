@@ -2,7 +2,8 @@
 
 test_cases = [
     {
-        'name': 'Test GFX Turn On and Clear Screen',
+        'name': 'Test GFX Turn On and Clear Screen (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -12,7 +13,8 @@ while True: # pragma: no cover
         'expected': 'graphics/test_gfx_on_clear.asm'
     },
     {
-        'name': 'Test GFX Draw Line (Star)',
+        'name': 'Test GFX Draw Line (Star) (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -32,7 +34,8 @@ while True: # pragma: no cover
         'expected': 'graphics/test_gfx_draw_star.asm'
     },
     {
-        'name': 'Test GFX Turn Off',
+        'name': 'Test GFX Turn Off (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_turn_off()
@@ -40,7 +43,8 @@ gfx_turn_off()
         'expected': 'graphics/test_gfx_off.asm',
     },
     {
-        'name': 'Test GFX Draw Ellipse and Circle',
+        'name': 'Test GFX Draw Ellipse and Circle (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -54,7 +58,8 @@ draw_ellipse(60, 150, 30, 30)
         'expected': 'graphics/test_gfx_draw_ellipse.asm'
     },
     {
-        'name': 'graphics_draw_circle_simple',
+        'name': 'graphics_draw_circle_simple (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -66,7 +71,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_draw_circle_simple.asm'
     },
     {
-        'name': 'graphics_draw_circle_vars',
+        'name': 'graphics_draw_circle_vars (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -81,7 +87,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_draw_circle_vars.asm'
     },
     {
-        'name': 'graphics_draw_ellipse_expressions',
+        'name': 'graphics_draw_ellipse_expressions (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -95,7 +102,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_draw_ellipse_expressions.asm'
     },
     {
-        'name': 'graphics_draw_rect_simple',
+        'name': 'graphics_draw_rect_simple (V1)',
+        'compiler_version': 'V1',
         'code': """
 gfx_turn_on()
 gfx_clear_screen()
@@ -107,7 +115,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_draw_rect_simple.asm'
     },
     {
-        'name': 'graphics_sprite_set_pos',
+        'name': 'graphics_sprite_set_pos (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Imposta la posizione dello sprite 0 a (150, 100) usando variabili
 sprite_num = 0
@@ -124,7 +133,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_set_pos.asm'
     },
     {
-        'name': 'graphics_sprite_color_and_enable',
+        'name': 'graphics_sprite_color_and_enable (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Abilita sprite 0 e 2 (maschera 1+4=5)
 sprite_enable(5)
@@ -143,7 +153,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_color_and_enable.asm'
     },
     {
-        'name': 'graphics_sprite_disable_and_msb',
+        'name': 'graphics_sprite_disable_and_msb (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Abilita sprite 0 e 1 (maschera 1+2=3)
 sprite_enable(3)
@@ -163,7 +174,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_disable_and_msb.asm'
     },
     {
-        'name': 'graphics_sprite_expand',
+        'name': 'graphics_sprite_expand (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Espande lo sprite 0 in Y e lo sprite 1 in X
 y_expand_mask = 1 # sprite 0
@@ -179,7 +191,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_expand.asm'
     },
     {
-        'name': 'graphics_sprite_msb_clear',
+        'name': 'graphics_sprite_msb_clear (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Imposta la posizione dello sprite 1 a X>255
 # LSB di X = 300-256 = 44
@@ -197,7 +210,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_msb_clear.asm'
     },
     {
-        'name': 'graphics_sprite_set_pointer',
+        'name': 'graphics_sprite_set_pointer (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Set pointer for sprite 0 to point to data block at $3000 (pointer value $C0 = 192)
 sprite_set_pointer(0, 192)
@@ -213,7 +227,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_set_pointer.asm'
     },
     {
-        'name': 'graphics_sprite_priority',
+        'name': 'graphics_sprite_priority (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Set sprite 0 to be behind background graphics (mask=1)
 sprite_set_priority(1)
@@ -228,7 +243,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_priority.asm'
     },
     {
-        'name': 'graphics_sprite_multicolor',
+        'name': 'graphics_sprite_multicolor (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Set sprite 1 to multicolor mode using a constant
 sprite_set_multicolor(2) # mask for sprite 1 is bit 1 = 2
@@ -243,7 +259,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_multicolor.asm'
     },
     {
-        'name': 'graphics_sprite_multicolor_colors',
+        'name': 'graphics_sprite_multicolor_colors (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Set multicolor colors using variables
 mc1 = 1 # black
@@ -259,7 +276,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_multicolor_colors.asm'
     },
     {
-        'name': 'graphics_sprite_collision_check',
+        'name': 'graphics_sprite_collision_check (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Enable some sprites to check for collisions
 sprite_enable(3) # sprite 0 and 1
@@ -278,7 +296,8 @@ while True: # pragma: no cover
         'expected': 'graphics/graphics_sprite_collision_check.asm'
     },
     {
-        'name': 'graphics_sprite_create_from_data',
+        'name': 'graphics_sprite_create_from_data (V1)',
+        'compiler_version': 'V1',
         'code': """
 # Create sprite 0 from data located at address $4000
 sprite_create_from_data(0, 0x4000)

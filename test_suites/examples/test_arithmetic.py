@@ -15,47 +15,56 @@ test_cases = [
 
 test_cases = [
     {
-        "name": "Simple assignment",
+        "name": "Simple assignment (V1)",
+        "compiler_version": "V1",
         "code": "x1 = 10\nx2 = 20\nz = x1 + x2",
         "expected": "arithmetic/output_assign_simple.asm",
     },
     {
-        "name": "Mixed arithmetic operations",
+        "name": "Mixed arithmetic operations (V1)",
+        "compiler_version": "V1",
         "code": "a1 = 5\nb = 3\nc = a1 * b + (a1 - b) // 2",
         "expected": "arithmetic/output_arithmetic_mixed.asm",
     },
     {
-        "name": "Arithmetic overflow (sum)",
+        "name": "Arithmetic overflow (sum) (V1)",
+        "compiler_version": "V1",
         "code": "x1 = 250\nx2 = 10\nz = x1 + x2",
         "expected": "arithmetic/output_overflow_sum.asm"
     },
     {
-        "name": "Division by zero",
+        "name": "Division by zero (V1)",
+        "compiler_version": "V1",
         "code": "x1 = 10\nx2 = 0\nz = x1 // x2",
         "expected": "arithmetic/output_division_by_zero.asm"
     },
     {
-        "name": "XOR operator (assignment)",
+        "name": "XOR operator (assignment) (V1)",
+        "compiler_version": "V1",
         "code": "a = 10 # 00001010\nb = 5  # 00000101\nc = a ^ b # Expected result: 15 (00001111)",
         "expected": "arithmetic/output_operator_xor_assign.asm"
     },
     {
-        "name": "Operatore XOR (valori diversi)",
+        "name": "Operatore XOR (valori diversi) (V1)",
+        "compiler_version": "V1",
         "code": "val1 = 255 # 11111111 00000000\nval2 = 85  # 01010101 00000000\n# 255 (00FF) ^ 85 (0055) = 170 (00AA)\nres_xor = val1 ^ val2",
         "expected": "arithmetic/output_operator_xor_assign_alt.asm"
     },
     {
-        "name": "Constant Folding: Simple multiplication",
+        "name": "Constant Folding: Simple multiplication (V1)",
+        "compiler_version": "V1",
         "code": "x = 2 * 5",
         "expected": "arithmetic/output_constant_folding_mult.asm"
     },
     {
-        "name": "Constant Folding: Integer division by zero (compile-time error)",
+        "name": "Constant Folding: Integer division by zero (compile-time error) (V1)",
+        "compiler_version": "V1",
         "code": "y = 10 // 0",
         "expected": "arithmetic/output_constant_folding_div_by_zero.asm"
     },
     {
-        "name": "Constant Folding: Mixed type addition (int + float)",
+        "name": "Constant Folding: Mixed type addition (int + float) (V1)",
+        "compiler_version": "V1",
         "code": "z = 5 + 3.14",
         "expected": "arithmetic/output_constant_folding_int_float_add.asm"
     },
