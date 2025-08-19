@@ -5,9 +5,9 @@ from .errors import CompilerError
 from .ast_nodes import (
     Program, Statement, Expression, Assignment, IfStatement, WhileStatement,
     ForStatement, FunctionDefinition, ReturnStatement, Literal, Identifier,
-    BinaryOperation, FunctionCall
+    BinaryOperation, FunctionCall, ListLiteral, Subscript, UnaryOperation
 )
-from .symbols import SymbolTable, DataType, Variable, OperationType
+from .symbols import SymbolTable, DataType, Variable, OperationType, UnaryOperationType
 
 class PythonASTParser:
     """Parser that converts the Python AST to our internal AST."""
@@ -140,8 +140,43 @@ class PythonASTParser:
             return self._parse_function_call(node)
         elif isinstance(node, ast.Compare):
             return self._parse_comparison(node)
+        elif isinstance(node, ast.List):
+            return self._parse_list_literal(node)
+        elif isinstance(node, ast.Subscript):
+            return self._parse_subscript(node)
+        elif isinstance(node, ast.UnaryOp):
+            return self._parse_unary_operation(node)
         else:
             raise CompilerError(f"Unsupported expression type: {type(node)}")
+
+    def _parse_unary_operation(self, node: ast.UnaryOp) -> UnaryOperation:
+        """Parses a unary operation."""
+        op_map = {
+            ast.Not: UnaryOperationType.NOT,
+            ast.USub: UnaryOperationType.NEG,
+        }
+
+        op_type = op_map.get(type(node.op))
+        if not op_type:
+            raise CompilerError(f"Unsupported unary operation: {type(node.op)}")
+
+        operand = self._parse_expression(node.operand)
+        return UnaryOperation(op_type, operand)
+
+    def _parse_list_literal(self, node: ast.List) -> ListLiteral:
+        """Parses a list literal."""
+        elements = [self._parse_expression(e) for e in node.elts]
+        return ListLiteral(elements)
+
+    def _parse_subscript(self, node: ast.Subscript) -> Subscript:
+        """Parses a subscript access."""
+        if not isinstance(node.value, ast.Name):
+            raise CompilerError("Subscript access is only supported for simple variables.")
+
+        list_name = Identifier(node.value.id)
+        index_expr = self._parse_expression(node.slice)
+
+        return Subscript(list_name, index_expr)
 
     def _parse_constant(self, node: ast.Constant) -> Literal:
         """Parses a constant."""

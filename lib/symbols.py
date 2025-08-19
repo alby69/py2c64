@@ -24,6 +24,10 @@ class OperationType(Enum):
     LE = "le"
     GE = "ge"
 
+class UnaryOperationType(Enum):
+    NOT = "not"
+    NEG = "neg"
+
 @dataclass
 class Variable:
     name: str

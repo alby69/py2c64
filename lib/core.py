@@ -65,7 +65,7 @@ class Py2C64Compiler:
         self.output.switch_to_data_section()
         
         used_routines = self.routine_manager.used_routines
-        
+
         if "multiply16x16" in used_routines:
             self.output.add_lines(["MULT_ARG1:      .word 0", "MULT_ARG2:      .word 0", "MULT_RESULT:    .dword 0"])
         if "divide16x16" in used_routines:
@@ -73,9 +73,22 @@ class Py2C64Compiler:
         if "print_int16" in used_routines:
             self.output.add_lines(["PRINT_VALUE:    .word 0", "PRINT_BUFFER:   .res 8"])
         
+        if "get_list_element" in used_routines:
+            self.output.add_lines([
+                "LIST_ROUTINE_ARG1: .word 0",
+                "LIST_ROUTINE_ARG2: .word 0",
+                "LIST_ROUTINE_RET1: .word 0"
+            ])
+
         # General variables
         self.output.add_lines(["RETURN_VALUE:   .word 0", "FRAME_POINTER:  .byte 0"])
         
+        # Add heap pointer if list support is used
+        if self.code_generator.list_support_initialized:
+            self.output.add_lines([
+                "HEAP_POINTER:   .word $C000 ; Start of heap memory for dynamic allocation"
+            ])
+
         # Temporary variables
         for i in range(self.code_generator.temp_var_counter):
             self.output.add_line(f"TEMP_{i}:        .word 0")

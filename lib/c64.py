@@ -4,14 +4,14 @@
 from typing import Any, Set
 
 from .abc import CodeGenerator
-from .symbols import SymbolTable, DataType, OperationType
+from .symbols import SymbolTable, DataType, OperationType, UnaryOperationType
 from .labels import LabelManager
 from .output import AssemblyOutput
 from .errors import CompilerError
 from .ast_nodes import (
-    Program, Literal, Identifier, BinaryOperation, FunctionCall,
+    Program, Literal, Identifier, BinaryOperation, UnaryOperation, FunctionCall,
     Assignment, IfStatement, WhileStatement, ForStatement,
-    FunctionDefinition, ReturnStatement
+    FunctionDefinition, ReturnStatement, ListLiteral, Subscript
 )
 
 class C64CodeGenerator(CodeGenerator):
@@ -21,6 +21,7 @@ class C64CodeGenerator(CodeGenerator):
         super().__init__(symbol_table, label_manager, output)
         self.temp_var_counter = 0
         self.used_routines: Set[str] = set()
+        self.list_support_initialized = False
 
     def visit_program(self, node: Program) -> Any:
         """Visits the main program node."""
@@ -74,6 +75,49 @@ class C64CodeGenerator(CodeGenerator):
         elif node.operation == OperationType.MUL:
             self._generate_mul_int16(left_result, right_result, result_var)
             self.used_routines.add("multiply16x16")
+
+        return result_var
+
+    def visit_unary_operation(self, node: UnaryOperation) -> Any:
+        """Visits a unary operation node."""
+        operand_result = node.operand.accept(self)
+        result_var = self._get_temp_var()
+
+        if node.operation == UnaryOperationType.NEG:
+            # 0 - operand
+            zero_var = self._get_temp_var()
+            self.output.add_instruction("LDA", "#<0")
+            self.output.add_instruction("STA", f"{zero_var}")
+            self.output.add_instruction("LDA", "#0>>8")
+            self.output.add_instruction("STA", f"{zero_var}+1")
+            self._generate_sub_int16(zero_var, operand_result, result_var)
+        elif node.operation == UnaryOperationType.NOT:
+            # if operand is 0, result is 1, else result is 0
+            is_not_zero_label = self.label_manager.generate_label("IS_NOT_ZERO")
+            end_not_label = self.label_manager.generate_label("END_NOT")
+
+            # Check if operand is zero. If not, branch.
+            self.output.add_instruction("LDA", f"{operand_result}")
+            self.output.add_instruction("ORA", f"{operand_result}+1")
+            self.output.add_instruction("BNE", is_not_zero_label)
+
+            # Code for when operand IS zero (is not not-zero)
+            # Set result to 1
+            self.output.add_instruction("LDA", "#<1")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#1>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+            self.output.add_instruction("JMP", end_not_label)
+
+            # Code for when operand is NOT zero
+            self.output.add_label(is_not_zero_label)
+            # Set result to 0
+            self.output.add_instruction("LDA", "#<0")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#0>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+
+            self.output.add_label(end_not_label)
 
         return result_var
 
@@ -206,6 +250,84 @@ class C64CodeGenerator(CodeGenerator):
             self.output.add_instruction("STA", "RETURN_VALUE+1")
 
         self.output.add_instruction("RTS")
+
+    def visit_list_literal(self, node: ListLiteral) -> Any:
+        """Visits a list literal node and generates code to create it in memory."""
+        if not self.list_support_initialized:
+            self.list_support_initialized = True
+
+        list_ptr_var = self._get_temp_var()
+        list_size = 1 + len(node.elements) * 2  # 1 byte for length, 2 for each element
+
+        # 1. The result of this expression is the pointer to the new list.
+        #    Copy the current heap pointer to our result variable.
+        self.output.add_instruction("LDA", "HEAP_POINTER")
+        self.output.add_instruction("STA", f"{list_ptr_var}")
+        self.output.add_instruction("LDA", "HEAP_POINTER+1")
+        self.output.add_instruction("STA", f"{list_ptr_var}+1")
+
+        # 2. Store the length of the list at the first byte of the list structure.
+        self.output.add_instruction("LDY", "#0")
+        self.output.add_instruction("LDA", f"#{len(node.elements)}")
+        self.output.add_instruction("STA", f"({list_ptr_var}),Y")
+
+        # 3. Store each element in the list.
+        current_offset = 1
+        for element_expr in node.elements:
+            element_var = element_expr.accept(self)
+
+            # Load value of element into A
+            self.output.add_instruction("LDA", f"{element_var}")
+            self.output.add_instruction("LDY", f"#{current_offset}")
+            self.output.add_instruction("STA", f"({list_ptr_var}),Y")
+
+            # Load high byte of element into A
+            self.output.add_instruction("LDA", f"{element_var}+1")
+            self.output.add_instruction("INY")
+            self.output.add_instruction("STA", f"({list_ptr_var}),Y")
+
+            current_offset += 2
+
+        # 4. Update the heap pointer by adding the size of the list.
+        size_var = self._get_temp_var()
+        self.output.add_instruction("LDA", f"#<{list_size}")
+        self.output.add_instruction("STA", f"{size_var}")
+        self.output.add_instruction("LDA", f"#{list_size}>>8")
+        self.output.add_instruction("STA", f"{size_var}+1")
+
+        self._generate_add_int16("HEAP_POINTER", size_var, "HEAP_POINTER")
+
+        return list_ptr_var
+
+    def visit_subscript(self, node: Subscript) -> Any:
+        """Visits a subscript access node."""
+        # 1. Get the pointer to the list and the index value.
+        list_ptr_var = node.name.accept(self)
+        index_var = node.index.accept(self)
+
+        # 2. Pass arguments to the routine.
+        self.output.add_instruction("LDA", f"{list_ptr_var}")
+        self.output.add_instruction("STA", "LIST_ROUTINE_ARG1")
+        self.output.add_instruction("LDA", f"{list_ptr_var}+1")
+        self.output.add_instruction("STA", "LIST_ROUTINE_ARG1+1")
+
+        self.output.add_instruction("LDA", f"{index_var}")
+        self.output.add_instruction("STA", "LIST_ROUTINE_ARG2")
+        self.output.add_instruction("LDA", f"{index_var}+1")
+        self.output.add_instruction("STA", "LIST_ROUTINE_ARG2+1")
+
+        # 3. Call the routine.
+        self.output.add_instruction("JSR", "GET_LIST_ELEMENT")
+        self.used_routines.add("get_list_element")
+
+        # 4. The result is in LIST_ROUTINE_RET1. Copy it to a temp var.
+        result_var = self._get_temp_var()
+        self.output.add_instruction("LDA", "LIST_ROUTINE_RET1")
+        self.output.add_instruction("STA", f"{result_var}")
+        self.output.add_instruction("LDA", "LIST_ROUTINE_RET1+1")
+        self.output.add_instruction("STA", f"{result_var}+1")
+
+        return result_var
 
     def _get_temp_var(self) -> str:
         """Generates a temporary variable name."""

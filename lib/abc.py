@@ -5,9 +5,9 @@ from .symbols import SymbolTable
 from .labels import LabelManager
 from .output import AssemblyOutput
 from .ast_nodes import (
-    Program, Literal, Identifier, BinaryOperation, FunctionCall,
+    Program, Literal, Identifier, BinaryOperation, UnaryOperation, FunctionCall,
     Assignment, IfStatement, WhileStatement, ForStatement,
-    FunctionDefinition, ReturnStatement
+    FunctionDefinition, ReturnStatement, ListLiteral, Subscript
 )
 
 class CodeGenerator(ABC):
@@ -32,6 +32,10 @@ class CodeGenerator(ABC):
 
     @abstractmethod
     def visit_binary_operation(self, node: BinaryOperation) -> Any:
+        pass
+
+    @abstractmethod
+    def visit_unary_operation(self, node: UnaryOperation) -> Any:
         pass
 
     @abstractmethod
@@ -60,4 +64,14 @@ class CodeGenerator(ABC):
 
     @abstractmethod
     def visit_return_statement(self, node: ReturnStatement) -> Any:
+        pass
+
+    @abstractmethod
+    def visit_list_literal(self, node: ListLiteral) -> Any:
+        """Visits a list literal node."""
+        pass
+
+    @abstractmethod
+    def visit_subscript(self, node: Subscript) -> Any:
+        """Visits a subscript access node."""
         pass

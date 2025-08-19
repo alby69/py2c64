@@ -90,6 +90,9 @@ class RoutineManager:
         # Load math routines
         self.available_routines.update(self._get_math_routines())
 
+        # Load list routines
+        self.available_routines.update(self._get_list_routines())
+
         # Define dependencies
         self.dependencies = {
             "draw_line": ["multiply16x16"],
@@ -152,6 +155,53 @@ class RoutineManager:
             if routine_name in self.dependencies:
                 for dep in self.dependencies[routine_name]:
                     self.mark_routine_used(dep)
+
+    def _get_list_routines(self) -> Dict[str, List[str]]:
+        """Returns the routines for list manipulation."""
+        # ZP_PTR1 = $FB/$FC
+        # ZP_PTR2 = $FD/$FE
+        return {
+            "get_list_element": [
+                "; Routine to get an element from a list",
+                "; Input:",
+                ";   LIST_ROUTINE_ARG1: 16-bit pointer to the list",
+                ";   LIST_ROUTINE_ARG2: 16-bit index",
+                "; Output:",
+                ";   LIST_ROUTINE_RET1: 16-bit value of the element",
+                "GET_LIST_ELEMENT:",
+                "; 1. Calculate offset = index * 2",
+                "    LDA LIST_ROUTINE_ARG2",
+                "    ASL A",
+                "    STA $FB",
+                "    LDA LIST_ROUTINE_ARG2+1",
+                "    ROL A",
+                "    STA $FC",
+                "; 2. Add 1 to offset to get past the length byte",
+                "    CLC",
+                "    LDA $FB",
+                "    ADC #1",
+                "    STA $FB",
+                "    BCC GET_ELEM_NO_CARRY",
+                "    INC $FC",
+                "GET_ELEM_NO_CARRY:",
+                "; 3. Calculate final address = base_ptr + offset",
+                "    CLC",
+                "    LDA LIST_ROUTINE_ARG1",
+                "    ADC $FB",
+                "    STA $FD",
+                "    LDA LIST_ROUTINE_ARG1+1",
+                "    ADC $FC",
+                "    STA $FE",
+                "; 4. Dereference pointer to get the value",
+                "    LDY #0",
+                "    LDA ($FD),Y",
+                "    STA LIST_ROUTINE_RET1",
+                "    INY",
+                "    LDA ($FD),Y",
+                "    STA LIST_ROUTINE_RET1+1",
+                "    RTS",
+            ]
+        }
 
     def get_used_routines_code(self) -> List[str]:
         """Returns the assembly code for all used routines."""
