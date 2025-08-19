@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional
 from dataclasses import dataclass
-from lib.core import DataType, OperationType
+from .symbols import DataType, OperationType, Variable
 
 class ASTNode(ABC):
     """Base class for all AST nodes"""

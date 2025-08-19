@@ -154,32 +154,33 @@ pip install -r requirements.txt
 ```
 
 ### Uso Base
-```python
-from py2c64 import Py2C64Compiler
 
-# Crea un'istanza del compiler
-compiler = Py2C64Compiler()
+Il compilatore si usa da linea di comando.
 
-# Codice Python da compilare
-python_code = """
-def fibonacci(n):
-    if n <= 1:
-        return n
-    else:
-        return fibonacci(n-1) + fibonacci(n-2)
-
-result = fibonacci(10)
-print(result)
-"""
-
-# Compila
-try:
-    assembly_code = compiler.compile(python_code)
-    print("Compilation successful!")
-    print(assembly_code)
-except CompilerError as e:
-    print(f"Compilation failed: {e}")
+**Sintassi:**
+```bash
+python main.py <file_input.py> -o <file_output.asm>
 ```
+
+**Esempio:**
+1.  Salva il tuo codice Python in un file, per esempio `esempio.py`.
+    ```python
+    # esempio.py
+    def main():
+        x = 10
+        y = 20
+        result = (x + y) * 2
+        print(result)
+
+    main()
+    ```
+
+2.  Esegui il compilatore:
+    ```bash
+    python main.py esempio.py -o esempio.asm
+    ```
+
+3.  Verrà generato un file `esempio.asm` con il codice assembly 6502 corrispondente.
 
 ## 📝 Esempi di Codice
 
@@ -232,24 +233,31 @@ sprite_set_pos(0, 160, 100)
 
 ## 🔧 Struttura del Progetto
 
+Il progetto è organizzato in un package `lib` che contiene la logica del compilatore, un file `main.py` come entry point, e una `test_suites` per i test.
+
 ```
-py2c64/
+/
+├── main.py                 # Entry point della linea di comando
 ├── README.md
-├── requirements.txt
-├── py2c64.py              # File principale con tutto il codice
-├── tests/
-│   ├── __init__.py
-│   ├── test_parser.py
-│   ├── test_codegen.py
-│   └── test_integration.py
-├── examples/
-│   ├── basic_math.py
-│   ├── graphics_demo.py
-│   └── game_example.py
-└── docs/
-    ├── architecture.md
-    ├── hardware_reference.md
-    └── api_reference.md
+├── lib/                    # Package principale del compilatore
+│   ├── __init__.py         # Espone l'interfaccia pubblica
+│   ├── core.py             # Classe principale Py2C64Compiler
+│   ├── abc.py              # Classi base astratte (es. CodeGenerator)
+│   ├── ast_nodes.py        # Nodi dell'AST interno
+│   ├── c64.py              # Code generator per C64
+│   ├── errors.py           # Eccezioni custom
+│   ├── labels.py           # Label manager
+│   ├── optimizer.py        # Peephole optimizer
+│   ├── output.py           # Gestione output assembly
+│   ├── parser.py           # Parser da AST Python a AST interno
+│   ├── routines.py         # Gestore delle routine predefinite
+│   └── symbols.py          # Gestore della symbol table e tipi
+│
+├── test_suites/            # Suite di test di integrazione
+│   ├── examples/           # Codici Python di test
+│   └── expected_outputs/   # Output assembly attesi
+│
+└── doc/                    # Documentazione
 ```
 
 ## 🧪 Testing

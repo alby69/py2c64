@@ -2,12 +2,17 @@
 """6502 code generator for the Commodore 64."""
 
 from typing import Any, Set
-from lib.core import CodeGenerator, DataType, OperationType
-from lib.symbols import SymbolTable
-from lib.labels import LabelManager
-from lib.output import AssemblyOutput
-from lib.errors import CompilerError
-from lib.ast_nodes import Program, Literal, Identifier, BinaryOperation, FunctionCall, Assignment, IfStatement, WhileStatement, ForStatement, FunctionDefinition, ReturnStatement
+
+from .abc import CodeGenerator
+from .symbols import SymbolTable, DataType, OperationType
+from .labels import LabelManager
+from .output import AssemblyOutput
+from .errors import CompilerError
+from .ast_nodes import (
+    Program, Literal, Identifier, BinaryOperation, FunctionCall,
+    Assignment, IfStatement, WhileStatement, ForStatement,
+    FunctionDefinition, ReturnStatement
+)
 
 class C64CodeGenerator(CodeGenerator):
     """Generates 6502 assembly code for the Commodore 64."""
@@ -23,12 +28,9 @@ class C64CodeGenerator(CodeGenerator):
         self.output.add_line("; Target: Commodore 64")
         self.output.add_line("")
 
-        # Process all statements
         for stmt in node.statements:
             stmt.accept(self)
 
-        # Add used routines
-        self._add_used_routines()
         return self.output.generate()
 
     def visit_literal(self, node: Literal) -> Any:
@@ -41,7 +43,6 @@ class C64CodeGenerator(CodeGenerator):
             self.output.add_instruction("LDA", f"#{node.value}>>8")
             self.output.add_instruction("STA", f"{temp_var}+1")
         elif node.data_type == DataType.FLOAT32:
-            # For floats, conversion to Apple II format would be needed
             self.output.add_line(f"    ; Float literal: {node.value}")
 
         return temp_var
@@ -73,14 +74,12 @@ class C64CodeGenerator(CodeGenerator):
         elif node.operation == OperationType.MUL:
             self._generate_mul_int16(left_result, right_result, result_var)
             self.used_routines.add("multiply16x16")
-        # ... other operators ...
 
         return result_var
 
     def visit_function_call(self, node: FunctionCall) -> Any:
         """Visits a function call node."""
         if node.name == "print":
-            # Special handling for print
             if node.arguments:
                 arg_result = node.arguments[0].accept(self)
                 self.output.add_instruction("LDA", f"{arg_result}")
@@ -89,30 +88,27 @@ class C64CodeGenerator(CodeGenerator):
                 self.output.add_instruction("STA", "PRINT_VALUE+1")
                 self.output.add_instruction("JSR", "PRINT_INT16")
                 self.used_routines.add("print_int16")
-        else:
-            # Normal function call
-            func = self.symbol_table.lookup_function(node.name)
-            if not func:
-                raise CompilerError(f"Undefined function: {node.name}")
+            return
 
-            # Parameter handling and call
-            for i, arg in enumerate(node.arguments):
-                arg_result = arg.accept(self)
-                self.output.add_instruction("LDA", f"{arg_result}")
-                self.output.add_instruction("PHA")
-                self.output.add_instruction("LDA", f"{arg_result}+1")
-                self.output.add_instruction("PHA")
+        func = self.symbol_table.lookup_function(node.name)
+        if not func:
+            raise CompilerError(f"Undefined function: {node.name}")
 
-            self.output.add_instruction("JSR", f"FUNC_{node.name}")
+        for arg in reversed(node.arguments):
+            arg_result = arg.accept(self)
+            self.output.add_instruction("LDA", f"{arg_result}+1")
+            self.output.add_instruction("PHA")
+            self.output.add_instruction("LDA", f"{arg_result}")
+            self.output.add_instruction("PHA")
+
+        self.output.add_instruction("JSR", func.entry_label)
 
     def visit_assignment(self, node: Assignment) -> Any:
         """Visits an assignment node."""
         value_result = node.value.accept(self)
 
-        # Lookup or declare variable
         var = self.symbol_table.lookup_variable(node.target)
         if not var:
-            # Infer type from expression (simplified)
             var = self.symbol_table.declare_variable(node.target, DataType.INT16)
 
         self.output.add_instruction("LDA", f"{value_result}")
@@ -126,21 +122,18 @@ class C64CodeGenerator(CodeGenerator):
         else_label = self.label_manager.generate_label("ELSE")
         end_label = self.label_manager.generate_label("END_IF")
 
-        # Condition test (simplified: != 0)
         self.output.add_instruction("LDA", f"{condition_result}")
         self.output.add_instruction("ORA", f"{condition_result}+1")
-        self.output.add_instruction("BEQ", else_label)
+        self.output.add_instruction("BEQ", else_label if node.else_body else end_label)
 
-        # Then body
         for stmt in node.then_body:
             stmt.accept(self)
 
-        self.output.add_instruction("JMP", end_label)
-
-        # Else body
-        self.output.add_label(else_label)
-        for stmt in node.else_body:
-            stmt.accept(self)
+        if node.else_body:
+            self.output.add_instruction("JMP", end_label)
+            self.output.add_label(else_label)
+            for stmt in node.else_body:
+                stmt.accept(self)
 
         self.output.add_label(end_label)
 
@@ -150,14 +143,11 @@ class C64CodeGenerator(CodeGenerator):
         end_label = self.label_manager.generate_label("END_WHILE")
 
         self.output.add_label(loop_label)
-
-        # Condition test
         condition_result = node.condition.accept(self)
         self.output.add_instruction("LDA", f"{condition_result}")
         self.output.add_instruction("ORA", f"{condition_result}+1")
         self.output.add_instruction("BEQ", end_label)
 
-        # Body
         for stmt in node.body:
             stmt.accept(self)
 
@@ -166,11 +156,9 @@ class C64CodeGenerator(CodeGenerator):
 
     def visit_for_statement(self, node: ForStatement) -> Any:
         """Visits a for statement node."""
-        # Simplified implementation for: for i in range(start, end, step)
         loop_label = self.label_manager.generate_label("FOR_LOOP")
         end_label = self.label_manager.generate_label("END_FOR")
 
-        # Initialization
         start_result = node.start.accept(self)
         var = self.symbol_table.declare_variable(node.var, DataType.INT16)
 
@@ -179,19 +167,14 @@ class C64CodeGenerator(CodeGenerator):
         self.output.add_instruction("LDA", f"{start_result}+1")
         self.output.add_instruction("STA", f"{var.name}+1")
 
-        # Loop
         self.output.add_label(loop_label)
-
-        # Condition test (var < end)
         end_result = node.end.accept(self)
         self._generate_compare_int16(var.name, end_result, "LT")
-        self.output.add_instruction("BEQ", end_label)
+        self.output.add_instruction("BNE", end_label)
 
-        # Body
         for stmt in node.body:
             stmt.accept(self)
 
-        # Increment
         step_result = node.step.accept(self)
         self._generate_add_int16(var.name, step_result, var.name)
         self.output.add_instruction("JMP", loop_label)
@@ -201,13 +184,77 @@ class C64CodeGenerator(CodeGenerator):
         """Visits a function definition node."""
         func = self.symbol_table.declare_function(node.name, node.parameters, node.return_type)
         func.entry_label = f"FUNC_{node.name}"
+        self.output.add_label(func.entry_label)
 
         self.symbol_table.enter_scope(node.name)
-
-        # Declare parameters
         for param in node.parameters:
             self.symbol_table.declare_variable(param.name, param.data_type)
 
-        # Code generation
-        self.output.add_label(func.entry_label)
+        for stmt in node.body:
+            stmt.accept(self)
+
+        self.output.add_instruction("RTS")
+        self.symbol_table.exit_scope()
+
+    def visit_return_statement(self, node: ReturnStatement) -> Any:
+        """Visits a return statement node."""
+        if node.value:
+            result = node.value.accept(self)
+            self.output.add_instruction("LDA", f"{result}")
+            self.output.add_instruction("STA", "RETURN_VALUE")
+            self.output.add_instruction("LDA", f"{result}+1")
+            self.output.add_instruction("STA", "RETURN_VALUE+1")
+
+        self.output.add_instruction("RTS")
+
+    def _get_temp_var(self) -> str:
+        """Generates a temporary variable name."""
+        temp_name = f"TEMP_{self.temp_var_counter}"
+        self.temp_var_counter += 1
+        return temp_name
+
+    def _generate_add_int16(self, left: str, right: str, result: str):
+        """Generates code for 16-bit addition."""
+        self.output.add_instruction("CLC")
+        self.output.add_instruction("LDA", f"{left}")
+        self.output.add_instruction("ADC", f"{right}")
+        self.output.add_instruction("STA", f"{result}")
+        self.output.add_instruction("LDA", f"{left}+1")
+        self.output.add_instruction("ADC", f"{right}+1")
+        self.output.add_instruction("STA", f"{result}+1")
+
+    def _generate_sub_int16(self, left: str, right: str, result: str):
+        """Generates code for 16-bit subtraction."""
+        self.output.add_instruction("SEC")
+        self.output.add_instruction("LDA", f"{left}")
+        self.output.add_instruction("SBC", f"{right}")
+        self.output.add_instruction("STA", f"{result}")
+        self.output.add_instruction("LDA", f"{left}+1")
+        self.output.add_instruction("SBC", f"{right}+1")
+        self.output.add_instruction("STA", f"{result}+1")
+
+    def _generate_mul_int16(self, left: str, right: str, result: str):
+        """Generates code for 16-bit multiplication."""
+        self.output.add_instruction("LDA", f"{left}")
+        self.output.add_instruction("STA", "MULT_ARG1")
+        self.output.add_instruction("LDA", f"{left}+1")
+        self.output.add_instruction("STA", "MULT_ARG1+1")
+        self.output.add_instruction("LDA", f"{right}")
+        self.output.add_instruction("STA", "MULT_ARG2")
+        self.output.add_instruction("LDA", f"{right}+1")
+        self.output.add_instruction("STA", "MULT_ARG2+1")
+        self.output.add_instruction("JSR", "multiply16x16")
+        self.output.add_instruction("LDA", "MULT_RESULT")
+        self.output.add_instruction("STA", f"{result}")
+        self.output.add_instruction("LDA", "MULT_RESULT+1")
+        self.output.add_instruction("STA", f"{result}+1")
+
+    def _generate_compare_int16(self, left: str, right: str, op: str):
+        """Generates code for 16-bit comparison."""
+        self.output.add_instruction("LDA", f"{left}+1")
+        self.output.add_instruction("CMP", f"{right}+1")
+        self.output.add_instruction("BNE", "SKIP_LO_CMP")
+        self.output.add_instruction("LDA", f"{left}")
+        self.output.add_instruction("CMP", f"{right}")
+        self.output.add_label("SKIP_LO_CMP")
         
