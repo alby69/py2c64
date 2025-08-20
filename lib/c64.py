@@ -196,7 +196,7 @@ class C64CodeGenerator(CodeGenerator):
 
         # If it's a built-in, mark its routine as used
         if not func.entry_label.startswith("FUNC_"):
-            self.used_routines.add(func.name)
+            self.used_routines.add(func.entry_label)
 
         for arg in reversed(node.arguments):
             arg_result = arg.accept(self)

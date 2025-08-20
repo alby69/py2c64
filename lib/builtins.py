@@ -27,6 +27,11 @@ BUILTIN_FUNCTIONS = [
     ], return_type=DataType.VOID, entry_label="CLLINE"),
 
     # C64 Hardware Functions
+    Function(name="scroll", parameters=[
+        Variable(name="direction", data_type=DataType.INT16),
+        Variable(name="start_line", data_type=DataType.INT16),
+        Variable(name="end_line", data_type=DataType.INT16),
+    ], return_type=DataType.VOID, entry_label="SCROLL"),
     Function(name="sprite_enable", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_disable", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_set_pos", parameters=[
