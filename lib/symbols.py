@@ -106,6 +106,7 @@ class SymbolTable:
     def register_builtins(self, builtin_functions: List[Function]):
         """Registers a list of built-in functions."""
         for func in builtin_functions:
-            # Built-in functions have a predefined label which is their name
-            func.entry_label = func.name
+            if not func.entry_label:
+                # If no specific entry label is provided, assume it's the same as the function name
+                func.entry_label = func.name
             self.functions[func.name] = func

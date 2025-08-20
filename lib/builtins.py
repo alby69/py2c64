@@ -5,16 +5,28 @@ Defines the built-in functions available in the py2c64 language.
 from .symbols import DataType, Variable, Function
 
 BUILTIN_FUNCTIONS = [
-    # C64 Hardware Functions
-    Function(name="gfx_turn_on", parameters=[], return_type=DataType.VOID),
-    Function(name="gfx_turn_off", parameters=[], return_type=DataType.VOID),
-    Function(name="gfx_clear_screen", parameters=[], return_type=DataType.VOID),
-    Function(name="draw_line", parameters=[
+    # Graphics Package Functions
+    Function(name="graphics_on", parameters=[], return_type=DataType.VOID, entry_label="GON"),
+    Function(name="graphics_off", parameters=[], return_type=DataType.VOID, entry_label="GOFF"),
+    Function(name="clear_screen", parameters=[], return_type=DataType.VOID, entry_label="GCLEAR"),
+    Function(name="set_color", parameters=[Variable(name="color", data_type=DataType.INT16)], return_type=DataType.VOID, entry_label="SCOLOR"),
+    Function(name="plot_color", parameters=[Variable(name="color", data_type=DataType.INT16)], return_type=DataType.VOID, entry_label="PCOLOR"),
+    Function(name="plot", parameters=[Variable(name="x", data_type=DataType.INT16), Variable(name="y", data_type=DataType.INT16)], return_type=DataType.VOID, entry_label="PLOT"),
+    Function(name="unplot", parameters=[Variable(name="x", data_type=DataType.INT16), Variable(name="y", data_type=DataType.INT16)], return_type=DataType.VOID, entry_label="UNPLOT"),
+    Function(name="line", parameters=[
         Variable(name="x1", data_type=DataType.INT16),
         Variable(name="y1", data_type=DataType.INT16),
         Variable(name="x2", data_type=DataType.INT16),
         Variable(name="y2", data_type=DataType.INT16),
-    ], return_type=DataType.VOID),
+    ], return_type=DataType.VOID, entry_label="SLINE"),
+    Function(name="clear_line", parameters=[
+        Variable(name="x1", data_type=DataType.INT16),
+        Variable(name="y1", data_type=DataType.INT16),
+        Variable(name="x2", data_type=DataType.INT16),
+        Variable(name="y2", data_type=DataType.INT16),
+    ], return_type=DataType.VOID, entry_label="CLLINE"),
+
+    # C64 Hardware Functions
     Function(name="sprite_enable", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_disable", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_set_pos", parameters=[
