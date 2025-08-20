@@ -75,6 +75,8 @@ class C64CodeGenerator(CodeGenerator):
         elif node.operation == OperationType.MUL:
             self._generate_mul_int16(left_result, right_result, result_var)
             self.used_routines.add("multiply16x16")
+        elif node.operation == OperationType.XOR:
+            self._generate_xor_int16(left_result, right_result, result_var)
 
         return result_var
 
@@ -437,4 +439,13 @@ class C64CodeGenerator(CodeGenerator):
         self.output.add_instruction("LDA", f"{left}")
         self.output.add_instruction("CMP", f"{right}")
         self.output.add_label("SKIP_LO_CMP")
+
+    def _generate_xor_int16(self, left: str, right: str, result: str):
+        """Generates code for 16-bit bitwise XOR."""
+        self.output.add_instruction("LDA", f"{left}")
+        self.output.add_instruction("EOR", f"{right}")
+        self.output.add_instruction("STA", f"{result}")
+        self.output.add_instruction("LDA", f"{left}+1")
+        self.output.add_instruction("EOR", f"{right}+1")
+        self.output.add_instruction("STA", f"{result}+1")
         

@@ -23,6 +23,7 @@ class OperationType(Enum):
     GT = "gt"
     LE = "le"
     GE = "ge"
+    XOR = "xor"
 
 class UnaryOperationType(Enum):
     NOT = "not"

@@ -219,6 +219,7 @@ class PythonASTParser:
             ast.Mult: OperationType.MUL,
             ast.FloorDiv: OperationType.DIV,
             ast.Mod: OperationType.MOD,
+            ast.BitXor: OperationType.XOR,
         }
 
         op_type = op_map.get(type(node.op))
