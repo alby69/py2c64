@@ -2,6 +2,8 @@ from typing import Dict, List, Set
 
 from .graphics.drawing import get_drawing_routines, get_drawing_package_data
 from .graphics.scrolling import get_scrolling_routines
+from .math.arithmetic import get_math_routines
+from .sprites import get_sprite_routines
 
 class RoutineManager:
     """Manages library routines and their dependencies."""
@@ -15,9 +17,8 @@ class RoutineManager:
         self.available_routines.update(get_drawing_routines())
         self.available_routines.update(get_drawing_package_data())
         self.available_routines.update(get_scrolling_routines())
-
-        # Load other routines
-        self.available_routines.update(self._get_math_routines())
+        self.available_routines.update(get_sprite_routines())
+        self.available_routines.update(get_math_routines())
         self.available_routines.update(self._get_list_routines())
 
         # Define dependencies
@@ -33,46 +34,6 @@ class RoutineManager:
             "GOFF": ["C841"],
             "SCROLL": ["CCOO", "CCBB", "CCE5", "CC86", "CCAB", "CC8D"],
             "print_int16": ["divide16x16"]
-        }
-
-    def _get_math_routines(self) -> Dict[str, List[str]]:
-        """Returns the math routines."""
-        return {
-            "multiply16x16": [
-                "MULTIPLY16x16:",
-                "    ; 16x16 -> 32 bit multiplication",
-                "    ; Input: MULT_ARG1, MULT_ARG2",
-                "    ; Output: MULT_RESULT (32 bit)",
-                "    LDA #$00",
-                "    STA MULT_RESULT",
-                "    STA MULT_RESULT+1",
-                "    STA MULT_RESULT+2",
-                "    STA MULT_RESULT+3",
-                "    LDX #$10",
-                "MULT_LOOP:",
-                "    LSR MULT_ARG1+1",
-                "    ROR MULT_ARG1",
-                "    BCC MULT_SKIP",
-                "    CLC",
-                "    LDA MULT_RESULT",
-                "    ADC MULT_ARG2",
-                "    STA MULT_RESULT",
-                "    LDA MULT_RESULT+1",
-                "    ADC MULT_ARG2+1",
-                "    STA MULT_RESULT+1",
-                "MULT_SKIP:",
-                "    ASL MULT_ARG2",
-                "    ROL MULT_ARG2+1",
-                "    DEX",
-                "    BNE MULT_LOOP",
-                "    RTS"
-            ],
-            "divide16x16": [
-                "DIVIDE16x16:",
-                "    ; 16x16 -> 16 bit division",
-                "    ; ... full implementation ...",
-                "    RTS"
-            ],
         }
 
     def mark_routine_used(self, routine_name: str):
