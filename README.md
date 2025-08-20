@@ -130,6 +130,14 @@ Routine specifiche per il Commodore 64:
 - `sprite_enable()`: Attiva sprite
 - `sprite_set_pos()`: Imposta posizione sprite
 
+### Utilizzo delle Routine KERNAL
+
+Alcune delle funzioni di basso livello, come la stampa di un carattere (`print_char`) o il posizionamento del cursore (`set_cursor`), non sono implementate direttamente nel nostro codice assembly, ma utilizzano le **routine KERNAL** del Commodore 64.
+
+Il KERNAL è il "sistema operativo" del C64, un insieme di routine pre-programmate presenti nella ROM del computer che gestiscono operazioni di base come l'input/output e la gestione dello schermo.
+
+Il nostro compilatore genera chiamate a queste routine (ad esempio, `JSR $FFD2` per `CHROUT`) assumendo che il codice verrà eseguito su un C64 dove queste routine sono sempre disponibili a indirizzi di memoria fissi. Questo ci permette di sfruttare le funzionalità del sistema senza doverle riscrivere da zero.
+
 ### Routine Manager
 
 #### RoutineManager
