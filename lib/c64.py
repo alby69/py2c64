@@ -4,13 +4,13 @@
 from typing import Any, Set
 
 from .abc import CodeGenerator
-from .symbols import SymbolTable, DataType, OperationType, UnaryOperationType
+from .symbols import SymbolTable, DataType, OperationType, UnaryOperationType, BoolOpType
 from .labels import LabelManager
 from .output import AssemblyOutput
 from .errors import CompilerError
 from .ast_nodes import (
-    Program, Literal, Identifier, BinaryOperation, UnaryOperation, FunctionCall,
-    Assignment, IfStatement, WhileStatement, ForStatement,
+    Program, Literal, Identifier, BinaryOperation, UnaryOperation, BoolOperation,
+    FunctionCall, Assignment, IfStatement, WhileStatement, ForStatement,
     FunctionDefinition, ReturnStatement, ListLiteral, Subscript
 )
 
@@ -119,6 +119,60 @@ class C64CodeGenerator(CodeGenerator):
 
             self.output.add_label(end_not_label)
 
+        return result_var
+
+    def visit_bool_operation(self, node: BoolOperation) -> Any:
+        """Visits a boolean operation node with short-circuiting."""
+        result_var = self._get_temp_var()
+        end_label = self.label_manager.generate_label("BOOL_END")
+
+        if node.op == BoolOpType.AND:
+            # For AND, short-circuit if any value is false (0)
+            set_false_label = self.label_manager.generate_label("BOOL_SET_FALSE")
+            for value_node in node.values:
+                value_result = value_node.accept(self)
+                self.output.add_instruction("LDA", f"{value_result}")
+                self.output.add_instruction("ORA", f"{value_result}+1")
+                self.output.add_instruction("BEQ", set_false_label)
+
+            # All were true, so result is true (1)
+            self.output.add_instruction("LDA", "#<1")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#1>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+            self.output.add_instruction("JMP", end_label)
+
+            # Set result to false (0)
+            self.output.add_label(set_false_label)
+            self.output.add_instruction("LDA", "#<0")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#0>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+
+        elif node.op == BoolOpType.OR:
+            # For OR, short-circuit if any value is true (non-zero)
+            set_true_label = self.label_manager.generate_label("BOOL_SET_TRUE")
+            for value_node in node.values:
+                value_result = value_node.accept(self)
+                self.output.add_instruction("LDA", f"{value_result}")
+                self.output.add_instruction("ORA", f"{value_result}+1")
+                self.output.add_instruction("BNE", set_true_label)
+
+            # All were false, so result is false (0)
+            self.output.add_instruction("LDA", "#<0")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#0>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+            self.output.add_instruction("JMP", end_label)
+
+            # Set result to true (1)
+            self.output.add_label(set_true_label)
+            self.output.add_instruction("LDA", "#<1")
+            self.output.add_instruction("STA", f"{result_var}")
+            self.output.add_instruction("LDA", "#1>>8")
+            self.output.add_instruction("STA", f"{result_var}+1")
+
+        self.output.add_label(end_label)
         return result_var
 
     def visit_function_call(self, node: FunctionCall) -> Any:

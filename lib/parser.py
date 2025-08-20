@@ -5,9 +5,13 @@ from .errors import CompilerError
 from .ast_nodes import (
     Program, Statement, Expression, Assignment, IfStatement, WhileStatement,
     ForStatement, FunctionDefinition, ReturnStatement, Literal, Identifier,
-    BinaryOperation, FunctionCall, ListLiteral, Subscript, UnaryOperation
+    BinaryOperation, FunctionCall, ListLiteral, Subscript, UnaryOperation,
+    BoolOperation
 )
-from .symbols import SymbolTable, DataType, Variable, OperationType, UnaryOperationType
+from .symbols import (
+    SymbolTable, DataType, Variable, OperationType, UnaryOperationType,
+    BoolOpType
+)
 
 class PythonASTParser:
     """Parser that converts the Python AST to our internal AST."""
@@ -146,8 +150,22 @@ class PythonASTParser:
             return self._parse_subscript(node)
         elif isinstance(node, ast.UnaryOp):
             return self._parse_unary_operation(node)
+        elif isinstance(node, ast.BoolOp):
+            return self._parse_bool_operation(node)
         else:
             raise CompilerError(f"Unsupported expression type: {type(node)}")
+
+    def _parse_bool_operation(self, node: ast.BoolOp) -> BoolOperation:
+        """Parses a boolean operation (AND, OR)."""
+        if isinstance(node.op, ast.And):
+            op_type = BoolOpType.AND
+        elif isinstance(node.op, ast.Or):
+            op_type = BoolOpType.OR
+        else:
+            raise CompilerError(f"Unsupported boolean operator: {type(node.op)}")
+
+        values = [self._parse_expression(v) for v in node.values]
+        return BoolOperation(op_type, values)
 
     def _parse_unary_operation(self, node: ast.UnaryOp) -> UnaryOperation:
         """Parses a unary operation."""

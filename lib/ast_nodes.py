@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional
 from dataclasses import dataclass
-from .symbols import DataType, OperationType, UnaryOperationType, Variable
+from .symbols import DataType, OperationType, UnaryOperationType, BoolOpType, Variable
 
 class ASTNode(ABC):
     """Base class for all AST nodes"""
@@ -59,6 +59,15 @@ class UnaryOperation(Expression):
 
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_unary_operation(self)
+
+@dataclass
+class BoolOperation(Expression):
+    """Represents a boolean operation (AND, OR)."""
+    op: BoolOpType
+    values: List[Expression]
+
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_bool_operation(self)
 
 @dataclass
 class FunctionCall(Expression):

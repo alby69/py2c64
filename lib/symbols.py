@@ -28,6 +28,10 @@ class UnaryOperationType(Enum):
     NOT = "not"
     NEG = "neg"
 
+class BoolOpType(Enum):
+    AND = "and"
+    OR = "or"
+
 @dataclass
 class Variable:
     name: str

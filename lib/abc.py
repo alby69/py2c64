@@ -5,8 +5,8 @@ from .symbols import SymbolTable
 from .labels import LabelManager
 from .output import AssemblyOutput
 from .ast_nodes import (
-    Program, Literal, Identifier, BinaryOperation, UnaryOperation, FunctionCall,
-    Assignment, IfStatement, WhileStatement, ForStatement,
+    Program, Literal, Identifier, BinaryOperation, UnaryOperation, BoolOperation,
+    FunctionCall, Assignment, IfStatement, WhileStatement, ForStatement,
     FunctionDefinition, ReturnStatement, ListLiteral, Subscript
 )
 
@@ -36,6 +36,10 @@ class CodeGenerator(ABC):
 
     @abstractmethod
     def visit_unary_operation(self, node: UnaryOperation) -> Any:
+        pass
+
+    @abstractmethod
+    def visit_bool_operation(self, node: BoolOperation) -> Any:
         pass
 
     @abstractmethod
