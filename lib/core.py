@@ -9,6 +9,7 @@ from .c64 import C64CodeGenerator
 from .routines import RoutineManager
 from .optimizer import PeepholeOptimizer
 from .errors import CompilerError
+from .builtins import BUILTIN_FUNCTIONS
 
 class Py2C64Compiler:
     """The main compiler class that orchestrates the compilation process."""
@@ -21,6 +22,9 @@ class Py2C64Compiler:
         self.code_generator = C64CodeGenerator(self.symbol_table, self.label_manager, self.output)
         self.routine_manager = RoutineManager()
         self.optimizer = PeepholeOptimizer()
+
+        # Register built-in functions
+        self.symbol_table.register_builtins(BUILTIN_FUNCTIONS)
     
     def compile_code(self, python_code: str) -> str:
         """Compiles Python code to 6502 assembly."""

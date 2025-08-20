@@ -192,6 +192,10 @@ class C64CodeGenerator(CodeGenerator):
         if not func:
             raise CompilerError(f"Undefined function: {node.name}")
 
+        # If it's a built-in, mark its routine as used
+        if not func.entry_label.startswith("FUNC_"):
+            self.used_routines.add(func.name)
+
         for arg in reversed(node.arguments):
             arg_result = arg.accept(self)
             self.output.add_instruction("LDA", f"{arg_result}+1")

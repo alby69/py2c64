@@ -101,3 +101,10 @@ class SymbolTable:
     def lookup_function(self, name: str) -> Optional[Function]:
         """Looks for a function."""
         return self.functions.get(name)
+
+    def register_builtins(self, builtin_functions: List[Function]):
+        """Registers a list of built-in functions."""
+        for func in builtin_functions:
+            # Built-in functions have a predefined label which is their name
+            func.entry_label = func.name
+            self.functions[func.name] = func
