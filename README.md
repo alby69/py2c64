@@ -123,12 +123,43 @@ Routine specifiche per il Commodore 64:
 - **Sprites**: Gestione completa degli sprite
 - **I/O**: Routine per input/output
 
-#### Routine Disponibili
-- `gfx_turn_on()`: Attiva la modalità grafica
-- `gfx_clear_screen()`: Pulisce lo schermo
-- `draw_line()`: Disegna linee (algoritmo di Bresenham)
-- `sprite_enable()`: Attiva sprite
-- `sprite_set_pos()`: Imposta posizione sprite
+### Funzioni Grafiche e Hardware
+
+Il compilatore offre un'ampia gamma di funzioni per interagire con l'hardware del Commodore 64, in particolare per la gestione della grafica e degli sprite.
+
+| Funzione | Parametri | Descrizione |
+| --- | --- | --- |
+| `gfx_turn_on()` | `()` | Attiva la modalità grafica bitmap. |
+| `gfx_turn_off()` | `()` | Disattiva la modalità grafica e torna alla modalità testo. |
+| `gfx_clear_screen()` | `()` | Pulisce l'intero schermo grafico. |
+| `set_color(color)` | `(color)` | Imposta il colore di sfondo e del bordo. |
+| `plot_color(color)` | `(color)` | Imposta il colore per le operazioni di disegno. |
+| `plot(x, y)` | `(x, y)` | Disegna un pixel alle coordinate specificate. |
+| `unplot(x, y)` | `(x, y)` | Cancella un pixel alle coordinate specificate. |
+| `draw_line(x1, y1, x2, y2)` | `(x1, y1, x2, y2)` | Disegna una linea tra due punti. |
+| `clear_line(x1, y1, x2, y2)` | `(x1, y1, x2, y2)` | Cancella una linea tra due punti. |
+| `draw_circle(x, y, r)` | `(x, y, r)` | Disegna un cerchio. |
+| `draw_ellipse(x, y, rx, ry)` | `(x, y, rx, ry)` | Disegna un'ellisse. |
+| `draw_rect(x1, y1, x2, y2)` | `(x1, y1, x2, y2)` | Disegna un rettangolo. |
+| `scroll(dir, start, end)` | `(direction, start_line, end_line)` | Esegue lo scroll di una porzione dello schermo. |
+| `set_cursor(row, col)` | `(row, col)` | Posiziona il cursore testo. |
+| `print_char(char_code)` | `(char_code)` | Stampa un carattere in modalità testo. |
+| `set_char_color(color_code)` | `(color_code)` | Imposta il colore del testo. |
+| `sprite_enable(mask)` | `(mask)` | Abilita gli sprite specificati da una maschera di bit. |
+| `sprite_disable(mask)` | `(mask)` | Disabilita gli sprite specificati da una maschera di bit. |
+| `sprite_set_pos(num, x, y)` | `(sprite_num, x, y)` | Imposta la posizione di uno sprite. |
+| `sprite_set_color(num, color)` | `(sprite_num, color)` | Imposta il colore di uno sprite. |
+| `sprite_set_pointer(num, addr)` | `(sprite_num, address)` | Associa un blocco di dati a uno sprite. |
+| `sprite_create_from_data(addr, data)` | `(address, data)` | Crea i dati per uno sprite a un indirizzo di memoria. |
+| `sprite_expand_x(mask)` | `(mask)` | Espande gli sprite specificati in orizzontale. |
+| `sprite_expand_y(mask)` | `(mask)` | Espande gli sprite specificati in verticale. |
+| `sprite_set_priority(mask)` | `(mask)` | Imposta la priorità degli sprite (davanti/dietro alla grafica). |
+| `sprite_set_multicolor(mask)` | `(mask)` | Abilita la modalità multicolor per gli sprite. |
+| `sprite_set_multicolor_colors(mc1, mc2)` | `(mc1, mc2)` | Imposta i due colori globali per gli sprite multicolor. |
+| `sprite_set_x_msb(mask)` | `(mask)` | Imposta il bit più significativo della coordinata X per gli sprite. |
+| `sprite_set_x_msb_clear(mask)` | `(mask)` | Azzera il bit più significativo della coordinata X per gli sprite. |
+| `sprite_check_collision_data()` | `()` | Ritorna una maschera di bit delle collisioni sprite-dati. |
+| `sprite_check_collision_sprite()` | `()` | Ritorna una maschera di bit delle collisioni sprite-sprite. |
 
 ### Utilizzo delle Routine KERNAL
 
@@ -241,25 +272,37 @@ sprite_set_pos(0, 160, 100)
 
 ## 🔧 Struttura del Progetto
 
-Il progetto è organizzato in un package `lib` che contiene la logica del compilatore, un file `main.py` come entry point, e una `test_suites` per i test.
+Il progetto è organizzato in un package `lib` che contiene la logica del compilatore, un file `main.py` come entry point, e una `test_suites` per i test. La libreria `lib` è stata modularizzata per separare le diverse funzionalità.
 
 ```
 /
 ├── main.py                 # Entry point della linea di comando
 ├── README.md
 ├── lib/                    # Package principale del compilatore
-│   ├── __init__.py         # Espone l'interfaccia pubblica
+│   ├── __init__.py
 │   ├── core.py             # Classe principale Py2C64Compiler
-│   ├── abc.py              # Classi base astratte (es. CodeGenerator)
+│   ├── abc.py              # Classi base astratte
 │   ├── ast_nodes.py        # Nodi dell'AST interno
+│   ├── builtins.py         # Definizioni delle funzioni built-in
 │   ├── c64.py              # Code generator per C64
 │   ├── errors.py           # Eccezioni custom
 │   ├── labels.py           # Label manager
 │   ├── optimizer.py        # Peephole optimizer
 │   ├── output.py           # Gestione output assembly
 │   ├── parser.py           # Parser da AST Python a AST interno
-│   ├── routines.py         # Gestore delle routine predefinite
-│   └── symbols.py          # Gestore della symbol table e tipi
+│   ├── routines.py         # Gestore delle routine (carica da sub-packages)
+│   ├── symbols.py          # Gestore della symbol table e tipi
+│   │
+│   ├── graphics/           # Package per le routine grafiche
+│   │   ├── __init__.py
+│   │   ├── drawing.py      # Primitive di disegno (linee, punti)
+│   │   ├── scrolling.py    # Routine per lo scrolling
+│   │   ├── sprites.py      # Gestione degli sprite
+│   │   └── text.py         # Gestione testo in modalità grafica
+│   │
+│   └── math/               # Package per le routine matematiche
+│       ├── __init__.py
+│       └── arithmetic.py   # Routine per operazioni matematiche
 │
 ├── test_suites/            # Suite di test di integrazione
 │   ├── examples/           # Codici Python di test
