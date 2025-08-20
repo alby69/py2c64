@@ -3,6 +3,7 @@ from typing import Dict, List, Set
 from .graphics.drawing import get_drawing_routines, get_drawing_package_data
 from .graphics.scrolling import get_scrolling_routines
 from .graphics.sprites import get_sprite_routines
+from .graphics.text import get_text_routines
 from .math.arithmetic import get_math_routines
 
 class RoutineManager:
@@ -20,6 +21,7 @@ class RoutineManager:
         self.available_routines.update(get_sprite_routines())
         self.available_routines.update(get_math_routines())
         self.available_routines.update(self._get_list_routines())
+        self.available_routines.update(get_text_routines())
 
         # Define dependencies
         self.dependencies = {

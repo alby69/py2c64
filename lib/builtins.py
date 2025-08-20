@@ -91,6 +91,18 @@ BUILTIN_FUNCTIONS = [
     # I/O Functions
     Function(name="input", parameters=[], return_type=DataType.INT16), # Simplified return type
 
+    # Text Functions
+    Function(name="set_cursor", parameters=[
+        Variable(name="row", data_type=DataType.INT16),
+        Variable(name="col", data_type=DataType.INT16),
+    ], return_type=DataType.VOID),
+    Function(name="print_char", parameters=[
+        Variable(name="char_code", data_type=DataType.INT16),
+    ], return_type=DataType.VOID),
+    Function(name="set_char_color", parameters=[
+        Variable(name="color_code", data_type=DataType.INT16),
+    ], return_type=DataType.VOID),
+
     # Type Conversion
     Function(name="float", parameters=[Variable(name="n", data_type=DataType.INT16)], return_type=DataType.FLOAT32),
     Function(name="int", parameters=[Variable(name="n", data_type=DataType.FLOAT32)], return_type=DataType.INT16),
