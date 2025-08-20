@@ -2,8 +2,8 @@ from typing import Dict, List, Set
 
 from .graphics.drawing import get_drawing_routines, get_drawing_package_data
 from .graphics.scrolling import get_scrolling_routines
+from .graphics.sprites import get_sprite_routines
 from .math.arithmetic import get_math_routines
-from .sprites import get_sprite_routines
 
 class RoutineManager:
     """Manages library routines and their dependencies."""

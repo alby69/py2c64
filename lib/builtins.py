@@ -43,8 +43,9 @@ BUILTIN_FUNCTIONS = [
         Variable(name="sprite_num", data_type=DataType.INT16),
         Variable(name="address", data_type=DataType.INT16),
     ], return_type=DataType.VOID),
-    Function(name="sprite_set_priority", parameters=[Variable(name="priority_mask", data_type=DataType.INT16)], return_type=DataType.VOID),
-    Function(name="sprite_expand_xy", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
+    Function(name="sprite_set_priority", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
+    Function(name="sprite_expand_x", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
+    Function(name="sprite_expand_y", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_set_multicolor", parameters=[Variable(name="mask", data_type=DataType.INT16)], return_type=DataType.VOID),
     Function(name="sprite_set_multicolor_colors", parameters=[
         Variable(name="mc1", data_type=DataType.INT16),
