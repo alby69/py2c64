@@ -27,6 +27,29 @@ py2c64 è un compiler che traduce codice Python in assembly 6502 ottimizzato per
 - **Sprites**: Gestione completa degli sprite
 - **Routine Ottimizzate**: Libreria di routine assembly per operazioni comuni
 
+#### Implemented Graphics Functions
+- `gfx_turn_on()`
+- `gfx_clear_screen()`
+- `draw_line()`
+- `gfx_turn_off()`
+- `draw_ellipse()`
+- `draw_circle()`
+- `draw_rect()`
+- `sprite_set_pos()`
+- `sprite_enable()`
+- `sprite_set_color()`
+- `sprite_set_x_msb()`
+- `sprite_disable()`
+- `sprite_expand_xy()`
+- `sprite_set_x_msb_clear()`
+- `sprite_set_pointer()`
+- `sprite_set_priority()`
+- `sprite_set_multicolor()`
+- `sprite_set_multicolor_colors()`
+- `sprite_check_collision_sprite()`
+- `sprite_check_collision_data()`
+- `sprite_create_from_data()`
+
 ## 🏛️ Architettura del Sistema
 
 ### Componenti Principali
