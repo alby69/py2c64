@@ -50,7 +50,7 @@ def run_all_tests():
 
         try:
             compiler = Py2C64Compiler()
-            assembly_code = compiler.compile(code)
+            assembly_code = compiler.compile_code(code)
 
             # Simple success check: if it compiles without error and produces output
             if assembly_code and isinstance(assembly_code, str):

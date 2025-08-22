@@ -4,125 +4,148 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional
 from dataclasses import dataclass
-from lib.core import DataType, OperationType
+from .symbols import DataType, OperationType, UnaryOperationType, BoolOpType, Variable
 
 class ASTNode(ABC):
     """Base class for all AST nodes"""
-
     @abstractmethod
     def accept(self, visitor: 'CodeGenerator') -> Any:
-        """Accepts a visitor and calls the appropriate visit method."""
         pass
 
 @dataclass
 class Expression(ASTNode):
-    """Base class for all expressions."""
     pass
 
 @dataclass
 class Statement(ASTNode):
-    """Base class for all statements."""
     pass
 
 @dataclass
 class Literal(Expression):
-    """Represents a literal value (e.g., 10, "hello")."""
     value: Any
     data_type: DataType
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_literal(self)
 
 @dataclass
 class Identifier(Expression):
-    """Represents an identifier (variable name)."""
     name: str
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_identifier(self)
 
 @dataclass
 class BinaryOperation(Expression):
-    """Represents a binary operation (e.g., +, -, *)."""
     left: Expression
     operation: OperationType
     right: Expression
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_binary_operation(self)
 
 @dataclass
+class UnaryOperation(Expression):
+    operation: UnaryOperationType
+    operand: Expression
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_unary_operation(self)
+
+@dataclass
+class BoolOperation(Expression):
+    op: BoolOpType
+    values: List[Expression]
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_bool_operation(self)
+
+@dataclass
 class FunctionCall(Expression):
-    """Represents a function call."""
     name: str
     arguments: List[Expression]
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_function_call(self)
 
 @dataclass
-class Assignment(Statement):
-    """Represents an assignment statement (e.g., x = 5)."""
-    target: str  # Target is now a string (variable name)
-    value: Expression
+class ListLiteral(Expression):
+    elements: List[Expression]
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_list_literal(self)
 
+@dataclass
+class Slice:
+    lower: Optional[Expression]
+    upper: Optional[Expression]
+    step: Optional[Expression]
+
+@dataclass
+class Subscript(Expression):
+    name: Identifier
+    index: Optional[Expression]
+    slice: Optional[Slice] = None
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_subscript(self)
+
+@dataclass
+class Assignment(Statement):
+    target: Any # Can be str (Identifier) or Subscript
+    value: Expression
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_assignment(self)
 
 @dataclass
 class IfStatement(Statement):
-    """Represents an if statement."""
     condition: Expression
     then_body: List[Statement]
     else_body: Optional[List[Statement]] = None
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_if_statement(self)
 
 @dataclass
 class WhileStatement(Statement):
-    """Represents a while loop."""
     condition: Expression
     body: List[Statement]
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_while_statement(self)
 
 @dataclass
 class ForStatement(Statement):
-    """Represents a for loop."""
-    var: str  # Loop variable name
-    start: Expression
-    end: Expression
-    step: Expression
+    var: str
+    start: Optional[Expression]
+    end: Optional[Expression]
+    step: Optional[Expression]
     body: List[Statement]
-
+    iterable: Optional[Expression] = None
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_for_statement(self)
 
 @dataclass
 class FunctionDefinition(Statement):
-    """Represents a function definition."""
     name: str
-    parameters: List['Variable']  # List of parameter variables
+    parameters: List[Variable]
     body: List[Statement]
     return_type: DataType
-
+    is_interrupt_handler: bool = False
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_function_definition(self)
 
 @dataclass
 class ReturnStatement(Statement):
-    """Represents a return statement."""
     value: Optional[Expression] = None
-
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_return_statement(self)
 
 @dataclass
-class Program(ASTNode):
-    """Represents the root of the AST, the entire program."""
-    statements: List[Statement]
-
+class Break(Statement):
     def accept(self, visitor: 'CodeGenerator') -> Any:
-        return visitor.visit_program(self)
+        return visitor.visit_break(self)
+
+@dataclass
+class Continue(Statement):
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        return visitor.visit_continue(self)
+
+@dataclass
+class Program(ASTNode):
+    statements: List[Statement]
+    def accept(self, visitor: 'CodeGenerator') -> Any:
+        # In the new design, the compiler core calls visit_functions and visit_main
+        visitor.visit_functions(self)
+        visitor.setup_interrupts(self)
+        visitor.visit_main(self)

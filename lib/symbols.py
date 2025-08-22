@@ -1,60 +1,92 @@
 # lib/symbols.py
 """Manages the symbol table for the compiler."""
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from dataclasses import dataclass, field
-from lib.core import DataType, Function, Variable  # Import core types
+from enum import Enum
+
+class DataType(Enum):
+    INT16 = "int16"
+    FLOAT32 = "float32"
+    STRING = "string"
+    VOID = "void"
+    LIST = "list"
+
+class OperationType(Enum):
+    ADD = "+"
+    SUB = "-"
+    MUL = "*"
+    DIV = "/"
+    XOR = "^"
+    EQ = "=="
+    NE = "!="
+    LT = "<"
+    LE = "<="
+    GT = ">"
+    GE = ">="
+
+class UnaryOperationType(Enum):
+    NEG = "-"
+    NOT = "not"
+
+class BoolOpType(Enum):
+    AND = "and"
+    OR = "or"
+
+@dataclass
+class Variable:
+    name: str
+    data_type: DataType
+    address: Optional[int] = None
+    scope: str = "global"
+    is_parameter: bool = False
+
+@dataclass
+class Function:
+    name: str
+    parameters: List[Variable]
+    return_type: DataType
+    local_vars: Dict[str, Variable] = field(default_factory=dict)
+    entry_label: Optional[str] = None
+    is_interrupt_handler: bool = False
 
 class SymbolTable:
-    """Gestisce simboli, variabili e scope in modo strutturato"""
+    """Manages symbols, variables, and scopes."""
     
     def __init__(self):
         self.global_vars: Dict[str, Variable] = {}
         self.functions: Dict[str, Function] = {}
-        self.current_scope: str = "global"
-        self.scope_stack: List[str] = ["global"]
-        self.local_vars_stack: List[Dict[str, Variable]] = [{}]
-    
-    def enter_scope(self, scope_name: str):
-        """Entra in un nuovo scope (funzione)"""
-        self.scope_stack.append(scope_name)
-        self.current_scope = scope_name
-        self.local_vars_stack.append({})
-    
+        self.current_scope: Optional[Function] = None
+
+    def enter_scope(self, func_name: str):
+        self.current_scope = self.functions.get(func_name)
+
     def exit_scope(self):
-        """Esce dallo scope corrente"""
-        if len(self.scope_stack) > 1:
-            self.scope_stack.pop()
-            self.local_vars_stack.pop()
-            self.current_scope = self.scope_stack[-1]
-    
-    def declare_variable(self, name: str, data_type: DataType) -> Variable:
-        """Dichiara una nuova variabile nello scope corrente"""
-        var = Variable(name, data_type, scope=self.current_scope)
-        
-        if self.current_scope == "global":
-            self.global_vars[name] = var
+        self.current_scope = None
+
+    def declare_variable(self, name: str, data_type: DataType, is_parameter: bool = False) -> Variable:
+        var = Variable(name=name, data_type=data_type, is_parameter=is_parameter)
+        if self.current_scope:
+            self.current_scope.local_vars[name] = var
         else:
-            self.local_vars_stack[-1][name] = var
-        
+            self.global_vars[name] = var
         return var
-    
+
     def lookup_variable(self, name: str) -> Optional[Variable]:
-        """Cerca una variabile negli scope disponibili"""
-        # Prima cerca negli scope locali (dal più profondo al più superficiale)
-        for local_vars in reversed(self.local_vars_stack[1:]):
-            if name in local_vars:
-                return local_vars[name]
-        
-        # Poi cerca nelle variabili globali
+        if self.current_scope:
+            if name in self.current_scope.local_vars:
+                return self.current_scope.local_vars[name]
         return self.global_vars.get(name)
-    
-    def declare_function(self, name: str, params: List[Variable], return_type: DataType) -> Function:
-        """Dichiara una nuova funzione"""
-        func = Function(name, params, return_type)
+
+    def declare_function(self, name: str, params: List, return_type: DataType, is_interrupt: bool = False) -> Function:
+        parameters = [Variable(p.arg, DataType.INT16, is_parameter=True) for p in params] # Simplified
+        func = Function(name, parameters, return_type, is_interrupt_handler=is_interrupt)
         self.functions[name] = func
         return func
-    
+
     def lookup_function(self, name: str) -> Optional[Function]:
-        """Cerca una funzione"""
         return self.functions.get(name)
+
+    def register_builtins(self, builtins: Dict[str, Any]):
+        for name, func_data in builtins.items():
+            self.functions[name] = func_data
