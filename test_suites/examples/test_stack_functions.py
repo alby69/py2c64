@@ -1,3 +1,5 @@
+# from py2c64 import globals as py2asm_globals
+
 test_cases = []
 
 # Test Case 1: Simple function call with parameters and local variables

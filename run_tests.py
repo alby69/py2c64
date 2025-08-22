@@ -1,7 +1,7 @@
 import os
 import sys
 import importlib.util
-from lib import Py2C64Compiler, CompilerError
+from main import Py2C64Compiler, CompilerError
 
 def load_test_cases(test_suite_dir):
     """Loads all test cases from modules in the specified directory."""
@@ -50,7 +50,7 @@ def run_all_tests():
 
         try:
             compiler = Py2C64Compiler()
-            assembly_code = compiler.compile_code(code)
+            assembly_code = compiler.compile(code)
 
             # Simple success check: if it compiles without error and produces output
             if assembly_code and isinstance(assembly_code, str):

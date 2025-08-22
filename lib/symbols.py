@@ -2,55 +2,11 @@
 """Manages the symbol table for the compiler."""
 
 from typing import List, Dict, Optional
-from enum import Enum
 from dataclasses import dataclass, field
-
-class DataType(Enum):
-    INT16 = "int16"
-    FLOAT32 = "float32"
-    STRING = "string"
-    VOID = "void"
-
-class OperationType(Enum):
-    ADD = "add"
-    SUB = "sub"
-    MUL = "mul"
-    DIV = "div"
-    MOD = "mod"
-    EQ = "eq"
-    NE = "ne"
-    LT = "lt"
-    GT = "gt"
-    LE = "le"
-    GE = "ge"
-    XOR = "xor"
-
-class UnaryOperationType(Enum):
-    NOT = "not"
-    NEG = "neg"
-
-class BoolOpType(Enum):
-    AND = "and"
-    OR = "or"
-
-@dataclass
-class Variable:
-    name: str
-    data_type: DataType
-    address: Optional[int] = None
-    scope: str = "global"
-    is_parameter: bool = False
-
-@dataclass
-class Function:
-    name: str
-    parameters: List[Variable]
-    return_type: DataType
-    local_vars: Dict[str, Variable] = field(default_factory=dict)
-    entry_label: Optional[str] = None
+from lib.core import DataType, Function, Variable  # Import core types
 
 class SymbolTable:
-    """Manages symbols, variables, and scopes in a structured way."""
+    """Gestisce simboli, variabili e scope in modo strutturato"""
     
     def __init__(self):
         self.global_vars: Dict[str, Variable] = {}
@@ -60,20 +16,20 @@ class SymbolTable:
         self.local_vars_stack: List[Dict[str, Variable]] = [{}]
     
     def enter_scope(self, scope_name: str):
-        """Enters a new scope (function)."""
+        """Entra in un nuovo scope (funzione)"""
         self.scope_stack.append(scope_name)
         self.current_scope = scope_name
         self.local_vars_stack.append({})
     
     def exit_scope(self):
-        """Exits the current scope."""
+        """Esce dallo scope corrente"""
         if len(self.scope_stack) > 1:
             self.scope_stack.pop()
             self.local_vars_stack.pop()
             self.current_scope = self.scope_stack[-1]
     
     def declare_variable(self, name: str, data_type: DataType) -> Variable:
-        """Declares a new variable in the current scope."""
+        """Dichiara una nuova variabile nello scope corrente"""
         var = Variable(name, data_type, scope=self.current_scope)
         
         if self.current_scope == "global":
@@ -84,29 +40,21 @@ class SymbolTable:
         return var
     
     def lookup_variable(self, name: str) -> Optional[Variable]:
-        """Looks for a variable in the available scopes."""
-        # First, search in local scopes (from deepest to shallowest)
+        """Cerca una variabile negli scope disponibili"""
+        # Prima cerca negli scope locali (dal più profondo al più superficiale)
         for local_vars in reversed(self.local_vars_stack[1:]):
             if name in local_vars:
                 return local_vars[name]
         
-        # Then, search in global variables
+        # Poi cerca nelle variabili globali
         return self.global_vars.get(name)
     
     def declare_function(self, name: str, params: List[Variable], return_type: DataType) -> Function:
-        """Declares a new function."""
+        """Dichiara una nuova funzione"""
         func = Function(name, params, return_type)
         self.functions[name] = func
         return func
     
     def lookup_function(self, name: str) -> Optional[Function]:
-        """Looks for a function."""
+        """Cerca una funzione"""
         return self.functions.get(name)
-
-    def register_builtins(self, builtin_functions: List[Function]):
-        """Registers a list of built-in functions."""
-        for func in builtin_functions:
-            if not func.entry_label:
-                # If no specific entry label is provided, assume it's the same as the function name
-                func.entry_label = func.name
-            self.functions[func.name] = func

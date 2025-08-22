@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Optional
 from dataclasses import dataclass
-from .symbols import DataType, OperationType, UnaryOperationType, BoolOpType, Variable
+from lib.core import DataType, OperationType
 
 class ASTNode(ABC):
     """Base class for all AST nodes"""
@@ -52,24 +52,6 @@ class BinaryOperation(Expression):
         return visitor.visit_binary_operation(self)
 
 @dataclass
-class UnaryOperation(Expression):
-    """Represents a unary operation (e.g., NOT, -)."""
-    operation: UnaryOperationType
-    operand: Expression
-
-    def accept(self, visitor: 'CodeGenerator') -> Any:
-        return visitor.visit_unary_operation(self)
-
-@dataclass
-class BoolOperation(Expression):
-    """Represents a boolean operation (AND, OR)."""
-    op: BoolOpType
-    values: List[Expression]
-
-    def accept(self, visitor: 'CodeGenerator') -> Any:
-        return visitor.visit_bool_operation(self)
-
-@dataclass
 class FunctionCall(Expression):
     """Represents a function call."""
     name: str
@@ -77,23 +59,6 @@ class FunctionCall(Expression):
 
     def accept(self, visitor: 'CodeGenerator') -> Any:
         return visitor.visit_function_call(self)
-
-@dataclass
-class ListLiteral(Expression):
-    """Represents a list literal (e.g., [1, 2, 3])."""
-    elements: List[Expression]
-
-    def accept(self, visitor: 'CodeGenerator') -> Any:
-        return visitor.visit_list_literal(self)
-
-@dataclass
-class Subscript(Expression):
-    """Represents a subscript access (e.g., my_list[0])."""
-    name: Identifier
-    index: Expression
-
-    def accept(self, visitor: 'CodeGenerator') -> Any:
-        return visitor.visit_subscript(self)
 
 @dataclass
 class Assignment(Statement):
